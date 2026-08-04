@@ -14,38 +14,18 @@ import { Route as TradeRouteImport } from './routes/trade'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as ReportsRouteImport } from './routes/reports'
 import { Route as RatesRouteImport } from './routes/rates'
-import { Route as RailMapRouteImport } from './routes/rail-map'
-import { Route as RailRouteImport } from './routes/rail'
 import { Route as PrivacyRouteImport } from './routes/privacy'
+import { Route as PortsRouteImport } from './routes/ports'
 import { Route as PortRiskRouteImport } from './routes/port-risk'
 import { Route as PolicyRouteImport } from './routes/policy'
 import { Route as NewsRouteImport } from './routes/news'
 import { Route as MethodologyRouteImport } from './routes/methodology'
-import { Route as IndustriesRouteImport } from './routes/industries'
-import { Route as ForecastsRouteImport } from './routes/forecasts'
 import { Route as FaqRouteImport } from './routes/faq'
-import { Route as EurasiaRouteImport } from './routes/eurasia'
-import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as ClimateRouteImport } from './routes/climate'
-import { Route as BriefingRouteImport } from './routes/briefing'
-import { Route as AdminRouteImport } from './routes/admin'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ReportsIndexRouteImport } from './routes/reports.index'
-import { Route as RailIndexRouteImport } from './routes/rail.index'
-import { Route as AdminIndexRouteImport } from './routes/admin.index'
-import { Route as RailEuropeRouteImport } from './routes/rail.europe'
-import { Route as RailEurasiaRouteImport } from './routes/rail.eurasia'
-import { Route as RailAmericasRouteImport } from './routes/rail.americas'
-import { Route as Index1520RoutesRouteImport } from './routes/index1520.routes'
 import { Route as ArticleSlugRouteImport } from './routes/article.$slug'
-import { Route as AdminSubscribersRouteImport } from './routes/admin.subscribers'
-import { Route as AdminRoutesRouteImport } from './routes/admin.routes'
-import { Route as AdminPoliciesRouteImport } from './routes/admin.policies'
-import { Route as AdminPartnerRatesRouteImport } from './routes/admin.partner-rates'
-import { Route as AdminLoginRouteImport } from './routes/admin.login'
-import { Route as AdminForecastsRouteImport } from './routes/admin.forecasts'
-import { Route as ReportsWeeklyWeekRouteImport } from './routes/reports.weekly.$week'
 import { Route as ReportsMonthlyMonthRouteImport } from './routes/reports.monthly.$month'
 import { Route as ApiWebhooksResendRouteImport } from './routes/api/webhooks/resend'
 import { Route as ApiTradeBriefRouteImport } from './routes/api/trade/brief'
@@ -76,19 +56,14 @@ const RatesRoute = RatesRouteImport.update({
   path: '/rates',
   getParentRoute: () => rootRouteImport,
 } as any)
-const RailMapRoute = RailMapRouteImport.update({
-  id: '/rail-map',
-  path: '/rail-map',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const RailRoute = RailRouteImport.update({
-  id: '/rail',
-  path: '/rail',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const PrivacyRoute = PrivacyRouteImport.update({
   id: '/privacy',
   path: '/privacy',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PortsRoute = PortsRouteImport.update({
+  id: '/ports',
+  path: '/ports',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PortRiskRoute = PortRiskRouteImport.update({
@@ -111,44 +86,14 @@ const MethodologyRoute = MethodologyRouteImport.update({
   path: '/methodology',
   getParentRoute: () => rootRouteImport,
 } as any)
-const IndustriesRoute = IndustriesRouteImport.update({
-  id: '/industries',
-  path: '/industries',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ForecastsRoute = ForecastsRouteImport.update({
-  id: '/forecasts',
-  path: '/forecasts',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const FaqRoute = FaqRouteImport.update({
   id: '/faq',
   path: '/faq',
   getParentRoute: () => rootRouteImport,
 } as any)
-const EurasiaRoute = EurasiaRouteImport.update({
-  id: '/eurasia',
-  path: '/eurasia',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const DashboardRoute = DashboardRouteImport.update({
-  id: '/dashboard',
-  path: '/dashboard',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const ClimateRoute = ClimateRouteImport.update({
   id: '/climate',
   path: '/climate',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const BriefingRoute = BriefingRouteImport.update({
-  id: '/briefing',
-  path: '/briefing',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AdminRoute = AdminRouteImport.update({
-  id: '/admin',
-  path: '/admin',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AboutRoute = AboutRouteImport.update({
@@ -166,75 +111,10 @@ const ReportsIndexRoute = ReportsIndexRouteImport.update({
   path: '/',
   getParentRoute: () => ReportsRoute,
 } as any)
-const RailIndexRoute = RailIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => RailRoute,
-} as any)
-const AdminIndexRoute = AdminIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => AdminRoute,
-} as any)
-const RailEuropeRoute = RailEuropeRouteImport.update({
-  id: '/europe',
-  path: '/europe',
-  getParentRoute: () => RailRoute,
-} as any)
-const RailEurasiaRoute = RailEurasiaRouteImport.update({
-  id: '/eurasia',
-  path: '/eurasia',
-  getParentRoute: () => RailRoute,
-} as any)
-const RailAmericasRoute = RailAmericasRouteImport.update({
-  id: '/americas',
-  path: '/americas',
-  getParentRoute: () => RailRoute,
-} as any)
-const Index1520RoutesRoute = Index1520RoutesRouteImport.update({
-  id: '/index1520/routes',
-  path: '/index1520/routes',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const ArticleSlugRoute = ArticleSlugRouteImport.update({
   id: '/article/$slug',
   path: '/article/$slug',
   getParentRoute: () => rootRouteImport,
-} as any)
-const AdminSubscribersRoute = AdminSubscribersRouteImport.update({
-  id: '/subscribers',
-  path: '/subscribers',
-  getParentRoute: () => AdminRoute,
-} as any)
-const AdminRoutesRoute = AdminRoutesRouteImport.update({
-  id: '/routes',
-  path: '/routes',
-  getParentRoute: () => AdminRoute,
-} as any)
-const AdminPoliciesRoute = AdminPoliciesRouteImport.update({
-  id: '/policies',
-  path: '/policies',
-  getParentRoute: () => AdminRoute,
-} as any)
-const AdminPartnerRatesRoute = AdminPartnerRatesRouteImport.update({
-  id: '/partner-rates',
-  path: '/partner-rates',
-  getParentRoute: () => AdminRoute,
-} as any)
-const AdminLoginRoute = AdminLoginRouteImport.update({
-  id: '/login',
-  path: '/login',
-  getParentRoute: () => AdminRoute,
-} as any)
-const AdminForecastsRoute = AdminForecastsRouteImport.update({
-  id: '/forecasts',
-  path: '/forecasts',
-  getParentRoute: () => AdminRoute,
-} as any)
-const ReportsWeeklyWeekRoute = ReportsWeeklyWeekRouteImport.update({
-  id: '/weekly/$week',
-  path: '/weekly/$week',
-  getParentRoute: () => ReportsRoute,
 } as any)
 const ReportsMonthlyMonthRoute = ReportsMonthlyMonthRouteImport.update({
   id: '/monthly/$month',
@@ -260,284 +140,160 @@ const ApiCronIndexnowRoute = ApiCronIndexnowRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
-  '/admin': typeof AdminRouteWithChildren
-  '/briefing': typeof BriefingRoute
   '/climate': typeof ClimateRoute
-  '/dashboard': typeof DashboardRoute
-  '/eurasia': typeof EurasiaRoute
   '/faq': typeof FaqRoute
-  '/forecasts': typeof ForecastsRoute
-  '/industries': typeof IndustriesRoute
   '/methodology': typeof MethodologyRoute
   '/news': typeof NewsRoute
   '/policy': typeof PolicyRoute
   '/port-risk': typeof PortRiskRoute
+  '/ports': typeof PortsRoute
   '/privacy': typeof PrivacyRoute
-  '/rail': typeof RailRouteWithChildren
-  '/rail-map': typeof RailMapRoute
   '/rates': typeof RatesRoute
   '/reports': typeof ReportsRouteWithChildren
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/trade': typeof TradeRoute
   '/unsubscribe': typeof UnsubscribeRoute
-  '/admin/forecasts': typeof AdminForecastsRoute
-  '/admin/login': typeof AdminLoginRoute
-  '/admin/partner-rates': typeof AdminPartnerRatesRoute
-  '/admin/policies': typeof AdminPoliciesRoute
-  '/admin/routes': typeof AdminRoutesRoute
-  '/admin/subscribers': typeof AdminSubscribersRoute
   '/article/$slug': typeof ArticleSlugRoute
-  '/index1520/routes': typeof Index1520RoutesRoute
-  '/rail/americas': typeof RailAmericasRoute
-  '/rail/eurasia': typeof RailEurasiaRoute
-  '/rail/europe': typeof RailEuropeRoute
-  '/admin/': typeof AdminIndexRoute
-  '/rail/': typeof RailIndexRoute
   '/reports/': typeof ReportsIndexRoute
   '/api/cron/indexnow': typeof ApiCronIndexnowRoute
   '/api/trade/brief': typeof ApiTradeBriefRoute
   '/api/webhooks/resend': typeof ApiWebhooksResendRoute
   '/reports/monthly/$month': typeof ReportsMonthlyMonthRoute
-  '/reports/weekly/$week': typeof ReportsWeeklyWeekRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
-  '/briefing': typeof BriefingRoute
   '/climate': typeof ClimateRoute
-  '/dashboard': typeof DashboardRoute
-  '/eurasia': typeof EurasiaRoute
   '/faq': typeof FaqRoute
-  '/forecasts': typeof ForecastsRoute
-  '/industries': typeof IndustriesRoute
   '/methodology': typeof MethodologyRoute
   '/news': typeof NewsRoute
   '/policy': typeof PolicyRoute
   '/port-risk': typeof PortRiskRoute
+  '/ports': typeof PortsRoute
   '/privacy': typeof PrivacyRoute
-  '/rail-map': typeof RailMapRoute
   '/rates': typeof RatesRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/trade': typeof TradeRoute
   '/unsubscribe': typeof UnsubscribeRoute
-  '/admin/forecasts': typeof AdminForecastsRoute
-  '/admin/login': typeof AdminLoginRoute
-  '/admin/partner-rates': typeof AdminPartnerRatesRoute
-  '/admin/policies': typeof AdminPoliciesRoute
-  '/admin/routes': typeof AdminRoutesRoute
-  '/admin/subscribers': typeof AdminSubscribersRoute
   '/article/$slug': typeof ArticleSlugRoute
-  '/index1520/routes': typeof Index1520RoutesRoute
-  '/rail/americas': typeof RailAmericasRoute
-  '/rail/eurasia': typeof RailEurasiaRoute
-  '/rail/europe': typeof RailEuropeRoute
-  '/admin': typeof AdminIndexRoute
-  '/rail': typeof RailIndexRoute
   '/reports': typeof ReportsIndexRoute
   '/api/cron/indexnow': typeof ApiCronIndexnowRoute
   '/api/trade/brief': typeof ApiTradeBriefRoute
   '/api/webhooks/resend': typeof ApiWebhooksResendRoute
   '/reports/monthly/$month': typeof ReportsMonthlyMonthRoute
-  '/reports/weekly/$week': typeof ReportsWeeklyWeekRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
-  '/admin': typeof AdminRouteWithChildren
-  '/briefing': typeof BriefingRoute
   '/climate': typeof ClimateRoute
-  '/dashboard': typeof DashboardRoute
-  '/eurasia': typeof EurasiaRoute
   '/faq': typeof FaqRoute
-  '/forecasts': typeof ForecastsRoute
-  '/industries': typeof IndustriesRoute
   '/methodology': typeof MethodologyRoute
   '/news': typeof NewsRoute
   '/policy': typeof PolicyRoute
   '/port-risk': typeof PortRiskRoute
+  '/ports': typeof PortsRoute
   '/privacy': typeof PrivacyRoute
-  '/rail': typeof RailRouteWithChildren
-  '/rail-map': typeof RailMapRoute
   '/rates': typeof RatesRoute
   '/reports': typeof ReportsRouteWithChildren
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/trade': typeof TradeRoute
   '/unsubscribe': typeof UnsubscribeRoute
-  '/admin/forecasts': typeof AdminForecastsRoute
-  '/admin/login': typeof AdminLoginRoute
-  '/admin/partner-rates': typeof AdminPartnerRatesRoute
-  '/admin/policies': typeof AdminPoliciesRoute
-  '/admin/routes': typeof AdminRoutesRoute
-  '/admin/subscribers': typeof AdminSubscribersRoute
   '/article/$slug': typeof ArticleSlugRoute
-  '/index1520/routes': typeof Index1520RoutesRoute
-  '/rail/americas': typeof RailAmericasRoute
-  '/rail/eurasia': typeof RailEurasiaRoute
-  '/rail/europe': typeof RailEuropeRoute
-  '/admin/': typeof AdminIndexRoute
-  '/rail/': typeof RailIndexRoute
   '/reports/': typeof ReportsIndexRoute
   '/api/cron/indexnow': typeof ApiCronIndexnowRoute
   '/api/trade/brief': typeof ApiTradeBriefRoute
   '/api/webhooks/resend': typeof ApiWebhooksResendRoute
   '/reports/monthly/$month': typeof ReportsMonthlyMonthRoute
-  '/reports/weekly/$week': typeof ReportsWeeklyWeekRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
     | '/about'
-    | '/admin'
-    | '/briefing'
     | '/climate'
-    | '/dashboard'
-    | '/eurasia'
     | '/faq'
-    | '/forecasts'
-    | '/industries'
     | '/methodology'
     | '/news'
     | '/policy'
     | '/port-risk'
+    | '/ports'
     | '/privacy'
-    | '/rail'
-    | '/rail-map'
     | '/rates'
     | '/reports'
     | '/sitemap.xml'
     | '/trade'
     | '/unsubscribe'
-    | '/admin/forecasts'
-    | '/admin/login'
-    | '/admin/partner-rates'
-    | '/admin/policies'
-    | '/admin/routes'
-    | '/admin/subscribers'
     | '/article/$slug'
-    | '/index1520/routes'
-    | '/rail/americas'
-    | '/rail/eurasia'
-    | '/rail/europe'
-    | '/admin/'
-    | '/rail/'
     | '/reports/'
     | '/api/cron/indexnow'
     | '/api/trade/brief'
     | '/api/webhooks/resend'
     | '/reports/monthly/$month'
-    | '/reports/weekly/$week'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/about'
-    | '/briefing'
     | '/climate'
-    | '/dashboard'
-    | '/eurasia'
     | '/faq'
-    | '/forecasts'
-    | '/industries'
     | '/methodology'
     | '/news'
     | '/policy'
     | '/port-risk'
+    | '/ports'
     | '/privacy'
-    | '/rail-map'
     | '/rates'
     | '/sitemap.xml'
     | '/trade'
     | '/unsubscribe'
-    | '/admin/forecasts'
-    | '/admin/login'
-    | '/admin/partner-rates'
-    | '/admin/policies'
-    | '/admin/routes'
-    | '/admin/subscribers'
     | '/article/$slug'
-    | '/index1520/routes'
-    | '/rail/americas'
-    | '/rail/eurasia'
-    | '/rail/europe'
-    | '/admin'
-    | '/rail'
     | '/reports'
     | '/api/cron/indexnow'
     | '/api/trade/brief'
     | '/api/webhooks/resend'
     | '/reports/monthly/$month'
-    | '/reports/weekly/$week'
   id:
     | '__root__'
     | '/'
     | '/about'
-    | '/admin'
-    | '/briefing'
     | '/climate'
-    | '/dashboard'
-    | '/eurasia'
     | '/faq'
-    | '/forecasts'
-    | '/industries'
     | '/methodology'
     | '/news'
     | '/policy'
     | '/port-risk'
+    | '/ports'
     | '/privacy'
-    | '/rail'
-    | '/rail-map'
     | '/rates'
     | '/reports'
     | '/sitemap.xml'
     | '/trade'
     | '/unsubscribe'
-    | '/admin/forecasts'
-    | '/admin/login'
-    | '/admin/partner-rates'
-    | '/admin/policies'
-    | '/admin/routes'
-    | '/admin/subscribers'
     | '/article/$slug'
-    | '/index1520/routes'
-    | '/rail/americas'
-    | '/rail/eurasia'
-    | '/rail/europe'
-    | '/admin/'
-    | '/rail/'
     | '/reports/'
     | '/api/cron/indexnow'
     | '/api/trade/brief'
     | '/api/webhooks/resend'
     | '/reports/monthly/$month'
-    | '/reports/weekly/$week'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
-  AdminRoute: typeof AdminRouteWithChildren
-  BriefingRoute: typeof BriefingRoute
   ClimateRoute: typeof ClimateRoute
-  DashboardRoute: typeof DashboardRoute
-  EurasiaRoute: typeof EurasiaRoute
   FaqRoute: typeof FaqRoute
-  ForecastsRoute: typeof ForecastsRoute
-  IndustriesRoute: typeof IndustriesRoute
   MethodologyRoute: typeof MethodologyRoute
   NewsRoute: typeof NewsRoute
   PolicyRoute: typeof PolicyRoute
   PortRiskRoute: typeof PortRiskRoute
+  PortsRoute: typeof PortsRoute
   PrivacyRoute: typeof PrivacyRoute
-  RailRoute: typeof RailRouteWithChildren
-  RailMapRoute: typeof RailMapRoute
   RatesRoute: typeof RatesRoute
   ReportsRoute: typeof ReportsRouteWithChildren
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   TradeRoute: typeof TradeRoute
   UnsubscribeRoute: typeof UnsubscribeRoute
   ArticleSlugRoute: typeof ArticleSlugRoute
-  Index1520RoutesRoute: typeof Index1520RoutesRoute
   ApiCronIndexnowRoute: typeof ApiCronIndexnowRoute
   ApiTradeBriefRoute: typeof ApiTradeBriefRoute
   ApiWebhooksResendRoute: typeof ApiWebhooksResendRoute
@@ -580,25 +336,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RatesRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/rail-map': {
-      id: '/rail-map'
-      path: '/rail-map'
-      fullPath: '/rail-map'
-      preLoaderRoute: typeof RailMapRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/rail': {
-      id: '/rail'
-      path: '/rail'
-      fullPath: '/rail'
-      preLoaderRoute: typeof RailRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/privacy': {
       id: '/privacy'
       path: '/privacy'
       fullPath: '/privacy'
       preLoaderRoute: typeof PrivacyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/ports': {
+      id: '/ports'
+      path: '/ports'
+      fullPath: '/ports'
+      preLoaderRoute: typeof PortsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/port-risk': {
@@ -629,20 +378,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MethodologyRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/industries': {
-      id: '/industries'
-      path: '/industries'
-      fullPath: '/industries'
-      preLoaderRoute: typeof IndustriesRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/forecasts': {
-      id: '/forecasts'
-      path: '/forecasts'
-      fullPath: '/forecasts'
-      preLoaderRoute: typeof ForecastsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/faq': {
       id: '/faq'
       path: '/faq'
@@ -650,39 +385,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof FaqRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/eurasia': {
-      id: '/eurasia'
-      path: '/eurasia'
-      fullPath: '/eurasia'
-      preLoaderRoute: typeof EurasiaRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/dashboard': {
-      id: '/dashboard'
-      path: '/dashboard'
-      fullPath: '/dashboard'
-      preLoaderRoute: typeof DashboardRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/climate': {
       id: '/climate'
       path: '/climate'
       fullPath: '/climate'
       preLoaderRoute: typeof ClimateRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/briefing': {
-      id: '/briefing'
-      path: '/briefing'
-      fullPath: '/briefing'
-      preLoaderRoute: typeof BriefingRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/admin': {
-      id: '/admin'
-      path: '/admin'
-      fullPath: '/admin'
-      preLoaderRoute: typeof AdminRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/about': {
@@ -706,103 +413,12 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ReportsIndexRouteImport
       parentRoute: typeof ReportsRoute
     }
-    '/rail/': {
-      id: '/rail/'
-      path: '/'
-      fullPath: '/rail/'
-      preLoaderRoute: typeof RailIndexRouteImport
-      parentRoute: typeof RailRoute
-    }
-    '/admin/': {
-      id: '/admin/'
-      path: '/'
-      fullPath: '/admin/'
-      preLoaderRoute: typeof AdminIndexRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/rail/europe': {
-      id: '/rail/europe'
-      path: '/europe'
-      fullPath: '/rail/europe'
-      preLoaderRoute: typeof RailEuropeRouteImport
-      parentRoute: typeof RailRoute
-    }
-    '/rail/eurasia': {
-      id: '/rail/eurasia'
-      path: '/eurasia'
-      fullPath: '/rail/eurasia'
-      preLoaderRoute: typeof RailEurasiaRouteImport
-      parentRoute: typeof RailRoute
-    }
-    '/rail/americas': {
-      id: '/rail/americas'
-      path: '/americas'
-      fullPath: '/rail/americas'
-      preLoaderRoute: typeof RailAmericasRouteImport
-      parentRoute: typeof RailRoute
-    }
-    '/index1520/routes': {
-      id: '/index1520/routes'
-      path: '/index1520/routes'
-      fullPath: '/index1520/routes'
-      preLoaderRoute: typeof Index1520RoutesRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/article/$slug': {
       id: '/article/$slug'
       path: '/article/$slug'
       fullPath: '/article/$slug'
       preLoaderRoute: typeof ArticleSlugRouteImport
       parentRoute: typeof rootRouteImport
-    }
-    '/admin/subscribers': {
-      id: '/admin/subscribers'
-      path: '/subscribers'
-      fullPath: '/admin/subscribers'
-      preLoaderRoute: typeof AdminSubscribersRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/admin/routes': {
-      id: '/admin/routes'
-      path: '/routes'
-      fullPath: '/admin/routes'
-      preLoaderRoute: typeof AdminRoutesRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/admin/policies': {
-      id: '/admin/policies'
-      path: '/policies'
-      fullPath: '/admin/policies'
-      preLoaderRoute: typeof AdminPoliciesRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/admin/partner-rates': {
-      id: '/admin/partner-rates'
-      path: '/partner-rates'
-      fullPath: '/admin/partner-rates'
-      preLoaderRoute: typeof AdminPartnerRatesRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/admin/login': {
-      id: '/admin/login'
-      path: '/login'
-      fullPath: '/admin/login'
-      preLoaderRoute: typeof AdminLoginRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/admin/forecasts': {
-      id: '/admin/forecasts'
-      path: '/forecasts'
-      fullPath: '/admin/forecasts'
-      preLoaderRoute: typeof AdminForecastsRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/reports/weekly/$week': {
-      id: '/reports/weekly/$week'
-      path: '/weekly/$week'
-      fullPath: '/reports/weekly/$week'
-      preLoaderRoute: typeof ReportsWeeklyWeekRouteImport
-      parentRoute: typeof ReportsRoute
     }
     '/reports/monthly/$month': {
       id: '/reports/monthly/$month'
@@ -835,54 +451,14 @@ declare module '@tanstack/react-router' {
   }
 }
 
-interface AdminRouteChildren {
-  AdminForecastsRoute: typeof AdminForecastsRoute
-  AdminLoginRoute: typeof AdminLoginRoute
-  AdminPartnerRatesRoute: typeof AdminPartnerRatesRoute
-  AdminPoliciesRoute: typeof AdminPoliciesRoute
-  AdminRoutesRoute: typeof AdminRoutesRoute
-  AdminSubscribersRoute: typeof AdminSubscribersRoute
-  AdminIndexRoute: typeof AdminIndexRoute
-}
-
-const AdminRouteChildren: AdminRouteChildren = {
-  AdminForecastsRoute: AdminForecastsRoute,
-  AdminLoginRoute: AdminLoginRoute,
-  AdminPartnerRatesRoute: AdminPartnerRatesRoute,
-  AdminPoliciesRoute: AdminPoliciesRoute,
-  AdminRoutesRoute: AdminRoutesRoute,
-  AdminSubscribersRoute: AdminSubscribersRoute,
-  AdminIndexRoute: AdminIndexRoute,
-}
-
-const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
-
-interface RailRouteChildren {
-  RailAmericasRoute: typeof RailAmericasRoute
-  RailEurasiaRoute: typeof RailEurasiaRoute
-  RailEuropeRoute: typeof RailEuropeRoute
-  RailIndexRoute: typeof RailIndexRoute
-}
-
-const RailRouteChildren: RailRouteChildren = {
-  RailAmericasRoute: RailAmericasRoute,
-  RailEurasiaRoute: RailEurasiaRoute,
-  RailEuropeRoute: RailEuropeRoute,
-  RailIndexRoute: RailIndexRoute,
-}
-
-const RailRouteWithChildren = RailRoute._addFileChildren(RailRouteChildren)
-
 interface ReportsRouteChildren {
   ReportsIndexRoute: typeof ReportsIndexRoute
   ReportsMonthlyMonthRoute: typeof ReportsMonthlyMonthRoute
-  ReportsWeeklyWeekRoute: typeof ReportsWeeklyWeekRoute
 }
 
 const ReportsRouteChildren: ReportsRouteChildren = {
   ReportsIndexRoute: ReportsIndexRoute,
   ReportsMonthlyMonthRoute: ReportsMonthlyMonthRoute,
-  ReportsWeeklyWeekRoute: ReportsWeeklyWeekRoute,
 }
 
 const ReportsRouteWithChildren =
@@ -891,28 +467,20 @@ const ReportsRouteWithChildren =
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
-  AdminRoute: AdminRouteWithChildren,
-  BriefingRoute: BriefingRoute,
   ClimateRoute: ClimateRoute,
-  DashboardRoute: DashboardRoute,
-  EurasiaRoute: EurasiaRoute,
   FaqRoute: FaqRoute,
-  ForecastsRoute: ForecastsRoute,
-  IndustriesRoute: IndustriesRoute,
   MethodologyRoute: MethodologyRoute,
   NewsRoute: NewsRoute,
   PolicyRoute: PolicyRoute,
   PortRiskRoute: PortRiskRoute,
+  PortsRoute: PortsRoute,
   PrivacyRoute: PrivacyRoute,
-  RailRoute: RailRouteWithChildren,
-  RailMapRoute: RailMapRoute,
   RatesRoute: RatesRoute,
   ReportsRoute: ReportsRouteWithChildren,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   TradeRoute: TradeRoute,
   UnsubscribeRoute: UnsubscribeRoute,
   ArticleSlugRoute: ArticleSlugRoute,
-  Index1520RoutesRoute: Index1520RoutesRoute,
   ApiCronIndexnowRoute: ApiCronIndexnowRoute,
   ApiTradeBriefRoute: ApiTradeBriefRoute,
   ApiWebhooksResendRoute: ApiWebhooksResendRoute,

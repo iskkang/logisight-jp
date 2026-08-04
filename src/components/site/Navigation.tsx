@@ -4,24 +4,22 @@ import { Menu, Moon, Sun, X } from "lucide-react";
 import { Logo } from "./Logo";
 import { useDarkMode } from "@/hooks/useDarkMode";
 
-// 프로토타입 메뉴 구조 — 상단 GNB 3개 + 대시보드 하위 서브메뉴 7개.
-// 홈은 로고/홈 버튼(→/), 대시보드 진입 시 서브 GNB가 나타난다.
+// 上部 GNB 4件 + インサイト配下のサブメニュー。
+// 日本のデータで裏付けられるページだけを載せる — 韓国専用の指標(KITA・関税庁)や
+// ユーラシア鉄道は日本版では扱わない。
 const GNB = [
-  { to: "/", label: "홈" },
-  { to: "/news", label: "뉴스" },
-  { to: "/dashboard", label: "인사이트" },
-  { to: "/reports", label: "리포트" },
+  { to: "/", label: "ホーム" },
+  { to: "/news", label: "ニュース" },
+  { to: "/rates", label: "インサイト" },
+  { to: "/reports", label: "レポート" },
 ] as const;
 
 const SUB_GNB = [
-  { to: "/dashboard", label: "종합" },
-  { to: "/forecasts", label: "전망" },
-  { to: "/rates", label: "운임" },
-  { to: "/rail", label: "철도" },
-  { to: "/port-risk", label: "포트" },
-  { to: "/trade", label: "무역" },
-  { to: "/industries", label: "산업" },
-  { to: "/climate", label: "기상" },
+  { to: "/rates", label: "運賃" },
+  { to: "/ports", label: "港湾" },
+  { to: "/trade", label: "貿易" },
+  { to: "/climate", label: "気象" },
+  { to: "/port-risk", label: "リスク" },
 ] as const;
 
 // 대시보드(다크 토글 허용) 영역
@@ -36,9 +34,7 @@ export function Navigation() {
   const { dark, toggle } = useDarkMode();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const inDash = isDashboardPath(pathname);
-  // 종합(/dashboard)은 라이트 전용 디자인(dashboard.css) → 다크 토글 숨김.
-  const isInsightHome = pathname === "/dashboard" || pathname.startsWith("/dashboard/");
-  const showThemeToggle = inDash && !isInsightHome;
+  const showThemeToggle = inDash;
 
   const topActive = (to: string): boolean => {
     if (to === "/") return pathname === "/";
@@ -77,11 +73,11 @@ export function Navigation() {
               <button
                 type="button"
                 onClick={toggle}
-                aria-label={dark ? "라이트 모드로 전환" : "다크 모드로 전환"}
+                aria-label={dark ? "ライトモードに切り替え" : "ダークモードに切り替え"}
                 className="inline-flex items-center gap-1.5 rounded-md border border-white/20 px-2.5 py-1 text-[11px] font-medium text-white/70 hover:bg-white/10 hover:text-white transition-colors"
               >
                 {dark ? <Sun className="h-3.5 w-3.5" /> : <Moon className="h-3.5 w-3.5" />}
-                <span>{dark ? "라이트" : "다크"}</span>
+                <span>{dark ? "ライト" : "ダーク"}</span>
               </button>
             )}
           </div>
@@ -90,7 +86,7 @@ export function Navigation() {
             type="button"
             className="absolute right-4 top-2.5 inline-flex h-9 w-9 items-center justify-center rounded-md border border-white/30 bg-white/15 text-white lg:hidden"
             onClick={() => setOpen((v) => !v)}
-            aria-label="메뉴 열기"
+            aria-label="メニューを開く"
           >
             {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </button>
@@ -132,11 +128,11 @@ export function Navigation() {
                   <button
                     type="button"
                     onClick={toggle}
-                    aria-label={dark ? "라이트 모드로 전환" : "다크 모드로 전환"}
+                    aria-label={dark ? "ライトモードに切り替え" : "ダークモードに切り替え"}
                     className="inline-flex items-center gap-1.5 rounded-md border border-white/20 px-2.5 py-1.5 text-[11px] font-medium text-white/70 hover:bg-white/10 hover:text-white"
                   >
                     {dark ? <Sun className="h-3.5 w-3.5" /> : <Moon className="h-3.5 w-3.5" />}
-                    <span>{dark ? "라이트" : "다크"}</span>
+                    <span>{dark ? "ライト" : "ダーク"}</span>
                   </button>
                 </div>
               )}
@@ -145,7 +141,7 @@ export function Navigation() {
         )}
       </div>
 
-      {/* 대시보드 서브 GNB — 종합 | 전망 | 운임 | 유라시아 | 포트 | 무역 | 산업 */}
+      {/* インサイト サブ GNB — 運賃 | 港湾 | 貿易 | 気象 | リスク */}
       {inDash && (
         <div
           className="hidden border-b border-white/10 lg:block"
