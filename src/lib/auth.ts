@@ -57,6 +57,29 @@ export async function signOut() {
 }
 
 /** 現在のセッション。未ログインなら null。SSR では null から始まる。 */
+/**
+ * OAuth から戻ってきたときのエラーを拾う。
+ *
+ * 失敗すると Supabase は本文ではなく URL に理由を載せて返す
+ * (implicit flow なので `#error=...&error_description=...`)。誰も読まないと
+ * 「押したのに何も起きない」ようにしか見えない — 実際にそれで原因が分からず、
+ * 同意画面は出るのにアカウントが作られない状態を追うのに時間を使った。
+ *
+ * 読んだら URL からは消す。再読み込みのたびに古いエラーが出ると混乱する。
+ */
+export function takeOAuthError(): string | null {
+  if (typeof window === "undefined") return null;
+  const from = (s: string) => new URLSearchParams(s.replace(/^[#?]/, ""));
+  for (const params of [from(window.location.hash), from(window.location.search)]) {
+    const code = params.get("error") || params.get("error_code");
+    if (!code) continue;
+    const desc = params.get("error_description");
+    window.history.replaceState(null, "", window.location.pathname);
+    return desc ? decodeURIComponent(desc).replace(/\+/g, " ") : code;
+  }
+  return null;
+}
+
 export function useSession(): { session: Session | null; loading: boolean } {
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);

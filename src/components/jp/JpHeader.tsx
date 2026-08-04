@@ -1,9 +1,9 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Menu, X } from "lucide-react";
 
 import { AuthModal, type AuthMode } from "./AuthModal";
-import { signOut, useSession } from "@/lib/auth";
+import { signOut, takeOAuthError, useSession } from "@/lib/auth";
 
 // ヘッダー。白地・細い罫線に、現在地を藍の下線で示す。
 // メニューは隠さず一列に並べる — 日本の業界メディアの導線に合わせる。
@@ -21,7 +21,11 @@ const NAV = [
 export function JpHeader({ today }: { today: string }) {
   const [open, setOpen] = useState(false);
   const [auth, setAuth] = useState<AuthMode | null>(null);
+  const [oauthError, setOauthError] = useState<string | null>(null);
   const { session, loading } = useSession();
+
+  // OAuth の失敗理由は URL にしか載らない。読まないと「押しても何も起きない」に見える。
+  useEffect(() => setOauthError(takeOAuthError()), []);
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const active = (to: string) =>
     to === "/" ? pathname === "/" : pathname === to || pathname.startsWith(`${to}/`);
@@ -150,6 +154,15 @@ export function JpHeader({ today }: { today: string }) {
             </div>
           </div>
         </nav>
+      )}
+
+      {oauthError && (
+        <div className="border-t border-[#f3c9c4] bg-[#fdecea] px-4 py-2.5 text-[12.5px] leading-[1.55] text-[#c0392b]">
+          <div className="mx-auto flex max-w-[1120px] items-start gap-3">
+            <span className="flex-1">ソーシャルログインに失敗しました: {oauthError}</span>
+            <button type="button" onClick={() => setOauthError(null)} className="flex-none font-bold">閉じる</button>
+          </div>
+        </div>
       )}
 
       <AuthModal open={auth !== null} mode={auth ?? "login"} onClose={() => setAuth(null)} />
