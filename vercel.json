@@ -12,7 +12,6 @@
   ],
   "rewrites": [
     {
-      "comment": "日本版のレポートは ja/monthly/... と言語ディレクトリを挟む。韓国版と同じ 2 段の規則だけだと 404 になる。",
       "source": "/reports/:lang/:type/:file",
       "destination": "https://hmgbvqczmyjixkqbruzp.supabase.co/storage/v1/object/public/reports/:lang/:type/:file"
     },
