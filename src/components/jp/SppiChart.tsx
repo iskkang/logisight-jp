@@ -35,7 +35,7 @@ export function SppiChart({
       </figcaption>
       <div className="h-[190px]">
         <ResponsiveContainer width="100%" height="100%">
-          <LineChart data={points} margin={{ top: 4, right: 6, bottom: 0, left: -18 }}>
+          <LineChart data={points} margin={{ top: 4, right: 6, bottom: 0, left: 0 }}>
             <CartesianGrid stroke="#eef0f2" vertical={false} />
             <XAxis
               dataKey="label"
@@ -48,7 +48,7 @@ export function SppiChart({
               tick={{ fontSize: 10, fill: "#8a929c" }}
               tickLine={false}
               axisLine={false}
-              width={44}
+              width={38}
               domain={["dataMin - 10", "dataMax + 10"]}
             />
             {/* 基準年の水準。契約通貨ベースがこの線を割ると実質は基準年以下。 */}

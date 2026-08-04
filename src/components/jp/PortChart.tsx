@@ -29,7 +29,7 @@ export function PortTotalChart({ points }: { points: PortSeriesPoint[] }) {
       </figcaption>
       <div className="h-[210px]">
         <ResponsiveContainer width="100%" height="100%">
-          <ComposedChart data={data} margin={{ top: 4, right: 2, bottom: 0, left: -14 }}>
+          <ComposedChart data={data} margin={{ top: 4, right: 2, bottom: 0, left: 0 }}>
             <CartesianGrid stroke="#eef0f2" vertical={false} />
             <XAxis dataKey="label" tick={{ fontSize: 10, fill: "#8a929c" }} tickLine={false} axisLine={{ stroke: "#d5d9de" }} interval={1} />
             <YAxis yAxisId="l" tickFormatter={fmtM} tick={{ fontSize: 10, fill: "#8a929c" }} tickLine={false} axisLine={false} width={48} />
@@ -61,7 +61,7 @@ export function PortYoyChart({ ports }: { ports: PortLatest[] }) {
       </figcaption>
       <div className="h-[210px]">
         <ResponsiveContainer width="100%" height="100%">
-          <BarChart data={data} margin={{ top: 4, right: 6, bottom: 0, left: -20 }}>
+          <BarChart data={data} margin={{ top: 4, right: 6, bottom: 0, left: 0 }}>
             <CartesianGrid stroke="#eef0f2" vertical={false} />
             <XAxis dataKey="name" tick={{ fontSize: 10.5, fill: "#6b7683" }} tickLine={false} axisLine={{ stroke: "#d5d9de" }} />
             <YAxis tickFormatter={(v: number) => `${v > 0 ? "+" : ""}${v.toFixed(0)}%`} tick={{ fontSize: 10, fill: "#8a929c" }} tickLine={false} axisLine={false} width={44} />
