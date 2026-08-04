@@ -29,7 +29,9 @@ export const getEurasiaRailBrief = createServerFn({ method: "GET" }).handler(asy
       };
     };
   };
-  const { data, error } = await sb.from("eurasia_charts").select("payload").eq("key", "rail_brief").maybeSingle();
+  // 日本語ブリーフは別キー(rail_brief_ja)。'rail_brief' は韓国語なので読まない。
+  // 生成前の期間は null になる — 韓国語を出すよりは空のほうがよい。
+  const { data, error } = await sb.from("eurasia_charts").select("payload").eq("key", "rail_brief_ja").maybeSingle();
   if (error) throw new Error(error.message);
   const p = data?.payload ?? null;
   return {
