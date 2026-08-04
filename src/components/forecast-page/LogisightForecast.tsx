@@ -102,7 +102,7 @@ function Donut({ pct }: { pct: number }) {
 /* ---------- forecast detail chart (실 시계열 + 見通し cone) ---------- */
 function ForecastDetailChart({ series, f }: { series?: ForecastSeries; f: Forecast }) {
   const pts = series?.points ?? [];
-  if (pts.length < 2) return <div className="grid h-[200px] place-items-center text-[12px] text-[#828d9d]">見通し 데이터 収集中</div>;
+  if (pts.length < 2) return <div className="grid h-[200px] place-items-center text-[12px] text-[#828d9d]">見通しデータを収集中</div>;
   const last = pts[pts.length - 1].value;
   const lo = f.range_low_pct, hi = f.range_high_pct;
   const projHi = hi != null ? last * (1 + hi / 100) : last;
@@ -138,7 +138,7 @@ function ForecastDetailChart({ series, f }: { series?: ForecastSeries; f: Foreca
       <polygon points={`${lastX.toFixed(1)},${lastY.toFixed(1)} ${projX.toFixed(1)},${Y(projHi).toFixed(1)} ${projX.toFixed(1)},${Y(projLo).toFixed(1)}`} fill="url(#lsgf-cone)" />
       <polygon points={`${histPts} ${lastX.toFixed(1)},${(pT + ih).toFixed(1)} ${X(0).toFixed(1)},${(pT + ih).toFixed(1)}`} fill="url(#lsgf-area)" />
       <line x1={lastX.toFixed(1)} y1={pT} x2={lastX.toFixed(1)} y2={pT + ih} stroke="#c7d0dc" strokeWidth="1" strokeDasharray="3 4" />
-      <text x={(lastX + 6).toFixed(1)} y={pT + ih - 8} fontSize="10" fill="#0d9488" fontFamily={FONT} fontWeight="600">見通し 구간</text>
+      <text x={(lastX + 6).toFixed(1)} y={pT + ih - 8} fontSize="10" fill="#0d9488" fontFamily={FONT} fontWeight="600">見通し区間</text>
       <polyline points={histPts} fill="none" stroke="#0d9488" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" />
       <polyline points={`${lastX.toFixed(1)},${lastY.toFixed(1)} ${projX.toFixed(1)},${Y(projMid).toFixed(1)}`} fill="none" stroke={projColor} strokeWidth="2.4" strokeDasharray="6 5" strokeLinecap="round" />
       <circle cx={projX.toFixed(1)} cy={Y(projMid).toFixed(1)} r="4" fill={projColor} />
@@ -160,9 +160,9 @@ function Hero({ kpis, lastUpdated, modules, activeModule, onModule }: {
   modules: { key: string; label: string }[]; activeModule: string | null; onModule: (k: string | null) => void;
 }) {
   const pills: { c: string; label: string; value: string }[] = [
-    { c: "bg-[#2dd4bf]", label: "이번 주 발행", value: `${kpis.publishedThisWeek}件` },
-    { c: "bg-[#d97706]", label: "판정 대기", value: `${kpis.awaitingJudgment}件` },
-    { c: "bg-[#3b82f6]", label: "최종 업데이트", value: fmtKstStamp(lastUpdated) },
+    { c: "bg-[#2dd4bf]", label: "今週の発行", value: `${kpis.publishedThisWeek}件` },
+    { c: "bg-[#d97706]", label: "判定待ち", value: `${kpis.awaitingJudgment}件` },
+    { c: "bg-[#3b82f6]", label: "最終更新", value: fmtKstStamp(lastUpdated) },
   ];
   return (
     <section className="relative overflow-hidden bg-[#070b16]">
@@ -193,8 +193,8 @@ function Hero({ kpis, lastUpdated, modules, activeModule, onModule }: {
       <div className={`${WRAP} relative z-[1]`}>
         <div className="max-w-[760px] pt-[58px] pb-[68px]">
           <span className="text-[11px] font-bold uppercase tracking-[0.22em] text-[#2dd4bf]">Verified Forecast</span>
-          <h1 className="mt-3.5 text-[clamp(32px,4.4vw,50px)] font-extrabold leading-[1.06] tracking-[-0.035em] text-[#e9eef7]">물류 시장 <span className="text-[#2dd4bf]">見通し</span></h1>
-          <p className="mt-4 max-w-[640px] text-[15px] leading-[1.6] text-[#93a1b7]">Logisight AI가 현재와 과거 데이터를 분석하여 運賃 방향을 見通し합니다.</p>
+          <h1 className="mt-3.5 text-[clamp(32px,4.4vw,50px)] font-extrabold leading-[1.06] tracking-[-0.035em] text-[#e9eef7]">物流市場 <span className="text-[#2dd4bf]">見通し</span></h1>
+          <p className="mt-4 max-w-[640px] text-[15px] leading-[1.6] text-[#93a1b7]">Logisight AI が現在と過去のデータを分析し、運賃の方向を見通します。</p>
           {modules.length > 0 && (
             <div className="mt-[18px] flex flex-wrap gap-2">
               <button type="button" onClick={() => onModule(null)} className={`rounded-full border px-3 py-[5px] text-[12px] ${activeModule == null ? "border-[#2dd4bf73] bg-[#0e2a2a] text-[#2dd4bf]" : "border-[#78a0cd1c] bg-[#0e1626] text-[#93a1b7]"}`}>전체</button>
@@ -219,11 +219,11 @@ function Hero({ kpis, lastUpdated, modules, activeModule, onModule }: {
 /* ============================ KPIs ============================ */
 function Kpis({ kpis }: { kpis: ReturnType<typeof computeKpis> }) {
   const items = [
-    { lab: "방향 적중률 (12주)", ic: "✓", bg: "#16a34a", v: kpis.hitRate.gate ? "누적 중" : `${kpis.hitRate.rate}%`, num: false, s: kpis.hitRate.gate ? `판정 표본 ${kpis.hitRate.sample}/10` : `${kpis.hitRate.sample}件 판정 기준` },
-    { lab: "이번 주 발행", ic: "+", bg: "#0d9488", v: `${kpis.publishedThisWeek}件`, num: true, s: "검수 통과 발행" },
-    { lab: "판정 대기", ic: "⏳", bg: "#d97706", v: `${kpis.awaitingJudgment}件`, num: true, s: "확인 일정 전" },
-    { lab: "근거 데이터 平均", ic: "◉", bg: "#3b82f6", v: kpis.avgEvidence != null ? `${kpis.avgEvidence}/5` : "—", num: true, s: "발행 見通し 기준" },
-    { lab: "平均 리드타임", ic: "→", bg: "#64748b", v: kpis.leadTimeDays != null ? `${kpis.leadTimeDays}일` : "—", num: true, s: "발행 → 판정" },
+    { lab: "方向的中率(12週)", ic: "✓", bg: "#16a34a", v: kpis.hitRate.gate ? "集計中" : `${kpis.hitRate.rate}%`, num: false, s: kpis.hitRate.gate ? `判定サンプル ${kpis.hitRate.sample}/10` : `${kpis.hitRate.sample}件 판정 기준` },
+    { lab: "今週の発行", ic: "+", bg: "#0d9488", v: `${kpis.publishedThisWeek}件`, num: true, s: "校閲を通過して発行" },
+    { lab: "判定待ち", ic: "⏳", bg: "#d97706", v: `${kpis.awaitingJudgment}件`, num: true, s: "確認予定日の前" },
+    { lab: "根拠データ 平均", ic: "◉", bg: "#3b82f6", v: kpis.avgEvidence != null ? `${kpis.avgEvidence}/5` : "—", num: true, s: "発行済みの見通しが基準" },
+    { lab: "平均リードタイム", ic: "→", bg: "#64748b", v: kpis.leadTimeDays != null ? `${kpis.leadTimeDays}일` : "—", num: true, s: "発行 → 判定" },
   ];
   return (
     <div className="mt-[22px] grid grid-cols-1 gap-3.5 min-[640px]:grid-cols-3 min-[1080px]:grid-cols-5">
@@ -247,8 +247,8 @@ function TrendBlock({ trend }: { trend: ReturnType<typeof hitRateTrend> }) {
   return (
     <div className={`mt-3.5 px-[22px] py-5 ${CARD}`}>
       <div className="mb-2.5 flex items-center gap-2.5">
-        <b className="text-[16px] font-bold text-[#1a2433]">주간 방향 적중률 추이</b>
-        <span className="rounded-full border border-[#d8dfe9] bg-[#eef1f6] px-[9px] py-[3px] text-[11px] text-[#828d9d]">최근 12주 · 분모 = 발행 전수</span>
+        <b className="text-[16px] font-bold text-[#1a2433]">週次の方向的中率の推移</b>
+        <span className="rounded-full border border-[#d8dfe9] bg-[#eef1f6] px-[9px] py-[3px] text-[11px] text-[#828d9d]">直近12週 · 分母は発行全件</span>
       </div>
       {hasTrend ? (
         <ResponsiveContainer width="100%" height={200}>
@@ -256,16 +256,16 @@ function TrendBlock({ trend }: { trend: ReturnType<typeof hitRateTrend> }) {
             <CartesianGrid stroke="#dde4ee" vertical={false} />
             <XAxis dataKey="label" tick={{ fontSize: 10, fill: "#828d9d" }} axisLine={false} tickLine={false} />
             <YAxis domain={[0, 100]} ticks={[0, 20, 40, 60, 80, 100]} tickFormatter={(v: number) => `${v}%`} width={40} tick={{ fontSize: 10, fill: "#828d9d" }} axisLine={false} tickLine={false} />
-            <Tooltip formatter={(v: number) => [`${v}%`, "방향 적중률"]} contentStyle={{ background: "#fff", border: "1px solid #d8dfe9", borderRadius: 8, fontSize: 12 }} />
-            <ReferenceLine y={60} stroke="#828d9d" strokeDasharray="4 4" label={{ value: "목표 60%", position: "insideTopRight", fontSize: 10, fill: "#828d9d" }} />
+            <Tooltip formatter={(v: number) => [`${v}%`, "方向的中率"]} contentStyle={{ background: "#fff", border: "1px solid #d8dfe9", borderRadius: 8, fontSize: 12 }} />
+            <ReferenceLine y={60} stroke="#828d9d" strokeDasharray="4 4" label={{ value: "目標 60%", position: "insideTopRight", fontSize: 10, fill: "#828d9d" }} />
             <Line dataKey="rate" stroke="#16a34a" strokeWidth={2} dot={false} connectNulls />
           </LineChart>
         </ResponsiveContainer>
       ) : (
         <div className="relative h-32 overflow-hidden rounded-[10px] border border-[#d8dfe9] bg-gradient-to-b from-[#eef2f8] to-[#f4f7fb]">
           <div className="absolute inset-0 flex flex-col items-center justify-center gap-[3px]">
-            <b className="text-[13px] font-semibold text-[#54606f]">데이터 収集中</b>
-            <span className="text-[11.5px] text-[#828d9d]">판정된 見通し이 누적되면 주간 적중률 추이가 표시됩니다.</span>
+            <b className="text-[13px] font-semibold text-[#54606f]">データ収集中</b>
+            <span className="text-[11.5px] text-[#828d9d]">判定済みの見通しが貯まると、週次の的中率推移を表示します。</span>
           </div>
         </div>
       )}
@@ -274,8 +274,8 @@ function TrendBlock({ trend }: { trend: ReturnType<typeof hitRateTrend> }) {
 }
 
 /* ============================ FILTERS ============================ */
-const CAD_SEG = ["전체", "주간", "월간"] as const;
-const DIR_SEG = ["전체 방향", "상승", "보합", "하락"] as const;
+const CAD_SEG = ["すべて", "週次", "月次"] as const;
+const DIR_SEG = ["すべての方向", "上昇", "横ばい", "下落"] as const;
 function Seg<T extends string>({ items, value, onChange }: { items: readonly T[]; value: T; onChange: (v: T) => void }) {
   return (
     <div className="inline-flex gap-[3px] rounded-[9px] border border-[#d8dfe9] bg-[#e7ecf3] p-[3px]">
@@ -304,7 +304,7 @@ function ForecastCards({ cards, series, selectedId, onSelect }: {
             role="button"
             tabIndex={0}
             aria-pressed={c.id === selectedId}
-            aria-label={`${displayLabelOf(c)} 見通し 상세 보기`}
+            aria-label={`${displayLabelOf(c)} 見通しの詳細`}
             onClick={() => onSelect(c.id)}
             onKeyDown={(e) => {
               if (e.key === "Enter" || e.key === " ") {
@@ -318,10 +318,10 @@ function ForecastCards({ cards, series, selectedId, onSelect }: {
               <span className="text-[15px] font-extrabold text-[#1a2433]">{displayLabelOf(c)}</span>
               <span className={`inline-flex items-center gap-1 rounded-[6px] px-2 py-[3px] text-[11.5px] font-bold ${up ? "border border-[#c7ead6] bg-[#ecfdf3] text-[#067647]" : c.direction === "down" ? "border border-[#fbd5d5] bg-[#fef2f2] text-[#dc2626]" : "border border-[#d8dfe9] bg-[#eef1f6] text-[#54606f]"}`}>{dir.glyph} {c.expected_range_pct ?? dir.label}</span>
             </div>
-            <div className="mt-2 flex items-center gap-2"><span className="text-[11.5px] text-[#828d9d]">근거 {ev.present}/{ev.total}</span><Dots n={ev.present} total={ev.total} /></div>
+            <div className="mt-2 flex items-center gap-2"><span className="text-[11.5px] text-[#828d9d]">根拠 {ev.present}/{ev.total}</span><Dots n={ev.present} total={ev.total} /></div>
             {sp.length > 1 && <Spark vals={sp} color={up ? "#16a34a" : c.direction === "down" ? "#dc2626" : "#94a3b8"} className="my-[10px] block h-[38px] w-full" />}
             <p className="mt-2 text-[12.5px] leading-[1.55] text-[#54606f]">{cardLead(c.statement)}</p>
-            {src && <div className="mt-[9px] text-[11px] text-[#828d9d]">기준 지표: {src}</div>}
+            {src && <div className="mt-[9px] text-[11px] text-[#828d9d]">基準指標: {src}</div>}
           </div>
         );
       })}
@@ -335,37 +335,37 @@ function DetailPanel({ f, series }: { f: Forecast; series?: ForecastSeries }) {
   const dir = DIR_META[f.direction ?? "flat"] ?? DIR_META.flat;
   const insights = sentences(f.statement);
   const dd = dDay(f.horizon_date);
-  const cadenceLabel = f.cadence === "weekly" ? "주간" : f.cadence === "monthly" ? "월간" : "—";
+  const cadenceLabel = f.cadence === "weekly" ? "週次" : f.cadence === "monthly" ? "月次" : "—";
   const dirColor = up ? "text-[#16a34a]" : f.direction === "down" ? "text-[#dc2626]" : "text-[#54606f]";
   return (
     <div className={`mt-3.5 p-6 ${CARD}`}>
       <div className="flex items-center justify-between">
         <span className="text-[12.5px] text-[#828d9d]">{displayLabelOf(f)} · {cadenceLabel}</span>
         <span className="flex items-center gap-2 text-[11.5px]">
-          {f.horizon_date && <span className="rounded-full border border-[#d8dfe9] bg-[#eef1f6] px-[9px] py-[3px] lsg-mono text-[#54606f]">판정 {f.horizon_date.slice(5)}</span>}
+          {f.horizon_date && <span className="rounded-full border border-[#d8dfe9] bg-[#eef1f6] px-[9px] py-[3px] lsg-mono text-[#54606f]">判定 {f.horizon_date.slice(5)}</span>}
           {dd && <span className="rounded-full border border-[#c7ead6] bg-[#ecfdf3] px-[9px] py-[3px] lsg-mono font-semibold text-[#067647]">{dd}</span>}
         </span>
       </div>
       <div className={`my-[8px] mb-[18px] text-[26px] font-extrabold tracking-[-0.02em] ${dirColor}`}>{dir.glyph} {dir.label}{f.expected_range_pct ? ` ${f.expected_range_pct}` : ""}</div>
       <div className="grid grid-cols-1 items-start gap-6 min-[1080px]:grid-cols-[1fr_280px]">
         <div>
-          <div className="mb-1.5 text-[12px] text-[#828d9d]">지수 추이 · 見通し 구간</div>
+          <div className="mb-1.5 text-[12px] text-[#828d9d]">지수 추이 · 見通し区間</div>
           <ForecastDetailChart series={series} f={f} />
         </div>
         <div>
-          <div className="mb-1.5 text-[12px] text-[#828d9d]">総合 신호</div>
+          <div className="mb-1.5 text-[12px] text-[#828d9d]">総合シグナル</div>
           <div className="flex items-center gap-4">
             <Donut pct={confPct(f.confidence)} />
             <div>
-              <div className="mb-0.5 text-[11px] text-[#828d9d]">신뢰도 {confPct(f.confidence)}% · {dir.label} 우세</div>
-              <b className={`text-[18px] font-extrabold ${dirColor}`}>{dir.label} 우세</b>
+              <div className="mb-0.5 text-[11px] text-[#828d9d]">信頼度 {confPct(f.confidence)}% · {dir.label} 優勢</div>
+              <b className={`text-[18px] font-extrabold ${dirColor}`}>{dir.label} 優勢</b>
               {f.composite_score != null && <div className="mt-[3px] lsg-mono text-[11.5px] text-[#828d9d]">総合 {f.composite_score > 0 ? "+" : ""}{f.composite_score} · 점수 환산</div>}
             </div>
           </div>
           <div className="mt-3.5 pt-3.5">
-            <div className="mb-2.5 text-[12px] font-bold text-[#1a2433]">핵심 インサイト</div>
+            <div className="mb-2.5 text-[12px] font-bold text-[#1a2433]">要点</div>
             {insights.length === 0 ? (
-              <p className="text-[12.5px] text-[#828d9d]">見通し 본문 収集中입니다.</p>
+              <p className="text-[12.5px] text-[#828d9d]">見通しの本文は準備中です。</p>
             ) : (
               <ul className="p-0">
                 {insights.map((t, i) => (
@@ -377,8 +377,8 @@ function DetailPanel({ f, series }: { f: Forecast; series?: ForecastSeries }) {
         </div>
       </div>
       <div className="mt-3.5 flex flex-wrap items-center justify-between gap-4 text-[12px] text-[#828d9d]">
-        <span>見通し은 정보 제공 목적이며 투자·계약 권유가 아닙니다. 모든 見通し은 확률로 표현됩니다.</span>
-        <span className="font-semibold text-[#0d9488]">AI 초안 · 에디터 검수</span>
+        <span>見通しは情報提供が目的であり、投資や契約の勧誘ではありません。すべて確率として示します。</span>
+        <span className="font-semibold text-[#0d9488]">AI 草案 · 編集校閲</span>
       </div>
     </div>
   );
@@ -386,16 +386,16 @@ function DetailPanel({ f, series }: { f: Forecast; series?: ForecastSeries }) {
 
 /* ============================ METHODOLOGY (static) ============================ */
 const METHOD: { b: string; s: string }[] = [
-  { b: "データ収集", s: "관세청 · Drewry · 상하이해운거래소(SSE) · KITA, SCFI/WCI" },
-  { b: "5팩터 채점", s: "모멘텀 · 공급 · 수요 · 비용 · 가격행동을 −2~+2로 채점" },
-  { b: "가중 합산", s: "해상: 공급30 · 모멘텀25 · 수요25 · 비용10 · 가격10, 한국발은 중국 수급 보정" },
-  { b: "AI 산문 + 자동 검증", s: "판정 단위 · 결측 여부 자동 검사" },
-  { b: "에디터 검수 후 발행", s: "발행 후 본문 폴백, 판정일 실측으로 적중 집계" },
+  { b: "データ収集", s: "Drewry · 上海航運交易所(SSE) · SCFI/WCI ほか" },
+  { b: "5팩터 채점", s: "モメンタム・供給・需要・コスト・価格行動を −2〜+2 で採点" },
+  { b: "가중 합산", s: "海上: 供給30 · モメンタム25 · 需要25 · コスト10 · 価格10" },
+  { b: "AI 산문 + 자동 검증", s: "判定単位と欠測の有無を自動で検査" },
+  { b: "에디터 검수 후 발행", s: "発行後は本文を変えず、判定日の実測で的中を集計" },
 ];
 function Methodology() {
   return (
     <div className={`mt-3.5 px-6 py-[22px] ${CARD}`}>
-      <h3 className="mb-4 text-[15px] font-extrabold text-[#1a2433]">모델 방법론</h3>
+      <h3 className="mb-4 text-[15px] font-extrabold text-[#1a2433]">モデルの方法論</h3>
       <div className="grid grid-cols-1 gap-[18px] min-[640px]:grid-cols-2 min-[1080px]:grid-cols-5">
         {METHOD.map((m, i) => (
           <div key={m.b}>
@@ -405,7 +405,7 @@ function Methodology() {
           </div>
         ))}
       </div>
-      <p className="mt-4 text-[11.5px] leading-[1.6] text-[#828d9d]">본 見通し은 정보 제공 목적이며 투자·계약 권유가 아닙니다. 결측 팩터는 가중치를 재분배하며, 인과가 아닌 상관 정합 추정으로 기술합니다. 적중률은 발행된 見通し 전수를 분모로 합니다.</p>
+      <p className="mt-4 text-[11.5px] leading-[1.6] text-[#828d9d]">この見通しは情報提供が目的であり、投資や契約の勧誘ではありません。欠測した要素は重みを再配分します。因果ではなく相関として記述します。的中率は発行された 見通し 전수를 분모로 합니다.</p>
     </div>
   );
 }
@@ -444,11 +444,11 @@ export function LogisightForecast() {
   const selectedId = search.sel ?? filtered[0]?.id ?? null;
   const selected = open.find((f) => f.id === selectedId) ?? filtered[0] ?? null;
 
-  const dirSeg = search.dir.length === 1 ? (search.dir[0] === "up" ? "상승" : search.dir[0] === "flat" ? "보합" : search.dir[0] === "down" ? "하락" : "전체 방향") : "전체 방향";
-  const cadSeg = search.cadence === "weekly" ? "주간" : search.cadence === "monthly" ? "월간" : "전체";
+  const dirSeg = search.dir.length === 1 ? (search.dir[0] === "up" ? "上昇" : search.dir[0] === "flat" ? "横ばい" : search.dir[0] === "down" ? "下落" : "すべての方向") : "전체 방향";
+  const cadSeg = search.cadence === "weekly" ? "週次" : search.cadence === "monthly" ? "月次" : "すべて";
 
-  const setDir = (v: string) => navigate({ search: (p: ForecastSearch) => ({ ...p, dir: v === "상승" ? ["up"] : v === "보합" ? ["flat"] : v === "하락" ? ["down"] : [] }), replace: true });
-  const setCad = (v: string) => navigate({ search: (p: ForecastSearch) => ({ ...p, cadence: v === "주간" ? "weekly" : v === "월간" ? "monthly" : undefined }), replace: true });
+  const setDir = (v: string) => navigate({ search: (p: ForecastSearch) => ({ ...p, dir: v === "上昇" ? ["up"] : v === "横ばい" ? ["flat"] : v === "下落" ? ["down"] : [] }), replace: true });
+  const setCad = (v: string) => navigate({ search: (p: ForecastSearch) => ({ ...p, cadence: v === "週次" ? "weekly" : v === "月次" ? "monthly" : undefined }), replace: true });
   const setSel = (id: string) => navigate({ search: (p: ForecastSearch) => ({ ...p, sel: id }), replace: true, resetScroll: false });
   const setMod = (k: string | null) => navigate({ search: (p: ForecastSearch) => ({ ...p, mod: k ?? undefined, sel: undefined }), replace: true });
 
@@ -466,9 +466,9 @@ export function LogisightForecast() {
           {/* GEO: 보이지 않는 Article JSON-LD만 유지 (시각 요소 없음) */}
           <GeoArticleSchema
             article={{
-              headline: "물류 시장 見通し — AI 초안 · 에디터 검수",
+              headline: "물류 시장 見通し — AI 草案 · 編集校閲",
               description:
-                "Logisight AI가 현재·과거 데이터를 분석해 運賃·ユーラシア·貿易·정책 방향을 확률·방향으로 見通し합니다. 발행 전 에디터 검수.",
+                "Logisight AI が現在と過去のデータを分析し、運賃・貿易・政策の方向を確率で見通します。発行前に編集が校閲します。",
               path: "/forecasts",
               datePublished: geo.latestDate,
               dateModified: geo.latestDate,
@@ -481,7 +481,7 @@ export function LogisightForecast() {
           {railBrief.outlook && (
             <section className="mt-[26px]">
               <div className="mb-3.5 flex items-center gap-2.5">
-                <h2 className="text-[19px] font-extrabold tracking-[-0.02em] text-[#1a2433]">철도 見通し</h2>
+                <h2 className="text-[19px] font-extrabold tracking-[-0.02em] text-[#1a2433]">鉄道の見通し</h2>
                 <span className="rounded-full border border-[#d8dfe9] bg-[#eef1f6] px-[9px] py-[3px] text-[11px] text-[#828d9d]">ユーラシア · AI</span>
               </div>
               <div className={`p-[22px] ${CARD}`}>
@@ -493,22 +493,22 @@ export function LogisightForecast() {
                     ))}
                   </ul>
                 )}
-                <div className="mt-3.5 border-t border-[#d8dfe9] pt-2.5 text-[11px] text-[#828d9d]">AI 분석 · ユーラシア 격주 시장 レポート 기반{railBrief.generatedAt ? ` · ${railBrief.generatedAt.slice(0, 10)}` : ""}</div>
+                <div className="mt-3.5 border-t border-[#d8dfe9] pt-2.5 text-[11px] text-[#828d9d]">AI 分析 · ユーラシア隔週マーケットレポートにもとづく{railBrief.generatedAt ? ` · ${railBrief.generatedAt.slice(0, 10)}` : ""}</div>
               </div>
             </section>
           )}
 
           {open.length === 0 ? (
             <div className={`mt-[26px] px-6 py-16 text-center ${CARD}`}>
-              <p className="text-[14px] font-semibold text-[#1a2433]">데이터 収集中</p>
-              <p className="mt-1 text-[12px] text-[#828d9d]">검수를 통과한 見通し이 게재되면 이곳에 표시됩니다.</p>
+              <p className="text-[14px] font-semibold text-[#1a2433]">データ収集中</p>
+              <p className="mt-1 text-[12px] text-[#828d9d]">校閲を通過した見通しが掲載されると、ここに表示します。</p>
             </div>
           ) : (
             <>
               <div className="mt-[18px] flex flex-wrap items-center gap-[18px]">
                 <Seg items={CAD_SEG} value={cadSeg} onChange={setCad} />
                 <Seg items={DIR_SEG} value={dirSeg} onChange={setDir} />
-                <span className="ml-auto text-[12px] text-[#828d9d]">카드 클릭 시 見通し 상세 · 팩터 스코어 · 판정 결과</span>
+                <span className="ml-auto text-[12px] text-[#828d9d]">カードを押すと 見通しの詳細・要素スコア・判定結果</span>
               </div>
               <div className="mb-3.5 mt-[26px] flex items-center justify-between"><h2 className="text-[19px] font-extrabold tracking-[-0.02em] text-[#1a2433]">見通し 카드</h2></div>
               <ForecastCards cards={filtered} series={series} selectedId={selectedId} onSelect={setSel} />

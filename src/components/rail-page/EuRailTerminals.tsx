@@ -7,9 +7,9 @@ import type { EuRailTerminal } from "@/lib/api/eu-rail-terminals";
 
 // 유형 → 한글 라벨 + 배지 색
 const TYPE_META: Record<string, { ko: string; cls: string }> = {
-  "Container / Intermodal Terminal": { ko: "컨테이너·복합운송", cls: "border-[#99f6e4] bg-[#f0fdfa] text-[#0d9488]" },
-  "Loading / Unloading": { ko: "상·하역", cls: "border-[#bfdbfe] bg-[#eff6ff] text-[#2563eb]" },
-  "Marshalling / Shunting Yard": { ko: "조차장", cls: "border-[#fed7aa] bg-[#fff7ed] text-[#d97706]" },
+  "Container / Intermodal Terminal": { ko: "コンテナ・複合輸送", cls: "border-[#99f6e4] bg-[#f0fdfa] text-[#0d9488]" },
+  "Loading / Unloading": { ko: "荷役", cls: "border-[#bfdbfe] bg-[#eff6ff] text-[#2563eb]" },
+  "Marshalling / Shunting Yard": { ko: "操車場", cls: "border-[#fed7aa] bg-[#fff7ed] text-[#d97706]" },
 };
 const typeKo = (t: string | null) => (t ? TYPE_META[t]?.ko ?? t : "—");
 const typeCls = (t: string | null) => (t ? TYPE_META[t]?.cls ?? "border-[#e5e7eb] bg-[#f3f4f6] text-[#6b7280]" : "border-[#e5e7eb] bg-[#f3f4f6] text-[#6b7280]");
@@ -55,9 +55,9 @@ export function EuRailTerminals() {
   return (
     <section className="mt-4">
       <div className="mb-3 flex items-center justify-between gap-2.5">
-        <h2 className="text-[19px] font-extrabold tracking-[-0.02em] text-[#1a2433]">유럽 복합운송 터미널</h2>
+        <h2 className="text-[19px] font-extrabold tracking-[-0.02em] text-[#1a2433]">欧州の複合輸送ターミナル</h2>
         <span className="rounded-full border border-[#d8dfe9] bg-[#eef1f6] px-[9px] py-[3px] text-[11px] text-[#828d9d]">
-          {terminals.length.toLocaleString()}개
+          {terminals.length.toLocaleString()} 箇所
         </span>
       </div>
 
@@ -66,24 +66,24 @@ export function EuRailTerminals() {
         <input
           value={q}
           onChange={(e) => onFilter(setQ)(e.target.value)}
-          placeholder="터미널·운영사·주소 검색"
+          placeholder="ターミナル・運営者・住所を検索"
           className={`${selCls} min-w-[200px] flex-1`}
         />
         <select value={type} onChange={(e) => onFilter(setType)(e.target.value)} className={selCls}>
-          <option value="all">모든 유형</option>
+          <option value="all">すべての種類</option>
           {types.map((t) => (
             <option key={t} value={t}>{typeKo(t)}</option>
           ))}
         </select>
         <select value={corridor} onChange={(e) => onFilter(setCorridor)(e.target.value)} className={selCls}>
-          <option value="all">모든 회랑</option>
+          <option value="all">すべての回廊</option>
           {corridors.map((c) => (
             <option key={c} value={c}>{c}</option>
           ))}
         </select>
       </div>
 
-      <div className="mb-2 text-[12px] text-[#828d9d]">{filtered.length.toLocaleString()}개 결과</div>
+      <div className="mb-2 text-[12px] text-[#828d9d]">{filtered.length.toLocaleString()} 件</div>
 
       {/* 목록 */}
       <div className="divide-y divide-[#e6ebf2] overflow-hidden rounded-[14px] border border-[#d8dfe9] bg-white">
@@ -91,7 +91,7 @@ export function EuRailTerminals() {
           <TerminalRow key={t.id} t={t} />
         ))}
         {!shown.length && (
-          <div className="px-4 py-8 text-center text-[13px] text-[#828d9d]">조件에 맞는 터미널이 없습니다.</div>
+          <div className="px-4 py-8 text-center text-[13px] text-[#828d9d]">条件に合うターミナルはない。</div>
         )}
       </div>
 
@@ -102,13 +102,13 @@ export function EuRailTerminals() {
             onClick={() => setLimit((n) => n + STEP)}
             className="rounded-[8px] border border-[#d8dfe9] bg-white px-4 py-2 text-[12.5px] font-semibold text-[#54606f] transition-colors hover:bg-[#f4f7fb]"
           >
-            더 보기 ({(filtered.length - limit).toLocaleString()})
+            さらに表示 ({(filtered.length - limit).toLocaleString()})
           </button>
         </div>
       )}
 
       <div className="mt-4 text-[11px] text-[#828d9d]">
-        데이터 출처: CIP — RailNetEurope Customer Information Platform ·{" "}
+        出典: CIP — RailNetEurope Customer Information Platform ·{" "}
         <a className="text-[#54606f] underline" href="https://cip.rne.eu/topology/interactive-map" target="_blank" rel="noopener noreferrer">cip.rne.eu</a>
       </div>
     </section>
@@ -143,7 +143,7 @@ function TerminalRow({ t }: { t: EuRailTerminal }) {
             target="_blank"
             rel="noopener noreferrer"
           >
-            ホーム페이지 ↗
+            公式サイト ↗
           </a>
         )}
       </div>

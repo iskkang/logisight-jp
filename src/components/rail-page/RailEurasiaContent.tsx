@@ -128,27 +128,27 @@ export function RailEurasiaContent() {
           <span className="eyebrow">Eurasia Rail Index</span>
           <h1>ユーラシア 回廊</h1>
           <p>
-            ERAI(Eurasian Rail Alliance Index) 기반 ユーラシア 철도 運賃·운송기간·물동량 동향. 지수·마켓맵·지역
-            물동량을 한눈에.
+            ERAI(Eurasian Rail Alliance Index)にもとづくユーラシア鉄道の運賃・輸送日数・物量。指数・マーケットマップ・地域別
+            物量をまとめて示す。
           </p>
           <div className="hpills">
             <span className="p"><span className="dot" style={{ background: "#2dd4bf" }} />ERAI 総合 <b className="mono">${fmtVal(sum.comp)}</b>/FEU</span>
-            <span className="p"><span className="dot" style={{ background: "#16a34a" }} />운송기간 <b className="mono">{sum.transit != null ? `${sum.transit.toFixed(2)}일` : "—"}</b></span>
-            <span className="p"><span className="dot" style={{ background: "#94a3b8" }} />기준 <b>{sum.month ?? "—"}</b></span>
+            <span className="p"><span className="dot" style={{ background: "#16a34a" }} />輸送日数 <b className="mono">{sum.transit != null ? `${sum.transit.toFixed(2)}일` : "—"}</b></span>
+            <span className="p"><span className="dot" style={{ background: "#94a3b8" }} />基準 <b>{sum.month ?? "—"}</b></span>
           </div>
         </div>
       </section>
 
       <div className="sheet">
         <div className="wrap">
-          <div className="bc">ホーム <b>›</b> インサイト <b>›</b> 철도 <b>›</b> ユーラシア</div>
+          <div className="bc">ホーム <b>›</b> インサイト <b>›</b> 鉄道 <b>›</b> ユーラシア</div>
 
           {/* GEO: 보이지 않는 Article JSON-LD만 유지 (시각 블록 제거) */}
           <GeoArticleSchema
             article={{
-              headline: "ユーラシア 回廊 — ERAI 철도 運賃·운송기간·물동량",
+              headline: "ユーラシア回廊 — ERAI 鉄道運賃・輸送日数・物量",
               description:
-                "ERAI(Eurasian Rail Alliance Index) 기반 ユーラシア 철도 運賃·운송기간·지역 물동량 동향.",
+                "ERAI(Eurasian Rail Alliance Index)にもとづくユーラシア鉄道の運賃・輸送日数・地域別物量。",
               path: "/rail/eurasia",
               datePublished: geo.latestDate,
               dateModified: geo.latestDate,
@@ -180,11 +180,11 @@ export function RailEurasiaContent() {
             <div className="verdict">{charts.aiInsight?.headline ?? `ERAI 総合 $${fmtVal(sum.comp)}/FEU · MoM ${fmtPct(sum.compMom)}`}</div>
             <div className="ai">
               {charts.aiInsight?.analysis ??
-                "ユーラシア 철도 運賃 컴포지트(ERAI)와 동·서행 지수, 平均 운송기간을 ERAI 공개 데이터로 제공합니다. 값은 월별 스냅샷이며, 상세 추이는 아래 차트에서 확인하세요."}
+                "ユーラシア鉄道運賃のコンポジット(ERAI)と東航・西航の指数、平均輸送日数を ERAI の公開データで示す。値は月次スナップショットで、推移は下のチャートで確認できる。"}
             </div>
             {charts.aiInsight && (
               <div className="mt-1.5 text-[11px] text-[#828d9d]">
-                AI 요약 · 격주 시장 レポート 기반{charts.aiInsight.generatedAt ? ` · ${charts.aiInsight.generatedAt.slice(0, 10)}` : ""}
+                AI 要約 · 隔週マーケットレポートにもとづく{charts.aiInsight.generatedAt ? ` · ${charts.aiInsight.generatedAt.slice(0, 10)}` : ""}
               </div>
             )}
             <div className="tiles">
@@ -200,8 +200,8 @@ export function RailEurasiaContent() {
                 </div>
               ))}
               <div className="tile">
-                <div className="k">平均 운송기간</div>
-                <div className="v mono" style={{ color: "var(--teal)" }}>{sum.transit != null ? sum.transit.toFixed(2) : "—"}<small> 일</small></div>
+                <div className="k">平均輸送日数</div>
+                <div className="v mono" style={{ color: "var(--teal)" }}>{sum.transit != null ? sum.transit.toFixed(2) : "—"}<small> 日</small></div>
                 <div className="d" style={{ color: "var(--mute)" }}>China-Europe-China</div>
               </div>
             </div>
@@ -211,8 +211,8 @@ export function RailEurasiaContent() {
           {railBrief.risks.length > 0 && (
             <section>
               <div className="mb-3 mt-[26px] flex items-center justify-between gap-2.5">
-                <h2 className="text-[19px] font-extrabold tracking-[-0.02em] text-[#1a2433]">ユーラシア 리스크</h2>
-                <span className="rounded-full border border-[#d8dfe9] bg-[#eef1f6] px-[9px] py-[3px] text-[11px] text-[#828d9d]">AI 분석</span>
+                <h2 className="text-[19px] font-extrabold tracking-[-0.02em] text-[#1a2433]">ユーラシアのリスク</h2>
+                <span className="rounded-full border border-[#d8dfe9] bg-[#eef1f6] px-[9px] py-[3px] text-[11px] text-[#828d9d]">AI 分析</span>
               </div>
               <div className="divide-y divide-[#e6ebf2] rounded-[14px] border border-[#d8dfe9] bg-[#f4f7fb]">
                 {railBrief.risks.map((r, i) => (
@@ -231,7 +231,7 @@ export function RailEurasiaContent() {
           <EurasiaMarketMap quotes={charts.indexQuotes} />
           <EurasiaGeoRanking geo={charts.geo} />
 
-          <div className="src">데이터 출처: ERAI (Eurasian Rail Alliance Index) · <a href="https://index1520.com" target="_blank" rel="noopener noreferrer">index1520.com</a> · 철도 ニュース는 <a href="/news?cat=철도">ニュース › 철도</a></div>
+          <div className="src">出典: ERAI (Eurasian Rail Alliance Index) · <a href="https://index1520.com" target="_blank" rel="noopener noreferrer">index1520.com</a> · 철도 ニュース는 <a href="/news?cat=철도">ニュース › 철도</a></div>
           </>
           )}
         </div>

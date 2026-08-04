@@ -37,7 +37,7 @@ function LineChartSVG({ labels, series, yFmt }: { labels: string[]; series: { la
   const W = 760, H = 280, pL = 48, pR = 14, pT = 14, pB = 26, ix = W - pL - pR, iy = H - pT - pB;
   const vals = series.flatMap((s) => s.data).filter((v): v is number => typeof v === "number");
   if (vals.length < 2 || labels.length < 2 || series.length === 0) {
-    return <div className="grid min-h-[200px] place-items-center text-[13px] text-[#828d9d]">표시할 시계열이 없습니다.</div>;
+    return <div className="grid min-h-[200px] place-items-center text-[13px] text-[#828d9d]">表示できる時系列がない。</div>;
   }
   const lo = Math.min(...vals), hi = Math.max(...vals), pad = (hi - lo) * 0.1 || 1;
   const yMin = Math.max(0, lo - pad), yMax = hi + pad, n = labels.length;
@@ -95,8 +95,8 @@ function RangeScale({ scale, setScale, range, setRange }: { scale: "month" | "we
   return (
     <div className="flex flex-wrap items-center gap-2">
       <div className="inline-flex gap-[3px] rounded-[8px] border border-[#d8dfe9] bg-[#e7ecf3] p-[3px]">
-        <Btn active={scale === "month"} onClick={() => setScale("month")}>월</Btn>
-        <Btn active={scale === "week"} onClick={() => setScale("week")}>주</Btn>
+        <Btn active={scale === "month"} onClick={() => setScale("month")}>月</Btn>
+        <Btn active={scale === "week"} onClick={() => setScale("week")}>週</Btn>
       </div>
       {scale === "month" && (
         <div className="inline-flex gap-[3px] rounded-[8px] border border-[#d8dfe9] bg-[#e7ecf3] p-[3px]">
@@ -142,10 +142,10 @@ function ChartSectionBlock({ title, section, defaultVisible, yFmt }: {
 }
 
 export function EurasiaIndexChart({ quotes }: { quotes: IndexQuotes | null }) {
-  return <ChartSectionBlock title="ERAI 지수 추이" section={quotes?.indexes} defaultVisible={(l) => l.startsWith("ERAI")} />;
+  return <ChartSectionBlock title="ERAI 指数の推移" section={quotes?.indexes} defaultVisible={(l) => l.startsWith("ERAI")} />;
 }
 export function EurasiaTransitChart({ quotes }: { quotes: IndexQuotes | null }) {
-  return <ChartSectionBlock title="平均 운송기간 (일)" section={quotes?.times} defaultVisible={() => true} yFmt={(v) => v.toFixed(1)} />;
+  return <ChartSectionBlock title="平均輸送日数(日)" section={quotes?.times} defaultVisible={() => true} yFmt={(v) => v.toFixed(1)} />;
 }
 
 function Sparkline({ data, color }: { data: number[]; color: string }) {

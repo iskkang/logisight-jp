@@ -1,7 +1,7 @@
 // LogisightEurasia.tsx
 // ─────────────────────────────────────────────────────────────────────────────
 // ユーラシア 回廊 — 리드 뷰 드롭인 컴포넌트 (Logisight 패턴)
-// · 総合 판단(계산식 팩트 요약 + 4타일) + 回廊 헬스 표 + 데이터 구동 스키매틱 + 소스 状態
+// · 総合判断(계산식 팩트 요약 + 4타일) + 回廊 헬스 표 + 데이터 구동 스키매틱 + 소스 状態
 // · '추세' 컬럼 제거(대응 데이터 없음). TCR 0행이면 "収集中".
 // · 보존 모드(집계 遅延 지수 / 수동 이슈 등)는 children으로 시트 아래에 렌더.
 // · 데이터는 operational TCR 레코드(source #1)에서 매핑.
@@ -277,13 +277,13 @@ export default function LogisightEurasia({
 
   const verdict =
     m.n === 0 ? (
-      "TCR 운영 遅延 데이터 収集中."
+      "TCR の運行遅延データを収集中。"
     ) : (
       <>
         TCR {m.n}개 路線 운영 중 —{" "}
         {m.worst ? (
           <>
-            最大 遅延{" "}
+            最大遅延{" "}
             <b>
               {m.worst.route_label} +{m.worst.delay_days}일
             </b>
@@ -386,10 +386,10 @@ export default function LogisightEurasia({
         </svg>
         <div className="wrap in">
           <span className="eyebrow">Eurasia Corridor Intelligence</span>
-          <h1>ユーラシア 回廊</h1>
+          <h1>ユーラシア回廊</h1>
           <p>
             TCR(中国横断鉄道) 路線의 운영 状態·ETA 遅延을 한눈에. 遅延은 路線 최초 예정
-            ETA(baseline) 대비로 산출합니다.
+            ETA(baseline)との差で算出する。
           </p>
           <div className="hpills">
             <span className="p">
@@ -402,7 +402,7 @@ export default function LogisightEurasia({
             </span>
             <span className="p">
               <span className="dot" style={{ background: "#dc2626" }} />
-              最大 遅延 <b className="mono">{m.worst ? `+${m.worst.delay_days}일` : "—"}</b>
+              最大遅延 <b className="mono">{m.worst ? `+${m.worst.delay_days}일` : "—"}</b>
             </span>
           </div>
         </div>
@@ -414,7 +414,7 @@ export default function LogisightEurasia({
             ホーム <b>›</b> インサイト <b>›</b> ユーラシア
           </div>
 
-          {/* 総合 판단 */}
+          {/* 総合判断 */}
           <div className="judge">
             <div className="top">
               <div>
@@ -433,12 +433,12 @@ export default function LogisightEurasia({
             </div>
             <div className="tiles">
               <div className="tile">
-                <div className="k">稼働 TCR 路線</div>
+                <div className="k">稼働中の TCR 路線</div>
                 <div className="v mono">{m.n || "—"}</div>
                 <div className="d">{m.n ? "정상 収集中" : "収集中"}</div>
               </div>
               <div className="tile">
-                <div className="k">平均 ETA 遅延 (vs 최초)</div>
+                <div className="k">平均 ETA 遅延(当初比)</div>
                 <div className={`v mono ${m.avg && m.avg >= 5 ? "bad" : ""}`}>
                   {m.avg == null ? "—" : `+${m.avg}일`}
                 </div>
@@ -447,7 +447,7 @@ export default function LogisightEurasia({
                 </div>
               </div>
               <div className="tile">
-                <div className="k">最大 遅延 路線</div>
+                <div className="k">最大遅延の路線</div>
                 <div className={`v mono ${m.worst && (m.worst.delay_days ?? 0) >= 5 ? "bad" : ""}`}>
                   {m.worst ? `+${m.worst.delay_days}일` : "—"}
                 </div>
@@ -459,7 +459,7 @@ export default function LogisightEurasia({
           {/* 回廊 헬스 */}
           <div className="sect-h">
             <h2>遅延 현황</h2>
-            <span className="chip">路線별 状態 · ETA 遅延</span>
+            <span className="chip">路線別の状態 · ETA 遅延</span>
           </div>
           <div className="htbl-wrap">
             <table className="htbl">
@@ -482,7 +482,7 @@ export default function LogisightEurasia({
                 ) : records.length === 0 ? (
                   <tr>
                     <td className="emptytd" colSpan={5}>
-                      TCR 遅延 데이터 収集中
+                      TCR の遅延データを収集中
                     </td>
                   </tr>
                 ) : (
@@ -507,20 +507,20 @@ export default function LogisightEurasia({
               </tbody>
             </table>
             <div className="hnote">
-              <b>遅延 = 最新ETA − 최초 예정 ETA(baseline)</b>. 日次スナップショットの累積で算出する。
+              <b>遅延 = 最新ETA − 当初予定ETA(baseline)</b>。日次スナップショットの累積で算出する。
               FESCO·TSR은 データは保留中である。
             </div>
           </div>
 
-          {/* 보조: 回廊 맵 + 소스 状態 */}
+          {/* 보조: 回廊マップ + 소스 状態 */}
           <div className="two">
             <div className="card pad">
               <div className="ch-h">
-                <span className="t">回廊 맵</span>
-                <span className="chip">TCR 路線 개요</span>
+                <span className="t">回廊マップ</span>
+                <span className="chip">TCR 路線の概要</span>
               </div>
               {records.length === 0 ? (
-                <div className="emptytd">路線 데이터 収集中</div>
+                <div className="emptytd">路線データを収集中</div>
               ) : (
                 <div className="cmap">
                   {records.map((r, i) => {

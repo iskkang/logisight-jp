@@ -19,8 +19,8 @@ const STATUS_LABEL_KO: Record<string, string> = {
   normal: "正常",
   watch: "注意",
   delayed: "遅延",
-  severe: "심각",
-  unknown: "미상",
+  severe: "深刻",
+  unknown: "不明",
 };
 const statusKo = (s: string): string => STATUS_LABEL_KO[s] ?? s;
 
@@ -54,11 +54,11 @@ function popupHtml(properties: MapGeoJSONFeature["properties"]): string {
   const updated = properties.updated_at || "-";
   return [
     `<strong>${properties.name}</strong>`,
-    `철도사: ${properties.railroad}`,
+    `鉄道会社: ${properties.railroad}`,
     `状態: ${statusKo(String(properties.status))}`,
-    `점수: ${score}`,
-    `사유: ${reason}`,
-    `갱신: ${updated}`,
+    `スコア: ${score}`,
+    `理由: ${reason}`,
+    `更新: ${updated}`,
   ].join("<br/>");
 }
 
@@ -98,9 +98,9 @@ export function RailAmericasMap() {
         // 데스크톱은 ⌘/Ctrl+스크롤, 모바일은 두 손가락일 때만 지도를 조작한다.
         cooperativeGestures: true,
         locale: {
-          "CooperativeGesturesHandler.WindowsHelpText": "Ctrl + 스크롤로 지도를 확대/축소합니다",
-          "CooperativeGesturesHandler.MacHelpText": "⌘ + 스크롤로 지도를 확대/축소합니다",
-          "CooperativeGesturesHandler.MobileHelpText": "두 손가락으로 지도를 움직입니다",
+          "CooperativeGesturesHandler.WindowsHelpText": "Ctrl + スクロールで地図を拡大・縮小します",
+          "CooperativeGesturesHandler.MacHelpText": "⌘ + スクロールで地図を拡大・縮小します",
+          "CooperativeGesturesHandler.MobileHelpText": "2本指で地図を動かします",
         },
       });
       mapRef.current = map;
@@ -170,8 +170,8 @@ export function RailAmericasMap() {
       {/* GEO: 보이지 않는 Article JSON-LD만 유지 (시각 요소 없음) */}
       <GeoArticleSchema
         article={{
-          headline: "북미 인터모달 철도 回廊 状態",
-          description: "북미 인터모달 철도 코리도 状態 지도(정상·주의·遅延)와 回廊별 状態·점수·갱신 시각.",
+          headline: "北米インターモーダル鉄道回廊の状態",
+          description: "北米インターモーダル鉄道回廊の状態地図(正常・注意・遅延)と、回廊ごとの状態・スコア・更新時刻。",
           path: "/rail/americas",
           datePublished: geo.refDate,
           dateModified: geo.refDate,
@@ -181,15 +181,15 @@ export function RailAmericasMap() {
       <div className="grid min-h-[78vh] grid-cols-[320px_minmax(0,1fr)] grid-rows-[minmax(0,1fr)_auto] max-[900px]:grid-cols-1 max-[900px]:grid-rows-[auto_70vh_auto]">
         <aside className="border-r border-[#d8dfe9] bg-white px-5 py-5 max-[900px]:border-b max-[900px]:border-r-0">
           <div className="mb-5">
-            <div className="text-[12px] font-semibold uppercase text-[#667085]">철도 리스크 맵</div>
-            <h1 className="mt-1 text-[22px] font-bold leading-tight text-[#101828]">북미 인터모달 철도 回廊</h1>
+            <div className="text-[12px] font-semibold uppercase text-[#667085]">鉄道リスクマップ</div>
+            <h1 className="mt-1 text-[22px] font-bold leading-tight text-[#101828]">北米インターモーダル鉄道回廊</h1>
             <p className="mt-2 text-[13px] leading-[1.55] text-[#54606f]">
-              선사 어드바이저리·ニュース 모니터링 기반. 초록 = 출처 확인·보고된 차질 없음. 회색 = 공개 정보 제한.
+              船社アドバイザリーとニュースの監視にもとづく。緑=出典を確認し、報告された支障なし。灰=公開情報が限られる。
             </p>
           </div>
 
           <div className="rounded-lg border border-[#d8dfe9] bg-[#f8fafc] p-4">
-            <div className="text-[13px] font-bold text-[#1a2433]">状態 요약</div>
+            <div className="text-[13px] font-bold text-[#1a2433]">状態の要約</div>
             <div className="mt-3 grid grid-cols-2 gap-2 text-[13px]">
               {Object.entries(summary.counts).map(([status, count]) => (
                 <div key={status} className="flex items-center justify-between rounded-md border border-[#e4e9f1] bg-white px-3 py-2">
@@ -205,28 +205,28 @@ export function RailAmericasMap() {
               ))}
             </div>
             <div className="mt-3 border-t border-[#e4e9f1] pt-3 text-[12px] text-[#667085]">
-              최종 갱신: <span className="font-medium text-[#344054]">{formatDate(summary.latest)}</span>
+              最終更新: <span className="font-medium text-[#344054]">{formatDate(summary.latest)}</span>
             </div>
           </div>
 
           <div className="mt-5 rounded-lg border border-[#d8dfe9] bg-white p-4">
-            <div className="text-[13px] font-bold text-[#1a2433]">심각·遅延 回廊</div>
-            <div className="mt-2 text-[13px] text-[#667085]">현재 모니터링 구간에서 심각·遅延 回廊가 없습니다.</div>
+            <div className="text-[13px] font-bold text-[#1a2433]">深刻・遅延の回廊</div>
+            <div className="mt-2 text-[13px] text-[#667085]">監視中の区間に深刻・遅延の回廊はない。</div>
           </div>
         </aside>
 
         <section className="relative min-h-0">
           <div ref={containerRef} className="h-full min-h-[520px] w-full" data-testid="rail-map-canvas" />
           <div className="pointer-events-none absolute left-4 top-4 rounded-md border border-[#d8dfe9] bg-white/92 px-3 py-2 text-[12px] font-semibold text-[#344054] shadow-sm">
-            回廊 {geojson.features.length}개 / 정상=초록, 정보 제한=회색
+            回廊 {geojson.features.length} 本 / 正常=緑、情報が限られる=灰
           </div>
         </section>
 
         <section className="col-span-2 border-t border-[#d8dfe9] bg-white px-5 py-4 max-[900px]:col-span-1">
           <div className="mb-3 flex items-center justify-between gap-3">
-            <h2 className="text-[15px] font-bold text-[#1a2433]">回廊 현황</h2>
+            <h2 className="text-[15px] font-bold text-[#1a2433]">回廊の状況</h2>
             <div className="text-[12px] text-[#667085]" data-testid="rail-map-line-count">
-              {geojson.features.length}개 路線
+              {geojson.features.length} 本
             </div>
           </div>
           <div className="overflow-x-auto">
@@ -234,11 +234,11 @@ export function RailAmericasMap() {
               <thead>
                 <tr className="border-b border-[#d8dfe9] text-[12px] uppercase text-[#667085]">
                   <th className="py-2 pr-4 font-semibold">回廊</th>
-                  <th className="py-2 pr-4 font-semibold">철도사</th>
+                  <th className="py-2 pr-4 font-semibold">鉄道会社</th>
                   <th className="py-2 pr-4 font-semibold">状態</th>
-                  <th className="py-2 pr-4 font-semibold">점수</th>
-                  <th className="py-2 pr-4 font-semibold">사유</th>
-                  <th className="py-2 font-semibold">갱신</th>
+                  <th className="py-2 pr-4 font-semibold">スコア</th>
+                  <th className="py-2 pr-4 font-semibold">理由</th>
+                  <th className="py-2 font-semibold">更新</th>
                 </tr>
               </thead>
               <tbody>

@@ -11,11 +11,15 @@ export const Route = createFileRoute("/climate")({
   loader: ({ context }) => {
     context.queryClient.ensureQueryData(climateRiskQueryOptions());
   },
-  head: () =>
-    seoHead({
+  // 本文が韓国語のままのため、日本語コンテンツが用意できるまで非公開扱いにする。
+  // メニューとサイトマップから外すだけでは、クローラが URL を辿って索引しうる。
+  head: () => {
+    const base = seoHead({
       title: "世界の気象リスク — Logisight",
       description: SUBTITLE,
       path: "/climate",
-    }),
+    });
+    return { ...base, meta: [...base.meta, { name: "robots", content: "noindex,nofollow" }] };
+  },
   component: LogisightClimate,
 });
