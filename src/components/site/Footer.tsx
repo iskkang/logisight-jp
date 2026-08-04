@@ -6,7 +6,7 @@ import type { ReactNode } from "react";
 import { NewsletterForm } from "./NewsletterForm";
 
 /** 日本版は lang="ja" の記事だけを扱うため、カテゴリ値も日本語。 */
-const NEWS_CATEGORIES = ["海上", "航空", "港湾", "貿易"] as const;
+const NEWS_CATEGORIES = ["海上", "航空", "鉄道", "貿易"] as const;
 
 export function Footer() {
   return (

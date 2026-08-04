@@ -21,6 +21,7 @@ export const getArticleBySlug = createServerFn({ method: "GET" })
       .from("maritime_news")
       .select(SELECT)
       .eq("slug", data.slug)
+      .eq("lang", "ja")
       .maybeSingle();
     if (bySlug.error) throw new Error(bySlug.error.message);
     if (bySlug.data) return normalizeNewsImage(bySlug.data as Article);
@@ -32,6 +33,7 @@ export const getArticleBySlug = createServerFn({ method: "GET" })
         .from("maritime_news")
         .select(SELECT)
         .eq("id", id)
+        .eq("lang", "ja")
         .maybeSingle();
       if (byId.error) throw new Error(byId.error.message);
       if (byId.data) return normalizeNewsImage(byId.data as Article);
@@ -54,6 +56,7 @@ export const getRelatedArticles = createServerFn({ method: "GET" })
       .from("maritime_news")
       .select(SELECT)
       .eq("category", data.category)
+      .eq("lang", "ja")
       .neq("id", data.id)
       .like("url", "http%")
       .order("published_at", { ascending: false, nullsFirst: false })

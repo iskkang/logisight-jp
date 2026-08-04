@@ -27,7 +27,7 @@ type Status =
   | { kind: "error"; message: string };
 
 // 表示は日本語、保存値は DB と共通(韓国語)にする — 値を変えると既存の購読者と揃わない。
-const INTERESTS = ["海上", "航空", "港湾", "貿易", "物流"] as const;
+const INTERESTS = ["海上", "航空", "港湾", "鉄道", "貿易", "物流"] as const;
 
 export function NewsletterForm({ compact = false }: { compact?: boolean }) {
   const [email, setEmail] = useState("");

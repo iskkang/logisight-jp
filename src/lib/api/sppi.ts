@@ -16,13 +16,26 @@ export type SppiSeries = {
   yoyContractPct: number | null;
 };
 
+/** 折れ線用の1点。円ベースと契約通貨ベースを同じ月で並べる。 */
+export type SppiPoint = {
+  period: string; // "2026-06"
+  label: string; // "26/06"
+  yen: number | null;
+  contract: number | null;
+};
+
 export type SppiData = {
   period: string | null; // "2026-06"
   baseYear: string;
   series: SppiSeries[];
   /** 契約通貨ベースが基準年(100)を下回る系列。実質の運賃水準が2020年以下という意味。 */
   belowBase: SppiSeries[];
+  /** 主要系列の推移(古い順)。単月の表だけでは水準の動きが読めない。 */
+  history: { name: string; points: SppiPoint[] }[];
 };
+
+/** 折れ線に出す系列。全系列を重ねると読めないので、海上・航空の代表に絞る。 */
+export const CHART_SERIES = ["外航貨物輸送", "国際航空貨物輸送", "海上貨物輸送"] as const;
 
 export const sppiQueryOptions = () =>
   queryOptions({

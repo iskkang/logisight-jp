@@ -1,6 +1,7 @@
 import { useSuspenseQuery } from "@tanstack/react-query";
 
-import { PageHero } from "@/components/site/PageHero";
+import { Chip, JpPage, SecTitle } from "@/components/jp/JpPage";
+import { PortTotalChart, PortYoyChart } from "@/components/jp/PortChart";
 import {
   formatPortPeriod,
   formatTeu,
@@ -11,92 +12,85 @@ import {
 
 const SOURCE = "国土交通省 港湾統計";
 
-function YoyCell({ value }: { value: number | null }) {
-  const tone = value == null ? "text-slate-400" : value < 0 ? "text-rose-600" : "text-emerald-600";
+function Yoy({ value }: { value: number | null }) {
+  const tone = value == null ? "text-[#8a929c]" : value < 0 ? "text-[#c0392b]" : "text-[#177245]";
   return <span className={`tabular-nums font-medium ${tone}`}>{formatYoy(value)}</span>;
 }
 
 function Row({ port, emphasis }: { port: PortLatest; emphasis?: boolean }) {
   return (
-    <tr className={emphasis ? "bg-slate-50 font-semibold" : ""}>
-      <td className="px-3 py-2.5 text-left whitespace-nowrap text-slate-900">{port.name}</td>
-      <td className="px-3 py-2.5 text-right tabular-nums text-slate-900">{formatTeu(port.teu)}</td>
-      <td className="px-3 py-2.5 text-right tabular-nums text-slate-600">
-        {formatTeu(port.exportTeu)}
-      </td>
-      <td className="px-3 py-2.5 text-right tabular-nums text-slate-600">
-        {formatTeu(port.importTeu)}
-      </td>
-      <td className="px-3 py-2.5 text-right">
-        <YoyCell value={port.yoyPct} />
-      </td>
+    <tr className={`border-b border-[#eef0f2] ${emphasis ? "bg-[#f7f8f9] font-bold" : ""}`}>
+      <td className="py-2.5 pr-3 text-left whitespace-nowrap">{port.name}</td>
+      <td className="py-2.5 pr-3 text-right tabular-nums font-medium">{formatTeu(port.teu)}</td>
+      <td className="py-2.5 pr-3 text-right tabular-nums text-[#4a5462]">{formatTeu(port.exportTeu)}</td>
+      <td className="py-2.5 pr-3 text-right tabular-nums text-[#4a5462]">{formatTeu(port.importTeu)}</td>
+      <td className="w-[92px] py-2.5 text-right"><Yoy value={port.yoyPct} /></td>
     </tr>
   );
 }
 
 export function LogisightPorts() {
   const { data } = useSuspenseQuery(portThroughputQueryOptions());
-
-  const period = data.period;
-  const preliminary = data.total?.isPreliminary ?? data.latest[0]?.isPreliminary ?? false;
+  const { period, total, latest, totalSeries } = data;
+  const preliminary = total?.isPreliminary ?? latest[0]?.isPreliminary ?? false;
 
   return (
-    <div className="min-h-screen bg-white text-slate-900">
-      <PageHero
-        eyebrow="港湾"
-        titleMain="主要6港"
-        titleAccent="コンテナ取扱量"
-        subtitle="東京・横浜・名古屋・神戸・大阪・川崎の外国貿易コンテナ取扱量。国土交通省 港湾統計にもとづく月次の実数と前年同月比。"
-        chips={
-          period
-            ? [{ label: "対象月", value: formatPortPeriod(period), color: "#38bdf8" }]
-            : []
-        }
-      />
-
-      <div className="mx-auto max-w-[1100px] px-4 py-10 lg:px-12">
-        {data.latest.length === 0 && (
-          <p className="text-sm text-slate-500">公表済みのデータがありません。</p>
-        )}
-
-        {data.latest.length > 0 && (
+    <JpPage
+      crumbs={[{ label: "ホーム", to: "/" }, { label: "港湾" }]}
+      title="主要6港 コンテナ取扱量"
+      lead="東京・横浜・名古屋・神戸・大阪・川崎の外国貿易コンテナ取扱量です。合計はこの6港の合計であり、全国計ではありません。"
+      meta={
+        period ? (
           <>
-            <div className="mb-4 flex flex-wrap items-baseline gap-x-3 gap-y-1">
-              <h2 className="text-lg font-bold text-slate-900">{formatPortPeriod(period)}</h2>
-              {preliminary && (
-                <span className="rounded bg-amber-50 px-2 py-0.5 text-[11px] font-medium text-amber-700">
-                  速報値 — 確報とは確定度が異なる
-                </span>
-              )}
-            </div>
-
-            <div className="overflow-x-auto">
-              <table className="w-full min-w-[560px] border-collapse text-[13px]">
-                <thead>
-                  <tr className="border-b-2 border-slate-300 bg-slate-50 text-slate-600">
-                    <th className="px-3 py-2.5 text-left font-semibold">港湾</th>
-                    <th className="px-3 py-2.5 text-right font-semibold">合計 (TEU)</th>
-                    <th className="px-3 py-2.5 text-right font-semibold">輸出</th>
-                    <th className="px-3 py-2.5 text-right font-semibold">輸入</th>
-                    <th className="px-3 py-2.5 text-right font-semibold">前年同月比</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-100">
-                  {data.total && <Row port={data.total} emphasis />}
-                  {data.latest.map((p) => (
-                    <Row key={p.code} port={p} />
-                  ))}
-                </tbody>
-              </table>
-            </div>
-
-            <p className="mt-4 text-[12px] leading-relaxed text-slate-500">
-              ※ 外国貿易コンテナ。合計は主要6港の合計であり全国計ではない。前年同月比のマイナスは
-              「▲」で表す。出典: {SOURCE}。
-            </p>
+            <Chip label="対象月" value={formatPortPeriod(period)} />
+            <Chip label="出典" value="国土交通省" />
+            {preliminary && (
+              <span className="border border-[#e3c98f] bg-[#fdf3e3] px-2.5 py-1 text-[11.5px] font-medium text-[#95601a]">
+                速報値 — 確報とは確定度が異なる
+              </span>
+            )}
           </>
-        )}
-      </div>
-    </div>
+        ) : null
+      }
+    >
+      {latest.length === 0 && (
+        <p className="py-10 text-[13px] text-[#6b7683]">公表済みのデータがありません。</p>
+      )}
+
+      {latest.length > 0 && (
+        <>
+          <SecTitle>推移と港別の動き</SecTitle>
+          <div className="grid grid-cols-1 gap-3.5 min-[820px]:grid-cols-2">
+            {totalSeries.length > 1 && <PortTotalChart points={totalSeries} />}
+            <PortYoyChart ports={latest} />
+          </div>
+
+          <SecTitle>港別</SecTitle>
+          <div className="overflow-x-auto">
+            <table className="w-full min-w-[560px] border-collapse text-[13px]">
+              <thead>
+                <tr className="border-b-2 border-[#b9c0c8] text-[11.5px] text-[#6b7683]">
+                  <th className="py-2 pr-3 text-left font-bold">港湾</th>
+                  <th className="py-2 pr-3 text-right font-bold">合計 (TEU)</th>
+                  <th className="py-2 pr-3 text-right font-bold">輸出</th>
+                  <th className="py-2 pr-3 text-right font-bold">輸入</th>
+                  <th className="py-2 text-right font-bold">前年同月比</th>
+                </tr>
+              </thead>
+              <tbody>
+                {total && <Row port={total} emphasis />}
+                {latest.map((p) => (
+                  <Row key={p.code} port={p} />
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          <p className="mb-2 mt-4 text-[11.5px] leading-[1.8] text-[#8a929c]">
+            ※ 外国貿易コンテナ。合計は主要6港の合計であり全国計ではない。前年同月比のマイナスは「▲」で表す。出典: {SOURCE}。
+          </p>
+        </>
+      )}
+    </JpPage>
   );
 }

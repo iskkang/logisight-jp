@@ -34,7 +34,7 @@ export function HomeFooter() {
           </Col>
           <Col title="ニュース">
             {/* 表示は日本語、絞り込み値は DB の category 列そのまま。 */}
-            {(["海上", "航空", "港湾", "貿易"] as const).map((cat) => (
+            {(["海上", "航空", "鉄道", "貿易"] as const).map((cat) => (
               <Link key={cat} to="/news" search={{ cat }} className={itemCls}>{cat}</Link>
             ))}
           </Col>
