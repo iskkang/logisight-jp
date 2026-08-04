@@ -1,37 +1,18 @@
 import { createFileRoute } from "@tanstack/react-router";
 
 import { seoHead } from "@/lib/seo";
-import { LogisightRates } from "@/components/rates-page/LogisightRates";
-import {
-  freightIndicesHistoryQueryOptions,
-  kitaAirRatesQueryOptions,
-  kitaSeaRatesQueryOptions,
-  indexStatsQueryOptions,
-  kcciRouteStatsQueryOptions,
-} from "@/lib/api/rates";
-import { latestExchangeRateQueryOptions } from "@/lib/api/exchange-rates";
-import { publishedForecastsQueryOptions } from "@/lib/api/forecasts";
-import { publishedPartnerRatesQueryOptions } from "@/lib/api/partner-rates";
+import { sppiQueryOptions } from "@/lib/api/sppi";
+import { LogisightJpRates } from "@/components/rates-page/LogisightJpRates";
 
 export const Route = createFileRoute("/rates")({
-  loader: async ({ context }) => {
-    await Promise.all([
-      context.queryClient.ensureQueryData(freightIndicesHistoryQueryOptions()),
-      context.queryClient.ensureQueryData(kitaAirRatesQueryOptions()),
-      context.queryClient.ensureQueryData(kitaSeaRatesQueryOptions()),
-      context.queryClient.ensureQueryData(latestExchangeRateQueryOptions()),
-      context.queryClient.ensureQueryData(publishedForecastsQueryOptions()),
-      context.queryClient.ensureQueryData(publishedPartnerRatesQueryOptions()),
-      context.queryClient.ensureQueryData(indexStatsQueryOptions()),
-      context.queryClient.ensureQueryData(kcciRouteStatsQueryOptions()),
-    ]);
-  },
+  // 数値そのものが検索対象になるページなので SSR に載せる。
+  loader: ({ context }) => context.queryClient.ensureQueryData(sppiQueryOptions()),
   head: () =>
     seoHead({
-      title: "운임 Control Tower - Logisight",
+      title: "運輸関連の企業向けサービス価格指数(SPPI) | Logisight",
       description:
-        "저장된 KITA 해상·항공 운임과 글로벌 스팟 지수를 결합해 권역별 운임의 수준·추세·이상치를 한눈에 판단합니다.",
+        "外航・国際航空・陸上・港湾運送・倉庫の価格指数を、円ベースと契約通貨ベースに分けて掲載。日本銀行 企業向けサービス価格指数にもとづく月次データ。",
       path: "/rates",
     }),
-  component: LogisightRates,
+  component: LogisightJpRates,
 });
