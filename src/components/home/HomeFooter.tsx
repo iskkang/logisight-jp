@@ -34,8 +34,8 @@ export function HomeFooter() {
           </Col>
           <Col title="ニュース">
             {/* 表示は日本語、絞り込み値は DB の category 列そのまま。 */}
-            {([["海上", "해상"], ["航空", "항공"], ["貿易", "무역"]] as const).map(([label, cat]) => (
-              <Link key={cat} to="/news" search={{ cat }} className={itemCls}>{label}</Link>
+            {(["海上", "航空", "港湾", "貿易"] as const).map((cat) => (
+              <Link key={cat} to="/news" search={{ cat }} className={itemCls}>{cat}</Link>
             ))}
           </Col>
           <Col title="Logisight">

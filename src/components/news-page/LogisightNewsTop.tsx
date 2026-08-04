@@ -38,19 +38,8 @@ type Props = {
 };
 
 // 表示は日本語、値は DB の category 列そのまま。値を変えると絞り込みが空になる。
-const CATEGORIES = [
-  { label: "すべて", value: "전체" },
-  { label: "海上", value: "해상" },
-  { label: "航空", value: "항공" },
-  { label: "物流", value: "물류" },
-  { label: "貿易", value: "무역" },
-];
-const PERIODS = [
-  { label: "すべて", value: "전체" },
-  { label: "今日", value: "오늘" },
-  { label: "今週", value: "이번 주" },
-  { label: "今月", value: "이번 달" },
-];
+const CATEGORIES = ["すべて", "海上", "航空", "港湾", "貿易", "物流"];
+const PERIODS = ["すべて", "今日", "今週", "今月"];
 const NAV = [{ l: "ホーム" }, { l: "ニュース", on: true }, { l: "インサイト" }];
 
 const FALLBACK_PICK: Pick = {
@@ -171,8 +160,8 @@ export default function LogisightNewsTop({
   noteText = "閲覧数・言及量・物流への影響度を総合して自動で選定しています。",
   renderPickLink,
 }: Props) {
-  const [catState, setCatState] = useState(CATEGORIES[0].value);
-  const [perState, setPerState] = useState(PERIODS[0].value);
+  const [catState, setCatState] = useState(CATEGORIES[0]);
+  const [perState, setPerState] = useState(PERIODS[0]);
   const cat = category ?? catState;
   const per = period ?? perState;
   const setCat = (c: string) => (onCategoryChange ? onCategoryChange(c) : setCatState(c));
@@ -205,14 +194,14 @@ export default function LogisightNewsTop({
           <div className="period">
             <span className="pk">期間</span>
             <span className="seg">
-              {PERIODS.map((x) => <button key={x.value} className={x.value === per ? "on" : undefined} onClick={() => setPer(x.value)}>{x.label}</button>)}
+              {PERIODS.map((x) => <button key={x} className={x === per ? "on" : undefined} onClick={() => setPer(x)}>{x}</button>)}
             </span>
           </div>
         </div>
 
         {/* 카테고리 탭 */}
         <div className="tabs">
-          {CATEGORIES.map((x) => <button key={x.value} className={x.value === cat ? "on" : undefined} onClick={() => setCat(x.value)}>{x.label}</button>)}
+          {CATEGORIES.map((x) => <button key={x} className={x === cat ? "on" : undefined} onClick={() => setCat(x)}>{x}</button>)}
         </div>
 
         {/* 이번 주 주목 (자동 선정) */}

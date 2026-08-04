@@ -32,7 +32,7 @@ export const Route = createFileRoute("/news")({
   loaderDeps: ({ search }) => ({ cat: search.cat, date: search.date }),
   loader: ({ context, deps }) =>
     context.queryClient.ensureQueryData(
-      latestNewsQueryOptions({ lang: "ko", limit: 40, category: deps.cat, date: deps.date }),
+      latestNewsQueryOptions({ lang: "ja", limit: 40, category: deps.cat, date: deps.date }),
     ),
   head: () =>
     seoHead({
@@ -48,7 +48,7 @@ function NewsPage() {
   const navigate = useNavigate();
   const { cat, date } = Route.useSearch();
   const { data } = useSuspenseQuery(
-    latestNewsQueryOptions({ lang: "ko", limit: 40, category: cat, date }),
+    latestNewsQueryOptions({ lang: "ja", limit: 40, category: cat, date }),
   );
   const allItems: NewsItem[] = data ?? [];
 
@@ -78,9 +78,9 @@ function NewsPage() {
         showNav={false}
         intro="世界の物流・海運・航空・貿易ニュースを選んでお届けします。"
         date={kstDateLabel()}
-        category={cat ?? "전체"}
+        category={cat ?? "すべて"}
         onCategoryChange={(label) =>
-          navigate({ to: "/news", search: label === "전체" ? {} : { cat: label } })
+          navigate({ to: "/news", search: label === "すべて" ? {} : { cat: label } })
         }
         period={period}
         onPeriodChange={setPeriod}

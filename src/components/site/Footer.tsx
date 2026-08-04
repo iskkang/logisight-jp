@@ -5,15 +5,8 @@ import type { ReactNode } from "react";
 
 import { NewsletterForm } from "./NewsletterForm";
 
-/**
- * 表示は日本語、絞り込み値は DB の category 列そのまま(韓国語)。
- * ニュース本文の日本語化は収集パイプライン側の課題で、列の値は共通のまま使う。
- */
-const NEWS_CATEGORIES = [
-  { label: "海上", value: "해상" },
-  { label: "航空", value: "항공" },
-  { label: "貿易", value: "무역" },
-] as const;
+/** 日本版は lang="ja" の記事だけを扱うため、カテゴリ値も日本語。 */
+const NEWS_CATEGORIES = ["海上", "航空", "港湾", "貿易"] as const;
 
 export function Footer() {
   return (
@@ -48,9 +41,9 @@ export function Footer() {
 
         <FooterCol title="ニュース">
           {NEWS_CATEGORIES.map((c) => (
-            <li key={c.value}>
-              <Link to="/news" search={{ cat: c.value }} className={linkCls}>
-                {c.label}
+            <li key={c}>
+              <Link to="/news" search={{ cat: c }} className={linkCls}>
+                {c}
               </Link>
             </li>
           ))}
