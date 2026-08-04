@@ -39,7 +39,8 @@ function formatDate(value: string | null): string {
   if (!value) return "-";
   const date = new Date(value);
   if (!Number.isFinite(date.getTime())) return value;
-  return date.toLocaleString("ko-KR", {
+  // ko-KR は時刻を「오전 10:30」と組む — 日本版の画面に韓国語が出る唯一の経路だった。
+  return date.toLocaleString("ja-JP", {
     year: "numeric",
     month: "2-digit",
     day: "2-digit",

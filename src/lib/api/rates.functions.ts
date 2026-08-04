@@ -61,10 +61,10 @@ export const getRateFilterOptions = createServerFn({ method: "GET" }).handler(
     return {
       pols: [...polMap.entries()]
         .map(([code, name]) => ({ code, name }))
-        .sort((a, b) => a.name.localeCompare(b.name, "ko")),
+        .sort((a, b) => a.name.localeCompare(b.name, "ja")),
       pods: [...podMap.entries()]
         .map(([code, name]) => ({ code, name }))
-        .sort((a, b) => a.name.localeCompare(b.name, "ko")),
+        .sort((a, b) => a.name.localeCompare(b.name, "ja")),
       containerTypes: [...ctypeSet].sort(),
     };
   },
