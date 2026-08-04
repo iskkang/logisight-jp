@@ -4,16 +4,18 @@
   ],
   "headers": [
     {
-      "source": "/(logisight-hero-navigator.webp|og-default.jpg|world-map.svg|ad-mtl-truck-lcl.png|forecast-hero.png|dashboard-hero.png|dashboard-dark.png|ui.png)",
+      "source": "/(og-default.jpg|world-map.svg|dashboard-hero.png)",
       "headers": [
         { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
       ]
     }
   ],
-  "redirects": [
-    { "source": "/policy", "destination": "/port-risk", "statusCode": 301 }
-  ],
   "rewrites": [
+    {
+      "comment": "日本版のレポートは ja/monthly/... と言語ディレクトリを挟む。韓国版と同じ 2 段の規則だけだと 404 になる。",
+      "source": "/reports/:lang/:type/:file",
+      "destination": "https://hmgbvqczmyjixkqbruzp.supabase.co/storage/v1/object/public/reports/:lang/:type/:file"
+    },
     {
       "source": "/reports/:type/:file",
       "destination": "https://hmgbvqczmyjixkqbruzp.supabase.co/storage/v1/object/public/reports/:type/:file"
