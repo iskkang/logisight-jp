@@ -13,7 +13,10 @@ export type AssetType = "port" | "choke" | "rail" | "inland";
 
 export type AssetRow = {
   id: string;
+  /** 表示名。climate.functions.ts が name_ja に差し替えたあとの値である。 */
   name: string;
+  /** DB の日本語名。未設定なら name を使う。差し替え後は残らない。 */
+  name_ja?: string | null;
   type: AssetType;
   lon: number;
   lat: number;
@@ -41,6 +44,7 @@ export type RouteWaypoint = string | [number, number];
 export type RouteRow = {
   id: string;
   name: string;
+  name_ja?: string | null;
   waypoints: RouteWaypoint[];
   chokes: string[];
 };

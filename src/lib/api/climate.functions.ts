@@ -2,6 +2,7 @@ import { createServerFn } from "@tanstack/react-start";
 import type { SupabaseClient } from "@supabase/supabase-js";
 
 import { supabasePublicServer } from "@/integrations/supabase/public.server";
+import { driverJa } from "./climate-ja";
 import type {
   AssetRow,
   RiskRow,
@@ -15,18 +16,31 @@ import type {
 // → 레포 관례대로 클라이언트를 캐스팅해 사용 (industries/operational-delay.functions.ts와 동일).
 const sb = supabasePublicServer as unknown as SupabaseClient;
 
-// assets 43 · asset_risk 172(4 horizon) · routes 5 · events ~30 — anon read(RLS).
+/**
+ * name は韓国語の単一カラムである。日本版で使うため、ここで name_ja に差し替える。
+ * 表示側(RiskGlobe・LogisightClimate)は name を15か所以上で参照しており、
+ * 呼び出し側を1つずつ直すより境界で入れ替えるほうが漏れがない。
+ * name_ja が未設定の資産は name のまま出す — 空欄より原名のほうが読める。
+ */
+const ja = <T extends { name: string; name_ja?: string | null }>(rows: T[]) =>
+  rows.map(({ name_ja, ...r }) => ({ ...r, name: name_ja ?? r.name }));
+
+/** driver も韓国語である(Edge Function が組み立てる)。同じ境界で訳す。 */
+const jaDriver = <T extends { driver: string | null }>(rows: T[]) =>
+  rows.map((r) => ({ ...r, driver: driverJa(r.driver) }));
+
+// assets 61 · asset_risk 4/asset · routes 6 · events ~30 — anon read(RLS).
 export const getClimateRisk = createServerFn({ method: "GET" }).handler(
   async (): Promise<ClimateRiskData> => {
     const [assetsRes, riskRes, routesRes, eventsRes, fcRes] = await Promise.all([
-      sb.from("assets").select("id,name,type,lon,lat,freeze_prone").limit(500),
+      sb.from("assets").select("id,name,name_ja,type,lon,lat,freeze_prone").limit(500),
       sb
         .from("asset_risk")
         .select(
           "asset_id,horizon_days,score,level,driver,wind_gust,wave_height,precip,snowfall,temp_min,is_freeze,updated_at",
         )
         .limit(2000),
-      sb.from("routes").select("id,name,waypoints,chokes").limit(100),
+      sb.from("routes").select("id,name,name_ja,waypoints,chokes").limit(100),
       sb
         .from("events")
         .select("id,source,kind,title,severity,lon,lat,area,url,starts_at,ends_at,updated_at,track")
@@ -48,9 +62,9 @@ export const getClimateRisk = createServerFn({ method: "GET" }).handler(
     }
 
     return {
-      assets: (assetsRes.data ?? []) as unknown as AssetRow[],
-      risk: (riskRes.data ?? []) as unknown as RiskRow[],
-      routes: (routesRes.data ?? []) as unknown as RouteRow[],
+      assets: ja((assetsRes.data ?? []) as unknown as AssetRow[]),
+      risk: jaDriver((riskRes.data ?? []) as unknown as RiskRow[]),
+      routes: ja((routesRes.data ?? []) as unknown as RouteRow[]),
       events: (eventsRes.data ?? []) as unknown as EventRow[],
       forecasts: (fcRes.data ?? []) as unknown as ClimateForecastRow[],
     };
