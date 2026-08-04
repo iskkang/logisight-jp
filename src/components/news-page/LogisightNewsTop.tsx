@@ -57,12 +57,12 @@ const STYLE = `
   font-family:"Noto Sans JP","Noto Sans JP",system-ui,-apple-system,sans-serif;background:#fff;color:var(--ink);-webkit-font-smoothing:antialiased;letter-spacing:-.01em}
 .lsgn-root *{box-sizing:border-box;margin:0;padding:0}
 .lsgn-root .mono{font-feature-settings:"tnum" 1;letter-spacing:0}
-/* 본문 편집 영역(max-w-[1280px] px-4 lg:px-6)과 좌우 정렬을 맞춘다. */
+/* 本文の編集領域(max-w-[1280px] px-4 lg:px-6)と左右の位置を揃える。 */
 .lsgn-root .wrap{max-width:1280px;margin:0 auto;padding:0 16px}
 @media(min-width:1024px){.lsgn-root .wrap{padding:0 24px}}
 .lsgn-root a{color:inherit;text-decoration:none}
 .lsgn-root button{font:inherit;background:none;border:none;cursor:pointer;color:inherit}
-/* 공유 Wordmark(HomeNav·HomeFooter)의 's'는 .lsgn-root 밖이라 전역 규칙이 필요하다. */
+/* 共有 Wordmark(HomeNav・HomeFooter)の 's' は .lsgn-root の外にあるため全域の規則が必要。 */
 .lsg-ls{background:linear-gradient(95deg,#fff 35%,#2dd4bf);-webkit-background-clip:text;background-clip:text;color:transparent}
 
 .lsgn-root .nav{position:sticky;top:0;z-index:50;background:#070b16d1;backdrop-filter:blur(14px) saturate(1.5);border-bottom:1px solid var(--lineD)}
