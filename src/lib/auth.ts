@@ -6,18 +6,15 @@ import { supabase } from "@/integrations/supabase/client";
 /**
  * ソーシャルログインの提供元。
  *
- * google / apple は Supabase の組み込みプロバイダである。
- * LINE は組み込みに無い(kakao はあるが line は無い)。LINE Login は OIDC に
- * 準拠しているので、Supabase の Custom OIDC provider として 'line' の名前で
- * 登録し、'custom:line' で呼ぶ。
+ * 当面は Google のみ。Apple は Developer Program(年額)が要り、LINE は
+ * Supabase の組み込みに無く Custom OIDC の登録が要る — どちらも準備ができるまで
+ * ボタンを出さない。押しても "provider is not enabled" が返るだけだからである。
  *
- * いずれも Supabase ダッシュボードでクライアント ID/シークレットを設定しない限り
- * 動かない。未設定のまま押すとプロバイダ未登録のエラーが返る。
+ * Google も Supabase ダッシュボードでクライアント ID/シークレットを設定しない限り
+ * 動かない。
  */
 export const SOCIAL = {
   google: "google",
-  apple: "apple",
-  line: "custom:line",
 } as const;
 
 export type SocialProvider = keyof typeof SOCIAL;
