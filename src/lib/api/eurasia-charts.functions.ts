@@ -59,12 +59,14 @@ export const getEurasiaCharts = createServerFn({ method: "GET" }).handler(
         };
       };
     };
-    const { data, error } = await sb.from("eurasia_charts").select("key,payload,updated_at").in("key", ["index_quotes", "geo", "ai_insight"]);
+    // AI 分析は言語別キー。'ai_insight' は韓国語なので読まない。
+    // index_quotes・geo は数値だけなので言語の区別がない。
+    const { data, error } = await sb.from("eurasia_charts").select("key,payload,updated_at").in("key", ["index_quotes", "geo", "ai_insight_ja"]);
     if (error) throw new Error(error.message);
     const byKey = new Map((data ?? []).map((r) => [r.key, r]));
     const iq = byKey.get("index_quotes");
     const geo = byKey.get("geo");
-    const ins = byKey.get("ai_insight");
+    const ins = byKey.get("ai_insight_ja");
     return {
       indexQuotes: (iq?.payload as IndexQuotes) ?? null,
       geo: (geo?.payload as GeoPayload) ?? null,
