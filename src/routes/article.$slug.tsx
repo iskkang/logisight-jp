@@ -1,23 +1,14 @@
 import { createFileRoute, Link, notFound, redirect } from "@tanstack/react-router";
 import { useSuspenseQuery } from "@tanstack/react-query";
-import ReactMarkdown from "react-markdown";
 
 import {
   articleQueryOptions,
   articleParam,
   relatedArticlesQueryOptions,
-  estimateReadMinutes,
-  isSampleArticleUrl,
   isRedirectableUrl,
 } from "@/lib/api/article";
-import { formatPublishedAt, isInternalNewsItem } from "@/lib/api/news";
-import { normalizeArticleContent } from "@/lib/article-content";
 import { SITE_URL } from "@/lib/seo";
-import LogisightArticle from "@/components/article-page/LogisightArticle";
-import type {
-  Article as LsArticle,
-  RelatedArticle,
-} from "@/components/article-page/LogisightArticle";
+import { JpArticle } from "@/components/jp/JpArticle";
 
 export const Route = createFileRoute("/article/$slug")({
   loader: async ({ params, context }) => {
@@ -117,79 +108,7 @@ function ArticlePage() {
   const { slug } = Route.useParams();
   const { data: article } = useSuspenseQuery(articleQueryOptions(slug));
   const { data: related } = useSuspenseQuery(
-    relatedArticlesQueryOptions({
-      id: article.id,
-      category: article.category,
-    }),
+    relatedArticlesQueryOptions({ id: article.id, category: article.category }),
   );
-
-  const normalizedContent = normalizeArticleContent({
-    content: article.content,
-    title: article.title,
-    summary: article.summary,
-    imageUrl: article.image_url,
-    imageCredit: article.image_credit,
-  });
-  const hasContent = normalizedContent.length > 0;
-  const readMin = estimateReadMinutes(normalizedContent);
-  const isExternalSource =
-    !!article.url &&
-    /^https?:\/\//.test(article.url) &&
-    !isSampleArticleUrl(article.url);
-
-  // 인텔리전스 필드(summary_points·impact)는 maritime_news 에 없으므로 전달하지 않는다 → 자동 숨김.
-  const articleProp: LsArticle = {
-    id: String(article.id),
-    category: article.category,
-    title: article.title,
-    deck: article.summary,
-    source: article.source,
-    published_at: formatPublishedAt(article.published_at),
-    registered_at: formatPublishedAt(article.fetched_at ?? null),
-    read_minutes: readMin,
-    image_url: article.image_url,
-    image_caption: article.image_credit,
-    contentNode: hasContent ? (
-      <ReactMarkdown>{normalizedContent}</ReactMarkdown>
-    ) : (
-      // 본문 없음 → 더미 대신 "수집 예정" 안내(데이터 안전 규칙).
-      <p>この記事の全文は準備中です。</p>
-    ),
-    source_origin: isExternalSource ? null : article.source,
-    source_url: isExternalSource ? article.url : null,
-    tags: article.tags,
-  };
-
-  const relatedById = new Map(related.map((n) => [String(n.id), n]));
-  const relatedProp: RelatedArticle[] = related.map((n) => ({
-    id: String(n.id),
-    category: n.category,
-    title: n.title,
-    source: n.source,
-    published_at: formatPublishedAt(n.published_at),
-  }));
-
-  return (
-    <LogisightArticle
-      article={articleProp}
-      related={relatedProp}
-      reportCta={{
-        heading: "このニュースは運賃とサプライチェーンにどう影響するか",
-        body: "今月のマーケットレポートで、運賃・港湾・貿易の動きをまとめてご確認ください。",
-        buttonLabel: "今月のレポートを読む",
-      }}
-      renderRelatedLink={(item, children, className) => {
-        const n = item.id ? relatedById.get(item.id) : undefined;
-        return n && isInternalNewsItem(n) ? (
-          <Link to="/article/$slug" params={{ slug: articleParam(n) }} className={className}>
-            {children}
-          </Link>
-        ) : (
-          <a href={n?.url ?? "#"} target="_blank" rel="noopener noreferrer" className={className}>
-            {children}
-          </a>
-        );
-      }}
-    />
-  );
+  return <JpArticle article={article} related={related} />;
 }
