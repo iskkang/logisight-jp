@@ -223,7 +223,7 @@ function Kpis({ kpis }: { kpis: ReturnType<typeof computeKpis> }) {
     { lab: "今週の発行", ic: "+", bg: "#0d9488", v: `${kpis.publishedThisWeek}件`, num: true, s: "校閲を通過して発行" },
     { lab: "判定待ち", ic: "⏳", bg: "#d97706", v: `${kpis.awaitingJudgment}件`, num: true, s: "確認予定日の前" },
     { lab: "根拠データ 平均", ic: "◉", bg: "#3b82f6", v: kpis.avgEvidence != null ? `${kpis.avgEvidence}/5` : "—", num: true, s: "発行済みの見通しが基準" },
-    { lab: "平均リードタイム", ic: "→", bg: "#64748b", v: kpis.leadTimeDays != null ? `${kpis.leadTimeDays}일` : "—", num: true, s: "発行 → 判定" },
+    { lab: "平均リードタイム", ic: "→", bg: "#64748b", v: kpis.leadTimeDays != null ? `${kpis.leadTimeDays}日` : "—", num: true, s: "発行 → 判定" },
   ];
   return (
     <div className="mt-[22px] grid grid-cols-1 gap-3.5 min-[640px]:grid-cols-3 min-[1080px]:grid-cols-5">
@@ -349,7 +349,7 @@ function DetailPanel({ f, series }: { f: Forecast; series?: ForecastSeries }) {
       <div className={`my-[8px] mb-[18px] text-[26px] font-extrabold tracking-[-0.02em] ${dirColor}`}>{dir.glyph} {dir.label}{f.expected_range_pct ? ` ${f.expected_range_pct}` : ""}</div>
       <div className="grid grid-cols-1 items-start gap-6 min-[1080px]:grid-cols-[1fr_280px]">
         <div>
-          <div className="mb-1.5 text-[12px] text-[#828d9d]">지수 추이 · 見通し区間</div>
+          <div className="mb-1.5 text-[12px] text-[#828d9d]">指数の推移 · 見通し区間</div>
           <ForecastDetailChart series={series} f={f} />
         </div>
         <div>
@@ -387,10 +387,10 @@ function DetailPanel({ f, series }: { f: Forecast; series?: ForecastSeries }) {
 /* ============================ METHODOLOGY (static) ============================ */
 const METHOD: { b: string; s: string }[] = [
   { b: "データ収集", s: "Drewry · 上海航運交易所(SSE) · SCFI/WCI ほか" },
-  { b: "5팩터 채점", s: "モメンタム・供給・需要・コスト・価格行動を −2〜+2 で採点" },
-  { b: "가중 합산", s: "海上: 供給30 · モメンタム25 · 需要25 · コスト10 · 価格10" },
-  { b: "AI 산문 + 자동 검증", s: "判定単位と欠測の有無を自動で検査" },
-  { b: "에디터 검수 후 발행", s: "発行後は本文を変えず、判定日の実測で的中を集計" },
+  { b: "5ファクター採点", s: "モメンタム・供給・需要・コスト・価格行動を −2〜+2 で採点" },
+  { b: "加重合算", s: "海上: 供給30 · モメンタム25 · 需要25 · コスト10 · 価格10" },
+  { b: "AI 執筆 + 自動検証", s: "判定単位と欠測の有無を自動で検査" },
+  { b: "編集の確認後に発行", s: "発行後は本文を変えず、判定日の実測で的中を集計" },
 ];
 function Methodology() {
   return (
@@ -466,7 +466,7 @@ export function LogisightForecast() {
           {/* GEO: 보이지 않는 Article JSON-LD만 유지 (시각 요소 없음) */}
           <GeoArticleSchema
             article={{
-              headline: "물류 시장 見通し — AI 草案 · 編集校閲",
+              headline: "物流市場の見通し — AI 草案 · 編集校閲",
               description:
                 "Logisight AI が現在と過去のデータを分析し、運賃・貿易・政策の方向を確率で見通します。発行前に編集が校閲します。",
               path: "/forecasts",
@@ -510,7 +510,7 @@ export function LogisightForecast() {
                 <Seg items={DIR_SEG} value={dirSeg} onChange={setDir} />
                 <span className="ml-auto text-[12px] text-[#828d9d]">カードを押すと 見通しの詳細・要素スコア・判定結果</span>
               </div>
-              <div className="mb-3.5 mt-[26px] flex items-center justify-between"><h2 className="text-[19px] font-extrabold tracking-[-0.02em] text-[#1a2433]">見通し 카드</h2></div>
+              <div className="mb-3.5 mt-[26px] flex items-center justify-between"><h2 className="text-[19px] font-extrabold tracking-[-0.02em] text-[#1a2433]">見通しカード</h2></div>
               <ForecastCards cards={filtered} series={series} selectedId={selectedId} onSelect={setSel} />
               {selected && <DetailPanel f={selected} series={series[selected.id]} />}
             </>

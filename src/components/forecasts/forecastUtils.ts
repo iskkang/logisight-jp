@@ -2,9 +2,9 @@ import type { Forecast } from "@/lib/api/forecasts";
 
 // 방향 — 서구식: 상승=녹·하락=적·보합=회. 색은 항상 글리프(▲▼▬) 동반.
 export const DIR_META: Record<string, { glyph: string; label: string }> = {
-  up: { glyph: "▲", label: "상승" },
-  down: { glyph: "▼", label: "하락" },
-  flat: { glyph: "▬", label: "보합권" },
+  up: { glyph: "▲", label: "上昇" },
+  down: { glyph: "▼", label: "下落" },
+  flat: { glyph: "▬", label: "横ばい" },
 };
 // 방향 토큰 클래스(리터럴 — Tailwind JIT 스캔 대상). text=글리프/수치, badge=배지, spark=스파크라인 currentColor.
 export const DIR_CLS: Record<string, { text: string; badge: string; spark: string }> = {
@@ -21,28 +21,28 @@ export const TARGET_META: TargetMeta[] = [
   { metric_ref: "WCI", displayLabel: "WCI", displayOrder: 1 },
   { metric_ref: "SCFI", displayLabel: "SCFI", displayOrder: 2 },
   { metric_ref: "KCCI", displayLabel: "KCCI", displayOrder: 3 },
-  { metric_ref: "kita_sea_rates:부산-뉴욕", displayLabel: "부산 → 미동부", displayOrder: 4, baseLabel: "KITA 부산–뉴욕 (USD/FEU)" },
-  { metric_ref: "kita_sea_rates:부산-로테르담", displayLabel: "부산 → 유럽", displayOrder: 5, baseLabel: "KITA 부산–로테르담 (USD/FEU)" },
-  { metric_ref: "WCI_SHA_RTM", displayLabel: "상해 → 유럽", displayOrder: 6, baseLabel: "Drewry WCI 상하이–로테르담" },
-  { metric_ref: "kita_sea_rates:부산-로스앤젤레스", displayLabel: "부산 → 미서부", displayOrder: 7, baseLabel: "KITA 부산–로스앤젤레스 (USD/FEU)" },
-  { metric_ref: "WCI_SHA_LAX", displayLabel: "상해 → 미서부", displayOrder: 8, baseLabel: "Drewry WCI 상하이–로스앤젤레스" },
-  { metric_ref: "kita_sea_rates:부산-함부르크", displayLabel: "부산 → 함부르크", displayOrder: 9, baseLabel: "KITA 부산–함부르크 (USD/FEU)" },
+  { metric_ref: "kita_sea_rates:부산-뉴욕", displayLabel: "釜山 → 北米東岸", displayOrder: 4, baseLabel: "KITA 釜山–ニューヨーク (USD/FEU)" },
+  { metric_ref: "kita_sea_rates:부산-로테르담", displayLabel: "釜山 → 欧州", displayOrder: 5, baseLabel: "KITA 釜山–ロッテルダム (USD/FEU)" },
+  { metric_ref: "WCI_SHA_RTM", displayLabel: "上海 → 欧州", displayOrder: 6, baseLabel: "Drewry WCI 上海–ロッテルダム" },
+  { metric_ref: "kita_sea_rates:부산-로스앤젤레스", displayLabel: "釜山 → 北米西岸", displayOrder: 7, baseLabel: "KITA 釜山–ロサンゼルス (USD/FEU)" },
+  { metric_ref: "WCI_SHA_LAX", displayLabel: "上海 → 北米西岸", displayOrder: 8, baseLabel: "Drewry WCI 上海–ロサンゼルス" },
+  { metric_ref: "kita_sea_rates:부산-함부르크", displayLabel: "釜山 → ハンブルク", displayOrder: 9, baseLabel: "KITA 釜山–ハンブルク (USD/FEU)" },
 ];
 const META_BY_REF = new Map(TARGET_META.map((m) => [m.metric_ref, m]));
 
 export const FACTOR_LABEL: Record<string, string> = {
-  momentum: "모멘텀",
-  supply: "공급(선복)",
-  demand: "수요",
-  cost: "비용(연료/運賃)",
-  pricing: "가격(運賃 수준)",
+  momentum: "モメンタム",
+  supply: "供給(船腹)",
+  demand: "需要",
+  cost: "コスト(燃料油)",
+  pricing: "価格(運賃水準)",
 };
 export const MISSING_LABEL: Record<string, string> = {
-  cost: "유가",
-  pricing: "運賃공시",
-  demand: "수요",
-  supply: "공급",
-  momentum: "모멘텀",
+  cost: "燃料油",
+  pricing: "運賃の公示",
+  demand: "需要",
+  supply: "供給",
+  momentum: "モメンタム",
 };
 
 // 지표 계열 — 시안의 '출처' 필터 대체(출처별 件수는 모호해 부정확).
@@ -83,7 +83,7 @@ export function displayOrderOf(f: Forecast): number {
 // 권역 라벨 카드 기준지표 캡션(지수 자체 WCI/SCFI/KCCI는 라벨=지표라 null).
 export function baseIndexCaption(f: Forecast): string | null {
   const b = META_BY_REF.get(f.metric_ref ?? "")?.baseLabel;
-  return b ? `기준 지표: ${b}` : null;
+  return b ? `基準指標: ${b}` : null;
 }
 
 // 필터 적용(URL 쿼리 状態 → 카드 필터). 순수 함수.
@@ -189,7 +189,7 @@ export function directionStrength(
   const s = score ?? 0;
   const dir = (direction as "up" | "down" | "flat" | null) ?? (s >= 0.4 ? "up" : s <= -0.4 ? "down" : "flat");
   const pct = Math.round(Math.min(Math.abs(s) / 2, 1) * 100);
-  return { dir, pct, label: dir === "up" ? "상승" : dir === "down" ? "하락" : "보합" };
+  return { dir, pct, label: dir === "up" ? "上昇" : dir === "down" ? "下落" : "横ばい" };
 }
 
 // 전 見通し watch_points 통합 → 다가오는 이벤트 캘린더(실 일정만, 중복 제거).
