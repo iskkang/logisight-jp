@@ -77,7 +77,7 @@ function NewsPage() {
       <LogisightNewsTop
         showNav={false}
         intro="世界の物流・海運・航空・貿易ニュースを選んでお届けします。"
-        date={kstDateLabel()}
+        date={jstDateLabel()}
         category={cat ?? "すべて"}
         onCategoryChange={(label) =>
           navigate({ to: "/news", search: label === "すべて" ? {} : { cat: label } })
@@ -444,7 +444,7 @@ function filterByPeriod(items: NewsItem[], period: string): NewsItem[] {
   const today = todayKST(); // "YYYY-MM-DD" (KST)
   return items.filter((n) => {
     if (!n.published_at) return false;
-    const pub = new Date(n.published_at).toLocaleDateString("sv-SE", { timeZone: "Asia/Seoul" });
+    const pub = new Date(n.published_at).toLocaleDateString("sv-SE", { timeZone: "Asia/Tokyo" });
     if (period === "今日") return pub === today;
     const diff = daysBetween(pub, today);
     if (period === "今週") return diff >= 0 && diff <= 7;
@@ -459,14 +459,14 @@ function daysBetween(fromYmd: string, toYmd: string): number {
   return Math.round((b - a) / 86_400_000);
 }
 
-/** "2026.06.24 (수)" — TZ 고정이라 서버/클라이언트 동일 출력. */
-function kstDateLabel(): string {
-  const parts = new Intl.DateTimeFormat("ko-KR", {
+/** "2026.06.24 (水)" — TZ 고정이라 서버/클라이언트 동일 출력. */
+function jstDateLabel(): string {
+  const parts = new Intl.DateTimeFormat("ja-JP", {
     year: "numeric",
     month: "2-digit",
     day: "2-digit",
     weekday: "short",
-    timeZone: "Asia/Seoul",
+    timeZone: "Asia/Tokyo",
   }).formatToParts(new Date());
   const get = (t: string) => parts.find((p) => p.type === t)?.value ?? "";
   return `${get("year")}.${get("month")}.${get("day")} (${get("weekday")})`;

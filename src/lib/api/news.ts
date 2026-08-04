@@ -28,7 +28,7 @@ export function isInternalNewsItem(item: Pick<NewsItem, "slug" | "agent_type">):
 /** Returns today's date in KST as "YYYY-MM-DD". */
 export function todayKST(): string {
   // Swedish locale produces ISO date format "YYYY-MM-DD"
-  return new Date().toLocaleDateString("sv-SE", { timeZone: "Asia/Seoul" });
+  return new Date().toLocaleDateString("sv-SE", { timeZone: "Asia/Tokyo" });
 }
 
 /** Given "YYYY-MM-DD", returns KST start-of-day and end-of-day ISO strings. */

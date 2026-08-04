@@ -12,7 +12,7 @@ function plainText(value: string): string {
     .replace(/^[-*_>\s]+|[-*_>\s]+$/g, "")
     .replace(/\s+/g, " ")
     .trim()
-    .toLocaleLowerCase("ko-KR");
+    .toLocaleLowerCase("ja-JP");
 }
 
 export function normalizeArticleContent({
