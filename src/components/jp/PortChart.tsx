@@ -41,8 +41,8 @@ export function PortTotalChart({ points }: { points: PortSeriesPoint[] }) {
                 typeof v !== "number" ? "—" : n === "前年同月比" ? `${v > 0 ? "+" : ""}${v.toFixed(1)}%` : v.toLocaleString("ja-JP")
               }
             />
-            <Bar yAxisId="l" dataKey="teu" name="TEU" fill="#c3d3e2" barSize={13} />
-            <Line yAxisId="r" type="monotone" dataKey="yoyPct" name="前年同月比" stroke="#0b2d52" strokeWidth={1.8} dot={false} connectNulls />
+            <Bar isAnimationActive={false} yAxisId="l" dataKey="teu" name="TEU" fill="#c3d3e2" barSize={13} />
+            <Line isAnimationActive={false} yAxisId="r" type="monotone" dataKey="yoyPct" name="前年同月比" stroke="#0b2d52" strokeWidth={1.8} dot={false} connectNulls />
           </ComposedChart>
         </ResponsiveContainer>
       </div>
@@ -69,7 +69,7 @@ export function PortYoyChart({ ports }: { ports: PortLatest[] }) {
               contentStyle={{ fontSize: 12, border: "1px solid #d5d9de", borderRadius: 0, padding: "6px 9px" }}
               formatter={(v: number | string) => (typeof v === "number" ? `${v > 0 ? "+" : ""}${v.toFixed(1)}%` : "—")}
             />
-            <Bar dataKey="yoy" name="前年同月比" barSize={26}>
+            <Bar isAnimationActive={false} dataKey="yoy" name="前年同月比" barSize={26}>
               {data.map((d) => (
                 <Cell key={d.name} fill={d.yoy < 0 ? "#c0392b" : "#2e6ea6"} />
               ))}

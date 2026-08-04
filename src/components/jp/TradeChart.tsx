@@ -42,8 +42,8 @@ export function TradeCountryChart({ countries }: { countries: JpTradeCountry[] }
               formatter={(v: number | string) => (typeof v === "number" ? fmtOku(v) : "—")}
             />
             <Legend wrapperStyle={{ fontSize: 11, paddingTop: 2 }} iconSize={10} />
-            <Bar dataKey="export" name="輸出" fill="#0b2d52" barSize={11} />
-            <Bar dataKey="import" name="輸入" fill="#93b0c9" barSize={11} />
+            <Bar isAnimationActive={false} dataKey="export" name="輸出" fill="#0b2d52" barSize={11} />
+            <Bar isAnimationActive={false} dataKey="import" name="輸入" fill="#93b0c9" barSize={11} />
           </BarChart>
         </ResponsiveContainer>
       </div>
@@ -74,7 +74,7 @@ export function TradeItemChart({
       <div className="h-[220px]">
         <ResponsiveContainer width="100%" height="100%">
           <PieChart>
-            <Pie
+            <Pie isAnimationActive={false}
               data={data}
               dataKey="value"
               nameKey="name"

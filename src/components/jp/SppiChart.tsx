@@ -68,7 +68,7 @@ export function SppiChart({
               iconType="plainline"
               iconSize={14}
             />
-            <Line
+            <Line isAnimationActive={false}
               type="monotone"
               dataKey="yen"
               name="円ベース"
@@ -78,7 +78,7 @@ export function SppiChart({
               connectNulls
             />
             {hasContract && (
-              <Line
+              <Line isAnimationActive={false}
                 type="monotone"
                 dataKey="contract"
                 name="契約通貨ベース"
