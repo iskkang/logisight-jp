@@ -179,12 +179,12 @@ export function EurasiaMarketMap({ quotes }: { quotes: IndexQuotes | null }) {
 
   return (
     <section>
-      <SectHead title="마켓맵 · 지수 변화율" />
+      <SectHead title="マーケットマップ · 指数の変化率" />
       <div className={`${CARD} overflow-x-auto p-4 min-[640px]:p-5`}>
         <table className="w-full border-collapse text-[13px]">
           <thead>
             <tr>
-              {["지수", "최신", "추이", "MoM", "3개월", "연초대비", "3년"].map((h, i) => (
+              {["指数", "最新", "推移", "MoM", "3か月", "年初来", "3年"].map((h, i) => (
                 <th key={h} className={`border-b border-[#d8dfe9] px-3 pb-2.5 text-[10.5px] font-bold uppercase tracking-[0.06em] text-[#828d9d] ${i >= 3 ? "text-right" : "text-left"}`}>{h}</th>
               ))}
             </tr>
@@ -243,10 +243,10 @@ export function EurasiaGeoRanking({ geo }: { geo: GeoPayload | null }) {
   const eu = geo.data.filter((x) => x.countrySet === "eu").sort((a, b) => Number(b.TEU) - Number(a.TEU)).slice(0, 10);
   return (
     <section>
-      <SectHead title="지역별 물동량 (TEU)" chip={`${geo.interval?.minDate?.slice(0, 7)} ~ ${geo.interval?.maxDate?.slice(0, 7)}`} />
+      <SectHead title="地域別の輸送量(TEU)" chip={`${geo.interval?.minDate?.slice(0, 7)} ~ ${geo.interval?.maxDate?.slice(0, 7)}`} />
       <div className="grid grid-cols-1 gap-3 min-[900px]:grid-cols-2">
-        <GeoColumn title="중국 (성별)" items={cn} />
-        <GeoColumn title="유럽 (국가별)" items={eu} />
+        <GeoColumn title="中国(省別)" items={cn} />
+        <GeoColumn title="欧州(国別)" items={eu} />
       </div>
       <Attribution />
     </section>

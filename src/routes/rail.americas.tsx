@@ -11,8 +11,8 @@ export const Route = createFileRoute("/rail/americas")({
   },
   head: () =>
     seoHead({
-      title: "미주 철도 코리도어 — Logisight",
-      description: "북미 인터모달 철도 코리도 상태 지도(Watch/Delayed/Normal).",
+      title: "北米鉄道コリドー — Logisight",
+      description: "北米インターモーダル鉄道コリドーの状態マップ(Watch/Delayed/Normal)。",
       path: "/rail/americas",
     }),
   component: RailAmericasMap,

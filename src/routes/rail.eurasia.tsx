@@ -15,9 +15,9 @@ export const Route = createFileRoute("/rail/eurasia")({
   },
   head: () =>
     seoHead({
-      title: "유라시아 철도 — ERAI 지수·운임 — Logisight",
+      title: "ユーラシア鉄道 — ERAI 指数・運賃 — Logisight",
       description:
-        "ERAI(Eurasian Rail Alliance Index) 기반 유라시아 철도 운임·운송기간·지역 물동량을 지도와 차트로.",
+        "ERAI(Eurasian Rail Alliance Index)にもとづくユーラシア鉄道の運賃・輸送日数・地域別輸送量を地図とチャートで。",
       path: "/rail/eurasia",
     }),
   component: RailEurasiaContent,

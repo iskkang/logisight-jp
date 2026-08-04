@@ -4,8 +4,8 @@ import { Link, useRouterState } from "@tanstack/react-router";
 const WRAP = "mx-auto w-full max-w-[1240px] px-4 min-[640px]:px-7";
 
 const TABS = [
-  { to: "/rail/americas", label: "미주", ready: true },
-  { to: "/rail/eurasia", label: "유라시아", ready: true },
+  { to: "/rail/americas", label: "北米", ready: true },
+  { to: "/rail/eurasia", label: "ユーラシア", ready: true },
 ] as const;
 
 export function RailRegionTabs() {
@@ -13,7 +13,7 @@ export function RailRegionTabs() {
   return (
     <div className="border-b border-[#78a0cd1c] bg-[#0a0f1d]">
       <div className={`${WRAP} flex h-[44px] items-center gap-2 overflow-x-auto`}>
-        <span className="mr-1 flex-none text-[10.5px] font-bold tracking-[0.18em] text-[#5d6b80]">권역</span>
+        <span className="mr-1 flex-none text-[10.5px] font-bold tracking-[0.18em] text-[#5d6b80]">地域</span>
         {TABS.map((t) => {
           const active = pathname === t.to || pathname.startsWith(`${t.to}/`);
           const base =
@@ -38,7 +38,7 @@ export function RailRegionTabs() {
               {t.label}
               {!t.ready && (
                 <span className="ml-1.5 rounded-full border border-[#78a0cd33] bg-[#0e1626] px-1.5 py-px text-[9.5px] font-semibold text-[#828d9d]">
-                  준비 중
+                  準備中
                 </span>
               )}
             </Link>

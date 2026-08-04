@@ -110,7 +110,7 @@ function Hero({ onToggleImpact, impactOpen }: { onToggleImpact: () => void; impa
       <div className={`${WRAP} relative z-[1] flex flex-wrap items-end justify-between gap-6 pt-[62px] pb-[70px]`}>
         <div>
           <span className="text-[11px] font-bold uppercase tracking-[0.22em] text-[#2dd4bf]">Port Risk Intelligence</span>
-          <h1 className="mt-3.5 text-[clamp(34px,4.6vw,52px)] font-extrabold leading-[1.05] tracking-[-0.035em] text-[#e9eef7]">リスク <span className="text-[#2dd4bf]">리스크</span></h1>
+          <h1 className="mt-3.5 text-[clamp(34px,4.6vw,52px)] font-extrabold leading-[1.05] tracking-[-0.035em] text-[#e9eef7]">港湾 <span className="text-[#2dd4bf]">リスク</span></h1>
           <p className="mt-4 max-w-[560px] text-[15.5px] leading-[1.6] text-[#93a1b7]">港湾の混雑、海上のボトルネック、主要海峡、ホルムズ海峡の動向を一画面で監視します。</p>
         </div>
         <button type="button" onClick={onToggleImpact} className="whitespace-nowrap rounded-[9px] border border-[#78a0cd33] bg-white/5 px-5 py-3 text-[14px] font-semibold text-[#e9eef7] transition-transform hover:-translate-y-px hover:border-[#2dd4bf73] hover:bg-white/10">
@@ -214,10 +214,10 @@ export function LogisightPort() {
 
           {/* pills */}
           <div className="mb-1.5 mt-4 flex flex-wrap gap-2.5">
-            <Pill c="bg-[#ef4444]">항만 遅延 70%+ <b className="lsg-mono font-semibold text-[#dc2626]">{delayedPorts === 0 ? "없음" : `${delayedPorts}곳`}</b></Pill>
-            <Pill c="bg-[#ef4444]">주요 해협 변동 <b className="lsg-mono font-semibold text-[#dc2626]">{topChoke ? `${topChoke.name} ${fmtPct(topChoke.wowPct)}` : NA}</b></Pill>
-            <Pill c="bg-[#16a34a]">호르무즈 통항 <b className="lsg-mono font-semibold text-[#1a2433]">{hormuz.crossingCount}척</b></Pill>
-            <Pill c="bg-[#16a34a]">DB 이벤트 <b className="lsg-mono font-semibold text-[#1a2433]">{policies.length}件 · 예정 {upcoming30}件</b></Pill>
+            <Pill c="bg-[#ef4444]">港湾遅延 70%+ <b className="lsg-mono font-semibold text-[#dc2626]">{delayedPorts === 0 ? "なし" : `${delayedPorts}港`}</b></Pill>
+            <Pill c="bg-[#ef4444]">主要海峡の変動 <b className="lsg-mono font-semibold text-[#dc2626]">{topChoke ? `${topChoke.name} ${fmtPct(topChoke.wowPct)}` : NA}</b></Pill>
+            <Pill c="bg-[#16a34a]">ホルムズ通航 <b className="lsg-mono font-semibold text-[#1a2433]">{hormuz.crossingCount}隻</b></Pill>
+            <Pill c="bg-[#16a34a]">DB イベント <b className="lsg-mono font-semibold text-[#1a2433]">{policies.length}件 · 予定 {upcoming30}件</b></Pill>
           </div>
 
           {impactOpen && <CargoImpactPanel />}
@@ -229,31 +229,31 @@ export function LogisightPort() {
                 lab="最大の港湾遅延率"
                 val={topPort ? fmtPct(topPort.delayPercent) : NA}
                 tone="red"
-                sub={topPort ? `${topPort.name} · 혼잡도 ${fmtNum(topPort.congestion, 1)} · dwell ${fmtDwell(topPort.importDwell)}` : NA}
+                sub={topPort ? `${topPort.name} · 混雑度 ${fmtNum(topPort.congestion, 1)} · dwell ${fmtDwell(topPort.importDwell)}` : NA}
               />
               <KpiCard
                 lab="主要海峡の最大変動"
                 val={topChoke ? fmtPct(topChoke.wowPct) : NA}
                 tone="red"
-                sub={topChoke ? `${topChoke.name} · ${fmtTeu(topChoke.latestTotalTeu)} TEU · 기준 ${topChoke.asOf ?? "—"}` : NA}
+                sub={topChoke ? `${topChoke.name} · ${fmtTeu(topChoke.latestTotalTeu)} TEU · 基準日 ${topChoke.asOf ?? "—"}` : NA}
                 spark={topChoke?.spark}
                 sparkColor="#dc2626"
               />
               <KpiCard
-                lab="Persian Gulf 선박"
+                lab="Persian Gulf の船舶"
                 val={fmtNum(hormuz.gulfShipCount)}
                 tone="teal"
-                sub={`${hormuz.asOf ?? "—"} · 7일 변화 ${fmtPct(hormuz.gulfShipWowPct)}`}
+                sub={`${hormuz.asOf ?? "—"} · 7日変化 ${fmtPct(hormuz.gulfShipWowPct)}`}
                 spark={hormuz.gulfShipSpark}
                 sparkColor="#0d9488"
               />
               <KpiCard
                 lab="ホルムズ海峡の日次通航"
-                val={`${hormuz.crossingCount}척`}
-                sub={`${hormuz.crossingDate} · 유조선 ${hormuz.tankerCount} · 벌크 ${hormuz.bulkCount}`}
+                val={`${hormuz.crossingCount}隻`}
+                sub={`${hormuz.crossingDate} · タンカー ${hormuz.tankerCount} · バルク ${hormuz.bulkCount}`}
               />
             </div>
-            <DataMeta className="mt-3" source={`${DATASET_SOURCE.portcast}(항만 혼잡) · ${DATASET_SOURCE.econdb}(해협 TEU) · ${DATASET_SOURCE.shipfinder}(호르무즈)`} cadence="주간·일간" method="항만 median 대기일 · 해협 통과 TEU · 통항 매크로" />
+            <DataMeta className="mt-3" source={`${DATASET_SOURCE.portcast}(港湾混雑) · ${DATASET_SOURCE.econdb}(海峡 TEU) · ${DATASET_SOURCE.shipfinder}(ホルムズ)`} cadence="週次・日次" method="港湾の median 待機日数 · 海峡の通過 TEU · 通航マクロ" />
           </Sect>
 
           {/* Chokepoints */}
@@ -268,7 +268,7 @@ export function LogisightPort() {
                   return (
                     <article key={k.name} className={`p-4 ${CARD} ${CARD_H}`}>
                       <div className="flex items-start justify-between gap-2">
-                        <div><div className="text-[15px] font-bold text-[#1a2433]">{k.name}</div><div className="mt-0.5 lsg-mono text-[10.5px] text-[#828d9d]">기준 {k.asOf ?? "—"}</div></div>
+                        <div><div className="text-[15px] font-bold text-[#1a2433]">{k.name}</div><div className="mt-0.5 lsg-mono text-[10.5px] text-[#828d9d]">基準日 {k.asOf ?? "—"}</div></div>
                         <Spark vals={k.spark} color={up ? "#16a34a" : "#dc2626"} className="h-7 w-20" />
                       </div>
                       <div className="my-3.5 flex justify-between gap-2">
@@ -280,27 +280,27 @@ export function LogisightPort() {
                         <Bar key={d.code} label={`${d.name} (${d.code})`} v={fmtTeu(d.value)} pct={Math.round(((d.value ?? 0) / sum) * 100)} />
                       ))}
                       <div className="mt-3 border-t border-[#d8dfe9] pt-[10px] text-[11px] leading-[1.4] text-[#828d9d]">
-                        최신 선박 {k.latestCrossings}척{k.topCrossingName ? ` · 最大 ${k.topCrossingName} ${fmtTeu(k.topCrossingTeu)} TEU` : ""}
+                        直近の船舶 {k.latestCrossings}隻{k.topCrossingName ? ` · 最大 ${k.topCrossingName} ${fmtTeu(k.topCrossingTeu)} TEU` : ""}
                       </div>
                     </article>
                   );
                 })}
               </div>
             )}
-            <DataMeta className="mt-3" source={DATASET_SOURCE.econdb} cadence="일간" unit="TEU" method="해협별 방향 통과 TEU · 통항 추이" />
+            <DataMeta className="mt-3" source={DATASET_SOURCE.econdb} cadence="日次" unit="TEU" method="海峡別の方向別通過 TEU · 通航の推移" />
           </Sect>
 
           {/* Hormuz row */}
           <section className="pt-[30px]">
             <div className="grid grid-cols-1 items-start gap-[18px] min-[1080px]:grid-cols-2">
               <div className={`p-[22px] ${CARD}`}>
-                <div><div className="text-[16px] font-bold text-[#1a2433]">ホルムズ海峡の状況</div><div className="mt-[3px] text-[12px] text-[#828d9d]">Persian Gulf 선박 수와 Strait of Hormuz 일별 통항 상세</div></div>
-                <DataMeta className="mt-2" source={DATASET_SOURCE.shipfinder} cadence="일간" unit="척" method="Persian Gulf 선박 수 · Strait of Hormuz 통항" />
+                <div><div className="text-[16px] font-bold text-[#1a2433]">ホルムズ海峡の状況</div><div className="mt-[3px] text-[12px] text-[#828d9d]">Persian Gulf の船舶数と Strait of Hormuz の日別通航</div></div>
+                <DataMeta className="mt-2" source={DATASET_SOURCE.shipfinder} cadence="日次" unit="隻" method="Persian Gulf の船舶数 · Strait of Hormuz の通航" />
                 <div className="my-[18px] grid grid-cols-1 gap-x-[18px] gap-y-3.5 min-[640px]:grid-cols-2">
-                  <div><div className="text-[11px] text-[#828d9d]">Gulf 선박 수</div><div className="mt-[3px] lsg-mono text-[19px] font-bold text-[#0d9488]">{fmtNum(hormuz.gulfShipCount)}</div><div className="mt-0.5 lsg-mono text-[11px] text-[#828d9d]">7일 변화 {fmtPct(hormuz.gulfShipWowPct)}</div></div>
-                  <div><div className="text-[11px] text-[#828d9d]">통항 기준일</div><div className="mt-[3px] lsg-mono text-[19px] font-bold text-[#1a2433]">{hormuz.crossingDate}</div><div className="mt-0.5 lsg-mono text-[11px] text-[#828d9d]">{hormuz.crossingCount}척 · DWT {fmtNum(hormuz.totalDwt)}</div></div>
-                  <div><div className="text-[11px] text-[#828d9d]">방향 (in / out)</div><div className="mt-[3px] lsg-mono text-[19px] font-bold text-[#1a2433]">{hormuz.eastbound} / {hormuz.westbound}척</div></div>
-                  <div><div className="text-[11px] text-[#828d9d]">유조선 / 벌크</div><div className="mt-[3px] lsg-mono text-[19px] font-bold text-[#1a2433]">{hormuz.tankerCount} / {hormuz.bulkCount}척</div></div>
+                  <div><div className="text-[11px] text-[#828d9d]">Gulf の船舶数</div><div className="mt-[3px] lsg-mono text-[19px] font-bold text-[#0d9488]">{fmtNum(hormuz.gulfShipCount)}</div><div className="mt-0.5 lsg-mono text-[11px] text-[#828d9d]">7日変化 {fmtPct(hormuz.gulfShipWowPct)}</div></div>
+                  <div><div className="text-[11px] text-[#828d9d]">通航の基準日</div><div className="mt-[3px] lsg-mono text-[19px] font-bold text-[#1a2433]">{hormuz.crossingDate}</div><div className="mt-0.5 lsg-mono text-[11px] text-[#828d9d]">{hormuz.crossingCount}隻 · DWT {fmtNum(hormuz.totalDwt)}</div></div>
+                  <div><div className="text-[11px] text-[#828d9d]">方向(in / out)</div><div className="mt-[3px] lsg-mono text-[19px] font-bold text-[#1a2433]">{hormuz.eastbound} / {hormuz.westbound}隻</div></div>
+                  <div><div className="text-[11px] text-[#828d9d]">タンカー / バルク</div><div className="mt-[3px] lsg-mono text-[19px] font-bold text-[#1a2433]">{hormuz.tankerCount} / {hormuz.bulkCount}隻</div></div>
                 </div>
                 {hormuz.macro.length > 0 && (
                   <div className="grid grid-cols-1 gap-2.5 min-[640px]:grid-cols-2">
@@ -329,7 +329,7 @@ export function LogisightPort() {
                       <h4 className="text-[14.5px] font-semibold leading-[1.4] text-[#1a2433] transition-colors group-hover:text-[#0d9488]">{n.title}</h4>
                       {n.summary && <p className="mt-1.5 line-clamp-2 text-[12.5px] leading-[1.5] text-[#54606f]">{n.summary}</p>}
                       <div className="mt-2 flex items-center gap-2 text-[11px] text-[#828d9d]">
-                        {n.source && <span className="rounded-[5px] border border-[#ccfbf1] bg-[#e9f8f4] px-[7px] py-0.5 text-[10px] font-bold tracking-[0.04em] text-[#0d9488]">원문 {n.source}</span>}
+                        {n.source && <span className="rounded-[5px] border border-[#ccfbf1] bg-[#e9f8f4] px-[7px] py-0.5 text-[10px] font-bold tracking-[0.04em] text-[#0d9488]">原文 {n.source}</span>}
                         {n.publishedAt && <span className="lsg-mono">{n.publishedAt}</span>}
                       </div>
                     </a>
@@ -363,7 +363,7 @@ export function LogisightPort() {
                         <td className="px-3.5 py-[11px] text-right lsg-mono text-[#1a2433]">{fmtDwell(p.exportDwell)}</td>
                         <td className="px-3.5 py-[11px] text-right lsg-mono text-[#1a2433]">{fmtDwell(p.transshipDwell)}</td>
                         <td className="px-3.5 py-[11px] text-right lsg-mono text-[#1a2433]">{fmtNum(p.vesselsBerthed)}</td>
-                        <td className="px-3.5 py-[11px] text-right lsg-mono text-[11.5px] text-[#828d9d]">수입 <span className={(p.importTeuMom ?? 0) < 0 ? "text-[#dc2626]" : "text-[#16a34a]"}>{fmtPct(p.importTeuMom)}</span> · 수출 <span className={(p.exportTeuMom ?? 0) < 0 ? "text-[#dc2626]" : "text-[#16a34a]"}>{fmtPct(p.exportTeuMom)}</span></td>
+                        <td className="px-3.5 py-[11px] text-right lsg-mono text-[11.5px] text-[#828d9d]">輸入 <span className={(p.importTeuMom ?? 0) < 0 ? "text-[#dc2626]" : "text-[#16a34a]"}>{fmtPct(p.importTeuMom)}</span> · 輸出 <span className={(p.exportTeuMom ?? 0) < 0 ? "text-[#dc2626]" : "text-[#16a34a]"}>{fmtPct(p.exportTeuMom)}</span></td>
                       </tr>
                     ))}
                   </tbody>
@@ -388,7 +388,7 @@ export function LogisightPort() {
                         <div className={`lsg-mono text-[13px] font-semibold ${up ? "text-[#16a34a]" : "text-[#dc2626]"}`}>{fmtPct(m.changePct)}</div>
                       </div>
                       <div className="mb-1.5 mt-3.5 lsg-mono text-[24px] font-bold text-[#1a2433]">{fmtNum(m.latest, 1)}</div>
-                      <div className="lsg-mono text-[11px] text-[#828d9d]">기준 {m.asOf ?? "—"}</div>
+                      <div className="lsg-mono text-[11px] text-[#828d9d]">基準日 {m.asOf ?? "—"}</div>
                     </div>
                   );
                 })}

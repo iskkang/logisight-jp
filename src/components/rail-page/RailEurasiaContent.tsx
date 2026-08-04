@@ -133,7 +133,7 @@ export function RailEurasiaContent() {
           </p>
           <div className="hpills">
             <span className="p"><span className="dot" style={{ background: "#2dd4bf" }} />ERAI 総合 <b className="mono">${fmtVal(sum.comp)}</b>/FEU</span>
-            <span className="p"><span className="dot" style={{ background: "#16a34a" }} />輸送日数 <b className="mono">{sum.transit != null ? `${sum.transit.toFixed(2)}일` : "—"}</b></span>
+            <span className="p"><span className="dot" style={{ background: "#16a34a" }} />輸送日数 <b className="mono">{sum.transit != null ? `${sum.transit.toFixed(2)}日` : "—"}</b></span>
             <span className="p"><span className="dot" style={{ background: "#94a3b8" }} />基準 <b>{sum.month ?? "—"}</b></span>
           </div>
         </div>
@@ -218,7 +218,7 @@ export function RailEurasiaContent() {
                 {railBrief.risks.map((r, i) => (
                   <div key={i} className="flex items-center justify-between gap-2.5 px-4 py-3 text-[13.5px]">
                     <span className="text-[#1a2433]">{r.title}</span>
-                    <span className={`flex-none rounded-[5px] border px-[7px] py-0.5 text-[10px] font-bold ${r.severity === "high" ? "border-[#fecaca] bg-[#fef2f2] text-[#dc2626]" : r.severity === "medium" ? "border-[#fed7aa] bg-[#fff7ed] text-[#d97706]" : "border-[#e5e7eb] bg-[#f3f4f6] text-[#6b7280]"}`}>{r.severity === "high" ? "경고" : r.severity === "medium" ? "注意" : "낮음"}</span>
+                    <span className={`flex-none rounded-[5px] border px-[7px] py-0.5 text-[10px] font-bold ${r.severity === "high" ? "border-[#fecaca] bg-[#fef2f2] text-[#dc2626]" : r.severity === "medium" ? "border-[#fed7aa] bg-[#fff7ed] text-[#d97706]" : "border-[#e5e7eb] bg-[#f3f4f6] text-[#6b7280]"}`}>{r.severity === "high" ? "警告" : r.severity === "medium" ? "注意" : "低"}</span>
                   </div>
                 ))}
               </div>

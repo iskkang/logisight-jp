@@ -27,9 +27,9 @@ export function EraiWidget() {
   return (
     <section className={`${WRAP} pt-7`}>
       <div className="mb-3 flex items-center justify-between gap-2.5">
-        <h2 className="text-[18px] font-extrabold tracking-[-0.02em] text-[#e9eef7]">ERAI · ユーラシア 철도 運賃 지수</h2>
+        <h2 className="text-[18px] font-extrabold tracking-[-0.02em] text-[#e9eef7]">ERAI · ユーラシア鉄道運賃指数</h2>
         <span className="rounded-full border border-[#78a0cd1c] bg-[#0e1626] px-2.5 py-1 text-[11px] text-[#93a1b7]">
-          index1520 · USD/FEU · {asOf ? asOf.slice(0, 7) : "월별"}
+          index1520 · USD/FEU · {asOf ? asOf.slice(0, 7) : "月次"}
         </span>
       </div>
       <div className="grid grid-cols-2 gap-3 min-[900px]:grid-cols-4">
@@ -53,12 +53,12 @@ export function EraiWidget() {
           <div className="text-[11.5px] font-medium text-[#93a1b7]">{ERAI_LABELS["ERAI_TRANSIT_DAYS"]}</div>
           <div className="mt-[6px] text-[22px] font-extrabold tracking-[-0.02em] text-[#2dd4bf]">
             {transit?.latest_value != null ? transit.latest_value.toFixed(2) : "—"}
-            <span className="ml-1 text-[11px] font-medium text-[#5d6b80]">일</span>
+            <span className="ml-1 text-[11px] font-medium text-[#5d6b80]">日</span>
           </div>
-          <div className="mt-[4px] text-[11.5px] text-[#5d6b80]">철도 운송기간(현재)</div>
+          <div className="mt-[4px] text-[11.5px] text-[#5d6b80]">鉄道の輸送日数(現在)</div>
         </div>
       </div>
-      <DataMeta className="mt-3" source={INDEX_SOURCE.ERAI} cadence="월간" unit="USD/FEU · 운송기간 일" method="ユーラシア 철도 運賃 컴포지트(ERAI)" />
+      <DataMeta className="mt-3" source={INDEX_SOURCE.ERAI} cadence="月次" unit="USD/FEU · 輸送日数" method="ユーラシア鉄道運賃コンポジット(ERAI)" />
     </section>
   );
 }
@@ -73,7 +73,7 @@ export function RailNewsFeed({ title, chip, items, emptyText }: { title: string;
       </div>
       {items.length === 0 ? (
         <div className="rounded-[12px] border border-[#78a0cd1c] bg-[#0e1626] px-5 py-10 text-center text-[13px] text-[#93a1b7]">
-          {emptyText ?? "표시할 기사가 없습니다."}
+          {emptyText ?? "表示できる記事がありません。"}
         </div>
       ) : (
         <ul className="divide-y divide-[#78a0cd14] overflow-hidden rounded-[12px] border border-[#78a0cd1c] bg-[#0a0f1d]">

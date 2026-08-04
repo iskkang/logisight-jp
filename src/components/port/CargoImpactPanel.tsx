@@ -8,7 +8,7 @@ import { useSuspenseQuery } from "@tanstack/react-query";
 
 const CARD = "rounded-[14px] border border-[#d8dfe9] bg-[#f4f7fb] shadow-[0_1px_2px_rgba(16,24,40,0.04)]";
 
-const SEV_LABEL: Record<string, string> = { high: "높음", medium: "중간", low: "낮음", info: "정보" };
+const SEV_LABEL: Record<string, string> = { high: "高", medium: "中", low: "低", info: "情報" };
 const SEV_TONE: Record<string, string> = {
   high: "text-[#b42318] bg-[#fef0ef] border-[#fdd3cf]",
   medium: "text-[#b54708] bg-[#fff7ed] border-[#fed7aa]",
@@ -58,7 +58,7 @@ function PolicyChecklist({
           <li key={p.id} className="flex items-start gap-2.5 rounded-[10px] border border-[#d8dfe9] bg-white px-3 py-2">
             <button
               type="button" role="checkbox" aria-checked={checked}
-              aria-label={`${p.title_ko} 점검 완료 표시`}
+              aria-label={`${p.title_ko} を確認済みにする`}
               onClick={() => onToggle(p.id)}
               className={`mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded border text-[10px] leading-none ${checked ? "border-[#0d9488] bg-[#0d9488]/15 text-[#0d9488]" : "border-[#d8dfe9] text-transparent"}`}
             >✓</button>
@@ -72,13 +72,13 @@ function PolicyChecklist({
                 {d !== null && d >= 0 && (
                   <span suppressHydrationWarning className={`rounded px-1 py-0.5 text-[10px] font-medium ${d <= 30 ? "bg-[#fef0ef] text-[#b42318]" : "bg-[#fff7ed] text-[#b54708]"}`}>D−{d}</span>
                 )}
-                {!p.last_verified_at && <span className="rounded bg-[#fff7ed] px-1 py-0.5 text-[10px] text-[#b54708]">검증 전</span>}
+                {!p.last_verified_at && <span className="rounded bg-[#fff7ed] px-1 py-0.5 text-[10px] text-[#b54708]">未検証</span>}
               </div>
               <div className="mt-0.5 flex flex-wrap items-center gap-x-3 gap-y-0.5 text-[11px] text-[#828d9d]">
                 <span>{[p.region, p.country_code].filter(Boolean).join(" · ") || p.policy_type}</span>
-                {p.effective_date && <span>발효 {p.effective_date}</span>}
+                {p.effective_date && <span>発効 {p.effective_date}</span>}
                 {p.affected_hs_chapters && p.affected_hs_chapters.length > 0 && <span>HS {p.affected_hs_chapters.slice(0, 4).join(", ")}</span>}
-                {p.source_url && <a href={p.source_url} target="_blank" rel="noopener noreferrer" className="text-[#0d9488] underline">출처↗</a>}
+                {p.source_url && <a href={p.source_url} target="_blank" rel="noopener noreferrer" className="text-[#0d9488] underline">出典↗</a>}
               </div>
             </div>
           </li>
@@ -93,26 +93,26 @@ function PolicyDetail({ policy }: { policy: PolicyRow }) {
   return (
     <div className="space-y-5">
       {!policy.last_verified_at && (
-        <div className="rounded bg-[#fff7ed] px-3 py-2 text-[11px] font-medium text-[#b54708]">검증 전 — last_verified_at 미입력. 내용을 확인 후 어드민에서 갱신하세요.</div>
+        <div className="rounded bg-[#fff7ed] px-3 py-2 text-[11px] font-medium text-[#b54708]">未検証 — last_verified_at が未入力である。内容を確認のうえ管理画面で更新すること。</div>
       )}
       {policy.summary_ko && (
         <div>
-          <p className="mb-1 text-[11px] font-semibold uppercase tracking-wide text-[#828d9d]">변경 내용 요약</p>
+          <p className="mb-1 text-[11px] font-semibold uppercase tracking-wide text-[#828d9d]">変更内容の要約</p>
           <p className="text-sm leading-relaxed">{policy.summary_ko}</p>
         </div>
       )}
       <div className="grid grid-cols-2 gap-y-2 text-xs">
-        <span className="text-[#828d9d]">유형</span><span>{policy.policy_type}</span>
-        <span className="text-[#828d9d]">지역·국가</span><span>{[policy.region, policy.country_code].filter(Boolean).join(" · ") || "—"}</span>
-        <span className="text-[#828d9d]">심각도</span><span><SevBadge sev={policy.severity} /></span>
-        <span className="text-[#828d9d]">발효일</span><span>{policy.effective_date ?? "—"}{d !== null && d >= 0 && <span className="ml-1.5 text-[#828d9d]">(D−{d})</span>}</span>
-        <span className="text-[#828d9d]">만료일</span><span>{policy.expiry_date ?? "—"}</span>
-        <span className="text-[#828d9d]">영향 HS 챕터</span><span>{policy.affected_hs_chapters?.join(", ") || "—"}</span>
-        <span className="text-[#828d9d]">최종 검증</span><span className={policy.last_verified_at ? "" : "text-[#b54708]"}>{policy.last_verified_at?.slice(0, 10) ?? "검증 전"}</span>
+        <span className="text-[#828d9d]">種別</span><span>{policy.policy_type}</span>
+        <span className="text-[#828d9d]">地域・国</span><span>{[policy.region, policy.country_code].filter(Boolean).join(" · ") || "—"}</span>
+        <span className="text-[#828d9d]">深刻度</span><span><SevBadge sev={policy.severity} /></span>
+        <span className="text-[#828d9d]">発効日</span><span>{policy.effective_date ?? "—"}{d !== null && d >= 0 && <span className="ml-1.5 text-[#828d9d]">(D−{d})</span>}</span>
+        <span className="text-[#828d9d]">失効日</span><span>{policy.expiry_date ?? "—"}</span>
+        <span className="text-[#828d9d]">影響する HS 章</span><span>{policy.affected_hs_chapters?.join(", ") || "—"}</span>
+        <span className="text-[#828d9d]">最終検証</span><span className={policy.last_verified_at ? "" : "text-[#b54708]"}>{policy.last_verified_at?.slice(0, 10) ?? "未検証"}</span>
       </div>
       {policy.source_url && (
         <div>
-          <p className="mb-1 text-[11px] font-semibold uppercase tracking-wide text-[#828d9d]">출처</p>
+          <p className="mb-1 text-[11px] font-semibold uppercase tracking-wide text-[#828d9d]">出典</p>
           <a href={policy.source_url} target="_blank" rel="noopener noreferrer" className="break-all text-xs text-[#0d9488] underline">{policy.source_url}</a>
         </div>
       )}
@@ -151,26 +151,26 @@ export function CargoImpactPanel() {
   return (
     <section className={`mt-[18px] space-y-3 p-[22px] ${CARD}`}>
       <div>
-        <h2 className="text-[16px] font-bold text-[#1a2433]">내 화물 영향 분석</h2>
-        <p className="mt-0.5 text-[12px] text-[#828d9d]">화물 HS 챕터·지역을 입력하면 현재 DB의 리스크 이벤트 중 영향 항목을 추려 점검 체크리스트를 만듭니다 · DB 기준, 추정·임의 수치 없음</p>
+        <h2 className="text-[16px] font-bold text-[#1a2433]">自社貨物への影響分析</h2>
+        <p className="mt-0.5 text-[12px] text-[#828d9d]">貨物の HS 章・地域を入力すると、DB にあるリスクイベントのうち影響するものを抜き出し、確認用のチェックリストを作ります · DB の値のみ、推定や任意の数値は使いません</p>
       </div>
       <div className="grid gap-3 min-[640px]:grid-cols-2">
         <div>
-          <label className="text-[11px] text-[#828d9d]">HS 챕터 (쉼표로 구분)</label>
-          <input value={hsInput} onChange={(e) => setHsInput(e.target.value)} placeholder="예: 84, 85, 87" inputMode="numeric" className="mt-0.5 w-full rounded-[8px] border border-[#d8dfe9] bg-white px-2.5 py-2 text-xs" />
+          <label className="text-[11px] text-[#828d9d]">HS 章(カンマ区切り)</label>
+          <input value={hsInput} onChange={(e) => setHsInput(e.target.value)} placeholder="例: 84, 85, 87" inputMode="numeric" className="mt-0.5 w-full rounded-[8px] border border-[#d8dfe9] bg-white px-2.5 py-2 text-xs" />
         </div>
         <div>
-          <label className="text-[11px] text-[#828d9d]">지역·국가 (선택)</label>
-          <input value={regionInput} onChange={(e) => setRegionInput(e.target.value)} placeholder="예: EU, US, CN" className="mt-0.5 w-full rounded-[8px] border border-[#d8dfe9] bg-white px-2.5 py-2 text-xs" />
+          <label className="text-[11px] text-[#828d9d]">地域・国(任意)</label>
+          <input value={regionInput} onChange={(e) => setRegionInput(e.target.value)} placeholder="例: EU, US, CN" className="mt-0.5 w-full rounded-[8px] border border-[#d8dfe9] bg-white px-2.5 py-2 text-xs" />
         </div>
       </div>
       {matches === null ? (
-        <p className="text-xs text-[#828d9d]">HS 챕터 또는 지역을 입력하세요.</p>
+        <p className="text-xs text-[#828d9d]">HS 章または地域を入力してください。</p>
       ) : matches.length === 0 ? (
-        <p className="text-xs text-[#828d9d]">입력 조件에 해당하는 리스크 이벤트가 없습니다 (현재 DB 기준).</p>
+        <p className="text-xs text-[#828d9d]">入力した条件に該当するリスクイベントはありません(現在の DB の範囲)。</p>
       ) : (
         <div className="space-y-2">
-          <p className="text-xs font-medium text-[#1a2433]">{matches.length}件 해당 — 점검 체크리스트</p>
+          <p className="text-xs font-medium text-[#1a2433]">{matches.length}件 該当 — 確認チェックリスト</p>
           <PolicyChecklist items={matches} checkedIds={checkedIds} onToggle={toggleChecked} onSelect={setSelected} />
         </div>
       )}
