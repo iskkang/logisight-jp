@@ -1,6 +1,6 @@
 // A — 히어로. 다크 네이비 + 컨테이너선 블리드(프로토타입 PageHero 스타일) + 모듈 탭 + 状態 칩.
 // 최종 업데이트 = max(published_at), 모듈 탭은 데이터가 존재하는 모듈만(빈 탭 금지).
-const WEEKDAY = ["일", "월", "화", "수", "목", "금", "토"];
+const WEEKDAY = ["日", "月", "火", "水", "木", "金", "土"];
 
 function kst(iso: string): string {
   const d = new Date(Date.parse(iso) + 9 * 3600000);
@@ -52,11 +52,11 @@ export function ForecastHero({
           Verified Forecast
         </div>
         <h1 className="text-3xl font-extrabold leading-[1.05] tracking-tight text-white lg:text-[40px]">
-          물류 시장 <span style={{ color: "#5bb8f5" }}>見通し</span>
+          物流市場の <span style={{ color: "#5bb8f5" }}>見通し</span>
         </h1>
         <p className="mt-3 max-w-[640px] text-sm leading-relaxed text-white/80">
-          향후 2~4주 運賃 방향을 정량 모델 + 에디터 검수로 발행하고, 판정일 실측으로 사후 적중을
-          매깁니다. 적중률 분모는 발행된 見通し 전수입니다.
+          今後2〜4週の運賃の方向を定量モデルと編集の確認を経て発行し、判定日の実測で事後の的中を
+          評価する。的中率の分母は発行した見通しの全件である。
         </p>
 
         {modules.length > 0 && (
@@ -96,9 +96,9 @@ export function ForecastHero({
             </span>
           ))}
           <span className="inline-flex items-center gap-2 whitespace-nowrap rounded-full border border-white/15 bg-white/10 px-3.5 py-1.5 text-[13px] text-white/80 backdrop-blur">
-            🗓 최종 업데이트{" "}
+            🗓 最終更新{" "}
             <b className="font-bold text-white" style={{ fontFamily: "var(--font-mono)" }}>
-              {lastUpdated ? kst(lastUpdated) : "데이터 収集中"}
+              {lastUpdated ? kst(lastUpdated) : "データ収集中"}
             </b>
           </span>
         </div>

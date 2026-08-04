@@ -83,15 +83,15 @@ export function ForecastKpiStrip({ kpis }: { kpis: Kpis }) {
   return (
     <div className="flex flex-col divide-y divide-border rounded-xl border border-border bg-card sm:flex-row sm:divide-x sm:divide-y-0">
       <Cell
-        label="방향 적중률 · 최근 12주"
-        value={hitRate.gate ? <span className="text-base font-semibold text-muted-foreground">판정 표본 누적 중</span> : `${hitRate.rate}%`}
-        sub={hitRate.gate ? `표본 ${hitRate.sample}/10` : "hit+부분 / 전체"}
+        label="方向の的中率 · 直近12週"
+        value={hitRate.gate ? <span className="text-base font-semibold text-muted-foreground">判定サンプルを蓄積中</span> : `${hitRate.rate}%`}
+        sub={hitRate.gate ? `サンプル ${hitRate.sample}/10` : "的中+一部 / 全体"}
         icon="target"
       />
-      <Cell label="Published" value={`${publishedThisWeek}`} sub="이번 주 발행 見通し" icon="doc" />
-      <Cell label="판정 대기" value={`${awaitingJudgment}`} sub="확인 대기 중인 見通し" icon="hourglass" />
-      <Cell label="근거 데이터 平均" value={avgEvidence != null ? `${avgEvidence}/5` : "—"} sub="見通し 平均 근거 팩터" icon="shield" />
-      <Cell label="平均 리드타임" value={leadTimeDays != null ? `${leadTimeDays}일` : "—"} sub="모델 신호 → 발행" icon="clock" />
+      <Cell label="Published" value={`${publishedThisWeek}`} sub="今週の発行見通し" icon="doc" />
+      <Cell label="判定待ち" value={`${awaitingJudgment}`} sub="確認待ちの見通し" icon="hourglass" />
+      <Cell label="根拠データ平均" value={avgEvidence != null ? `${avgEvidence}/5` : "—"} sub="見通し1件あたりの根拠ファクター" icon="shield" />
+      <Cell label="平均リードタイム" value={leadTimeDays != null ? `${leadTimeDays}日` : "—"} sub="モデルの signal → 発行" icon="clock" />
     </div>
   );
 }

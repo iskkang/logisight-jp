@@ -207,7 +207,7 @@ export function RailEurasiaContent() {
             </div>
           </div>
 
-          {/* ユーラシア 리스크 (AI 분석: レポート + 철도ニュース) */}
+          {/* ユーラシアのリスク(AI 분석: 리포트 + 철도 뉴스) */}
           {railBrief.risks.length > 0 && (
             <section>
               <div className="mb-3 mt-[26px] flex items-center justify-between gap-2.5">
@@ -231,7 +231,7 @@ export function RailEurasiaContent() {
           <EurasiaMarketMap quotes={charts.indexQuotes} />
           <EurasiaGeoRanking geo={charts.geo} />
 
-          <div className="src">出典: ERAI (Eurasian Rail Alliance Index) · <a href="https://index1520.com" target="_blank" rel="noopener noreferrer">index1520.com</a> · 철도 ニュース는 <a href="/news?cat=철도">ニュース › 철도</a></div>
+          <div className="src">出典: ERAI (Eurasian Rail Alliance Index) · <a href="https://index1520.com" target="_blank" rel="noopener noreferrer">index1520.com</a> · 鉄道ニュースは <a href="/news?cat=鉄道">ニュース › 鉄道</a></div>
           </>
           )}
         </div>

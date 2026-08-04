@@ -1,21 +1,21 @@
 // G — 방법론 스트립(실제 파이프라인만 기술). Z-Score·50+ 지표 등 시안 문구 사용 금지.
 // 가중치 단일 소스 — 스펙 freight-rate-forecast-prompt-v1.x(config/forecast-model.js WEIGHTS.ocean)와
 // 동기화. 분기 보정 시 이 상수 1곳만 갱신(v1.5 연동).
-const OCEAN_WEIGHTS: Record<string, number> = { 공급: 30, 모멘텀: 25, 수요: 25, 비용: 10, 가격행동: 10 };
+const OCEAN_WEIGHTS: Record<string, number> = { 供給: 30, モメンタム: 25, 需要: 25, コスト: 10, 価格動向: 10 };
 const WEIGHTS_LABEL = Object.entries(OCEAN_WEIGHTS).map(([k, v]) => `${k} ${v}`).join("·");
 
 const STEPS = [
-  { t: "データ収集", d: "관세청·Drewry·상하이해운거래소·KITA·SCFI/WCI" },
-  { t: "5팩터 채점", d: "모멘텀·공급·수요·비용·가격 −2~+2" },
-  { t: "가중 합산", d: `해상 ${WEIGHTS_LABEL} · 한국발 중국 수급 보정` },
-  { t: "AI 산문 + 자동 검증", d: "단정·단위·결측 단정 검사" },
-  { t: "에디터 검수 후 발행", d: "발행 후 본문 불변 · 판정일 실측 적중" },
+  { t: "データ収集", d: "Drewry·上海航運交易所·SCFI/WCI ほか" },
+  { t: "5ファクター採点", d: "モメンタム·供給·需要·コスト·価格 −2〜+2" },
+  { t: "加重合算", d: `海上 ${WEIGHTS_LABEL}` },
+  { t: "AI 執筆 + 自動検証", d: "断定·単位·欠測の断定を検査" },
+  { t: "編集の確認後に発行", d: "発行後は本文を変更しない · 判定日の実測で的中" },
 ];
 
 export function ForecastMethodology() {
   return (
     <section className="mt-10 rounded-xl border border-border bg-card p-5">
-      <div className="mb-3 text-sm font-semibold text-foreground">모델 방법론</div>
+      <div className="mb-3 text-sm font-semibold text-foreground">モデルの方法論</div>
       <ol className="flex flex-col gap-3 sm:flex-row sm:items-stretch">
         {STEPS.map((s, i) => (
           <li key={s.t} className="flex flex-1 items-start gap-2">
@@ -30,8 +30,8 @@ export function ForecastMethodology() {
         ))}
       </ol>
       <p className="mt-4 border-t border-border pt-3 text-[11px] leading-relaxed text-muted-foreground">
-        본 見通し은 정보 제공 목적이며 투자·계약 권유가 아닙니다. 결측 팩터는 가중치를 재분배하고,
-        인과 단정 없이 상관·정합·추정으로만 기술합니다. 적중률은 발행된 見通し 전수를 분모로 합니다.
+        本見通しは情報提供が目的であり、投資や契約の勧誘ではない。欠測したファクターは加重を再配分し、
+        因果を断定せず相関·整合·推定にとどめて記述する。的中率は発行した見通しの全件を分母とする。
       </p>
     </section>
   );
