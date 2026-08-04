@@ -1,9 +1,12 @@
 import { createFileRoute } from "@tanstack/react-router";
 
 import { seoHead } from "@/lib/seo";
+import { portThroughputQueryOptions } from "@/lib/api/ports";
 import { LogisightPorts } from "@/components/ports-page/LogisightPorts";
 
 export const Route = createFileRoute("/ports")({
+  // 数値そのものが検索対象になるページなので、クライアント取得ではなく SSR に載せる。
+  loader: ({ context }) => context.queryClient.ensureQueryData(portThroughputQueryOptions()),
   head: () =>
     seoHead({
       title: "主要6港 コンテナ取扱量 — 港湾統計 | Logisight",

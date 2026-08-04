@@ -22,11 +22,21 @@ const SUB_GNB = [
   { to: "/port-risk", label: "リスク" },
 ] as const;
 
-// 대시보드(다크 토글 허용) 영역
+// サブ GNB を出す領域。
 export const DASHBOARD_PREFIXES = SUB_GNB.map((i) => i.to);
 
+/**
+ * ダークテーマに対応済みのページだけ。サブ GNB に載っているかどうかとは別物である —
+ * /ports・/climate はライト専用の配色で、ダークにすると本文が白飛びする。
+ */
+const DARK_CAPABLE = ["/rates", "/trade", "/port-risk"] as const;
+
+function matches(pathname: string, prefixes: readonly string[]): boolean {
+  return prefixes.some((p) => pathname === p || pathname.startsWith(`${p}/`));
+}
+
 function isDashboardPath(pathname: string): boolean {
-  return DASHBOARD_PREFIXES.some((p) => pathname === p || pathname.startsWith(`${p}/`));
+  return matches(pathname, DASHBOARD_PREFIXES);
 }
 
 export function Navigation() {
@@ -34,7 +44,7 @@ export function Navigation() {
   const { dark, toggle } = useDarkMode();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const inDash = isDashboardPath(pathname);
-  const showThemeToggle = inDash;
+  const showThemeToggle = matches(pathname, DARK_CAPABLE);
 
   const topActive = (to: string): boolean => {
     if (to === "/") return pathname === "/";

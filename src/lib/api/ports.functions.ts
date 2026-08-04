@@ -7,6 +7,7 @@ import { PUBLIC_SWR_CACHE } from "@/lib/cache-control";
 import {
   JP_MAJOR6,
   JP_PORT_NAMES,
+  periodKey,
   type PortLatest,
   type PortThroughputData,
   type PortThroughputRow,
@@ -16,10 +17,8 @@ import {
 // (climate/industries.functions.ts と同じ)。
 const sb = supabasePublicServer as unknown as SupabaseClient;
 
-const SELECT = "port_code,period,teu,export_teu,import_teu,yoy_pct,is_preliminary";
-
-/** 主要6港と合計行だけ。韓国側の港も同じ表に入るため港コードで絞る。 */
-const CODES = [...Object.keys(JP_PORT_NAMES), JP_MAJOR6];
+// 期間は period ではなく year/month の2列で持つ。
+const SELECT = "port_code,year,month,teu,export_teu,import_teu,yoy_pct,is_preliminary";
 
 function toLatest(row: PortThroughputRow): PortLatest {
   return {
@@ -37,11 +36,13 @@ export const getPortThroughput = createServerFn({ method: "GET" }).handler(
   async (): Promise<PortThroughputData> => {
     setResponseHeader("cache-control", PUBLIC_SWR_CACHE);
 
+    // 同じ表に韓国の港も入る。country で日本分だけに絞る。
     const { data, error } = await sb
       .from("port_throughput")
       .select(SELECT)
-      .in("port_code", CODES)
-      .order("period", { ascending: false })
+      .eq("country", "JP")
+      .order("year", { ascending: false })
+      .order("month", { ascending: false })
       .limit(1000);
     if (error) throw new Error(error.message);
 
@@ -53,19 +54,19 @@ export const getPortThroughput = createServerFn({ method: "GET" }).handler(
     // 港別と合計で公表タイミングがずれることがある。港別の最新月を基準にする —
     // 合計だけ新しい月を見せると、表の合計と内訳が別の月になる。
     const portRows = rows.filter((r) => r.port_code !== JP_MAJOR6);
-    const period = portRows.length > 0 ? portRows[0].period : rows[0].period;
+    const period = periodKey(portRows.length > 0 ? portRows[0] : rows[0]);
 
     const latest = portRows
-      .filter((r) => r.period === period)
+      .filter((r) => periodKey(r) === period)
       .map(toLatest)
       .sort((a, b) => (b.teu ?? 0) - (a.teu ?? 0));
 
-    const totalRow = rows.find((r) => r.port_code === JP_MAJOR6 && r.period === period);
+    const totalRow = rows.find((r) => r.port_code === JP_MAJOR6 && periodKey(r) === period);
 
     const totalSeries = rows
       .filter((r) => r.port_code === JP_MAJOR6)
       .map((r) => ({
-        period: r.period,
+        period: periodKey(r),
         teu: r.teu === null ? null : Number(r.teu),
         yoyPct: r.yoy_pct === null ? null : Number(r.yoy_pct),
         isPreliminary: Boolean(r.is_preliminary),

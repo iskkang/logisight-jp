@@ -22,7 +22,7 @@
   border: 1px solid var(--line);
   border-radius: 14px;
   overflow: hidden;
-  font-family: "Pretendard", -apple-system, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+  font-family: "Noto Sans JP", -apple-system, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
 }
 .risk-globe * { box-sizing: border-box; }
 

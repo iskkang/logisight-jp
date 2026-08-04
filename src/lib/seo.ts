@@ -4,9 +4,9 @@
 // 사용: head: () => seoHead({ title, description, path: "/rates" })
 //
 // SITE_URL은 사이트 전역 도메인 단일 소스 — sitemap·__root·article·indexnow가 여기서 가져간다.
-// 정본은 apex(www 아님). www.logisight.net은 Vercel에서 apex로 308 리다이렉트되므로,
-// 생성되는 canonical·<loc>·IndexNow 제출 URL이 www를 타면 안 된다.
-export const SITE_URL = "https://logisight.net";
+// 일본판은 jpn 서브도메인이 정본. 한국판(logisight.net)과 canonical이 섞이면
+// 두 사이트가 같은 URL을 주장해 색인이 한쪽으로 몰린다.
+export const SITE_URL = "https://jpn.logisight.net";
 /** 스킴 없는 호스트 — IndexNow처럼 호스트만 받는 곳에서 사용. */
 export const SITE_HOST = SITE_URL.replace(/^https?:\/\//, "");
 const SITE_NAME = "Logisight";

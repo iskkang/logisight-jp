@@ -30,7 +30,7 @@ const WRAP = "mx-auto w-full max-w-[1360px] px-[18px] min-[620px]:px-7";
 const NA = "데이터 수집 중";
 
 const STYLE = `
-.lsg-root{font-family:"Pretendard","Pretendard Variable",system-ui,-apple-system,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;-webkit-font-smoothing:antialiased;letter-spacing:-.01em}
+.lsg-root{font-family:"Noto Sans JP","Noto Sans JP",system-ui,-apple-system,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;-webkit-font-smoothing:antialiased;letter-spacing:-.01em}
 .lsg-mono{font-family:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace;font-feature-settings:"tnum" 1;letter-spacing:0}
 @keyframes lsg-slide{to{transform:translateX(-50%)}}
 @keyframes lsg-pulse{0%{transform:scale(.6);opacity:.5}100%{transform:scale(2.4);opacity:0}}

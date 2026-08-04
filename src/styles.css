@@ -4,10 +4,10 @@
 
 @custom-variant dark (&:is(.dark *));
 
-/* Pretendard (Korean) + Inter (Latin) */
-@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css");
+/* Noto Sans JP (일본어) + Inter (라틴) */
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@500;700;900&family=Playfair+Display:wght@700;900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@500;700;900&family=Playfair+Display:wght@700;900&display=swap");
 
 /*
  * Design system definition.
@@ -110,11 +110,11 @@
   --color-cat-trade-fg: var(--cat-trade-fg);
 
   --font-sans:
-    "Pretendard Variable", Pretendard, Inter, -apple-system,
+    "Noto Sans JP", Inter, -apple-system,
     BlinkMacSystemFont, system-ui, "Segoe UI", Roboto, sans-serif;
-  /* 숫자 표기도 Pretendard로 통일(역할 변수명은 유지). tabular-nums로 정렬 보존. */
+  /* 숫자 표기도 Noto Sans JP로 통일(역할 변수명은 유지). tabular-nums로 정렬 보존. */
   --font-mono:
-    "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont,
+    "Noto Sans JP", -apple-system, BlinkMacSystemFont,
     system-ui, "Segoe UI", Roboto, sans-serif;
 }
 
@@ -469,22 +469,22 @@
     animation-play-state: paused;
   }
 
-  /* Editorial serif headlines → Pretendard로 통일(전체 폰트 강제). */
+  /* Editorial serif headlines → Noto Sans JP로 통일(전체 폰트 강제). */
   .font-serif-display {
-    font-family: "Pretendard Variable", Pretendard, -apple-system,
+    font-family: "Noto Sans JP", -apple-system,
       BlinkMacSystemFont, system-ui, sans-serif;
     letter-spacing: -0.015em;
   }
 }
 
-/* 사용자 요청: 전 페이지 폰트 Pretendard 강제.
+/* 사용자 요청: 전 페이지 폰트 Noto Sans JP 강제.
    에디토리얼 serif(Playfair/Noto Serif)·Inter·컴포넌트 인라인 폰트까지 모두 통일한다.
    아이콘은 전부 SVG(lucide)라 폰트 강제 영향 없음. */
 *,
 ::before,
 ::after {
   font-family:
-    "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont,
+    "Noto Sans JP", -apple-system, BlinkMacSystemFont,
     system-ui, "Apple SD Gothic Neo", "Malgun Gothic", "Segoe UI", Roboto,
     sans-serif !important;
 }

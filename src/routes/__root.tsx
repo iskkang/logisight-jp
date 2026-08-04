@@ -18,7 +18,10 @@ import { Footer } from "@/components/site/Footer";
 import LogisightLoader from "@/components/LogisightLoader";
 import { SITE_URL, SITE_HOST } from "@/lib/seo";
 
-const GA_MEASUREMENT_ID = "G-8NG0LJGF23";
+// 日本版の GA4 プロパティ。未作成のため空にしてある —
+// 韓国版(G-8NG0LJGF23)を使い回すと、観測期間の指標(セッション→登録率など)に
+// 日本の流入が混ざり、計測そのものが壊れる。プロパティ作成後にここへ入れる。
+const GA_MEASUREMENT_ID = "";
 
 // Minimal shell without IndexBar — safe to use outside QueryClientProvider
 function MinimalShell({ children }: { children: React.ReactNode }) {
@@ -37,15 +40,15 @@ function NotFoundComponent() {
       <div className="flex min-h-[60vh] items-center justify-center px-4">
         <div className="max-w-md text-center">
           <h1 className="text-6xl font-bold text-foreground">404</h1>
-          <h2 className="mt-4 text-lg font-semibold">페이지를 찾을 수 없습니다</h2>
+          <h2 className="mt-4 text-lg font-semibold">ページが見つかりません</h2>
           <p className="mt-2 text-sm text-muted-foreground">
-            요청하신 페이지가 존재하지 않거나 이동되었습니다.
+            お探しのページは存在しないか、移動しました。
           </p>
           <Link
             to="/"
             className="mt-6 inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:opacity-90"
           >
-            홈으로 가기
+            ホームへ戻る
           </Link>
         </div>
       </div>
@@ -61,8 +64,8 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
     <MinimalShell>
       <div className="flex min-h-[60vh] items-center justify-center px-4">
         <div className="max-w-md text-center">
-          <h1 className="text-lg font-semibold">페이지를 불러오지 못했습니다</h1>
-          <p className="mt-2 text-sm text-muted-foreground">잠시 후 다시 시도해 주세요.</p>
+          <h1 className="text-lg font-semibold">ページを読み込めませんでした</h1>
+          <p className="mt-2 text-sm text-muted-foreground">しばらくしてから再度お試しください。</p>
           <div className="mt-6 flex justify-center gap-2">
             <button
               onClick={() => {
@@ -71,13 +74,13 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
               }}
               className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:opacity-90"
             >
-              다시 시도
+              再試行
             </button>
             <a
               href="/"
               className="inline-flex items-center justify-center rounded-md border border-input bg-background px-4 py-2 text-sm font-medium text-foreground hover:bg-accent"
             >
-              홈으로
+              ホーム
             </a>
           </div>
         </div>
@@ -91,25 +94,25 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Logisight — 물류를 읽는 새로운 시선" },
+      { title: "Logisight — 物流を読む、新しい視点" },
       {
         name: "description",
         content:
-          "한국 화주·포워더를 위한 물류 인텔리전스 플랫폼. 운임 지수, 물류 뉴스, 유라시아 코리도어, 정책 변화를 매주 한 편의 분석으로.",
+          "日本の荷主・フォワーダーのための物流インテリジェンス。企業向けサービス価格指数(運賃)、主要6港のコンテナ取扱量、財務省貿易統計を毎月ひとつのレポートにまとめます。",
       },
       { name: "author", content: "Logisight" },
-      { property: "og:title", content: "Logisight — 물류를 읽는 새로운 시선" },
+      { property: "og:title", content: "Logisight — 物流を読む、新しい視点" },
       {
         property: "og:description",
-        content: "운임 지수와 물류 뉴스, 정책 변화. 매주 한 편의 분석으로 정리합니다.",
+        content: "運賃・港湾・貿易の動きを、出典と基準月を明示して毎月お届けします。",
       },
       { property: "og:type", content: "website" },
       { property: "og:site_name", content: "Logisight" },
       { name: "twitter:card", content: "summary" },
-      { name: "twitter:title", content: "Logisight — 물류를 읽는 새로운 시선" },
+      { name: "twitter:title", content: "Logisight — 物流を読む、新しい視点" },
       {
         name: "twitter:description",
-        content: "운임 지수와 물류 뉴스, 정책 변화. 매주 한 편의 분석으로 정리합니다.",
+        content: "運賃・港湾・貿易の動きを、出典と基準月を明示して毎月お届けします。",
       },
       {
         property: "og:image",
@@ -122,13 +125,12 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     ],
     links: [
       // 폰트는 HTML link로 로드한다. styles.css의 @import url(...)은 Tailwind v4 빌드에서
-      // 다른 규칙 뒤에 위치해 드롭되므로(브라우저 미요청) Pretendard가 로드되지 않았다.
-      { rel: "preconnect", href: "https://cdn.jsdelivr.net" },
+      // 다른 규칙 뒤에 위치해 드롭되므로(브라우저 미요청) Noto Sans JP가 로드되지 않았다.
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
       {
         rel: "stylesheet",
-        href: "https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css",
+        href: "https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap",
       },
       {
         rel: "stylesheet",
@@ -136,7 +138,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       },
       {
         rel: "stylesheet",
-        href: "https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@500;700;900&family=Playfair+Display:wght@700;900&display=swap",
+        href: "https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@500;700;900&family=Playfair+Display:wght@700;900&display=swap",
       },
       {
         rel: "stylesheet",
@@ -177,7 +179,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       // 섞이면 유입 분석이 오염되므로, 태그 자체를 심지 않는다.
       // SPA 라우트 이동은 GA4 향상된 측정(브라우저 방문 기록 이벤트)이 처리한다.
       {
-        children: `if(location.hostname===${JSON.stringify(SITE_HOST)}){
+        children: GA_MEASUREMENT_ID === "" ? "" : `if(location.hostname===${JSON.stringify(SITE_HOST)}){
   var s=document.createElement('script');
   s.async=true;s.src='https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}';
   document.head.appendChild(s);
@@ -197,7 +199,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 
 function RootShell({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="ko">
+    <html lang="ja">
       <head>
         <HeadContent />
       </head>

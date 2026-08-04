@@ -16,13 +16,19 @@ export const JP_MAJOR6 = "JP_MAJOR6";
 
 export type PortThroughputRow = {
   port_code: string;
-  period: string; // YYYY-MM-01
+  year: number;
+  month: number;
   teu: number | null;
   export_teu: number | null;
   import_teu: number | null;
   yoy_pct: number | null;
   is_preliminary: boolean | null;
 };
+
+/** 並べ替え・比較用のキー。"2026-05" */
+export function periodKey(row: { year: number; month: number }): string {
+  return `${row.year}-${String(row.month).padStart(2, "0")}`;
+}
 
 export type PortSeriesPoint = {
   period: string;
@@ -59,11 +65,11 @@ export const portThroughputQueryOptions = () =>
     staleTime: 30 * 60 * 1000,
   });
 
-/** "2026-05-01" → "2026年5月" */
+/** "2026-05" → "2026年5月" */
 export function formatPortPeriod(p: string | null | undefined): string {
-  const d = (p ?? "").replace(/\D/g, "");
-  if (d.length < 6) return "—";
-  return `${d.slice(0, 4)}年${Number(d.slice(4, 6))}月`;
+  const m = /^(\d{4})-(\d{2})$/.exec(p ?? "");
+  if (!m) return "—";
+  return `${m[1]}年${Number(m[2])}月`;
 }
 
 export function formatTeu(n: number | null | undefined): string {

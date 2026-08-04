@@ -28,7 +28,7 @@ const CARD = "rounded-[14px] border border-[#d8dfe9] bg-[#f4f7fb] shadow-[0_1px_
 const CHIP = "rounded-full border border-[#d8dfe9] bg-[#eef1f6] px-[9px] py-[3px] text-[11px] text-[#828d9d]";
 
 const STYLE = `
-.lsgt-root{font-family:"Pretendard","Pretendard Variable",system-ui,-apple-system,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;-webkit-font-smoothing:antialiased;letter-spacing:-.01em}
+.lsgt-root{font-family:"Noto Sans JP","Noto Sans JP",system-ui,-apple-system,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;-webkit-font-smoothing:antialiased;letter-spacing:-.01em}
 .lsg-mono{font-feature-settings:"tnum" 1;letter-spacing:0}
 .lsg-ls{background:linear-gradient(95deg,#fff 35%,#2dd4bf);-webkit-background-clip:text;background-clip:text;color:transparent}
 .lsgt-root tbody tr:hover{background:#eef2f8}
@@ -531,7 +531,7 @@ function MonthlyChart({ monthly }: { monthly: MonthlyPoint[] }) {
   const yBal = (v: number) => pT + ih / 2 - (v / balRange) * (ih / 2 - 8);
   const grid = [0, 0.25, 0.5, 0.75, 1];
   return (
-    <svg viewBox={`0 0 ${W} ${H}`} width="100%" preserveAspectRatio="xMidYMid meet" style={{ fontFamily: "Pretendard" }}>
+    <svg viewBox={`0 0 ${W} ${H}`} width="100%" preserveAspectRatio="xMidYMid meet" style={{ fontFamily: "Noto Sans JP" }}>
       {grid.map((g) => { const y = pT + ih - g * ih; return <g key={g}><line x1={pL} y1={y} x2={W - pR} y2={y} stroke="#e6ebf2" strokeWidth="1" /><text x={pL - 6} y={y + 3} textAnchor="end" fontSize="10" fill="#828d9d">{money(maxV * g)}</text></g>; })}
       {pts.map((p, i) => {
         const cx = pL + slot * i + slot / 2;

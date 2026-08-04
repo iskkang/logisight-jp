@@ -1,24 +1,33 @@
-// 다크 네이비 푸터 — 브랜드+칩 / 서비스·뉴스·Logisight 링크 / 뉴스레터 밴드 / © 라인.
-// 소유 공시(운영 주체)는 숨기지 않되 링크 칼럼이 아니라 하단 한 줄 + /about에서 다룬다.
-// 프로토타입(Logisight 인터랙티브 프로토타입) AppFooter 구성.
+// ダークネイビーのフッター — ブランド+チップ / サービス・ニュース・Logisight リンク /
+// ニュースレター帯 / © 行。運営主体の開示は隠さず、リンク列ではなく最下部の1行と /about で扱う。
 import { Link } from "@tanstack/react-router";
 import type { ReactNode } from "react";
 
 import { NewsletterForm } from "./NewsletterForm";
+
+/**
+ * 表示は日本語、絞り込み値は DB の category 列そのまま(韓国語)。
+ * ニュース本文の日本語化は収集パイプライン側の課題で、列の値は共通のまま使う。
+ */
+const NEWS_CATEGORIES = [
+  { label: "海上", value: "해상" },
+  { label: "航空", value: "항공" },
+  { label: "貿易", value: "무역" },
+] as const;
 
 export function Footer() {
   return (
     <footer className="text-white" style={{ background: "var(--color-navy-900)" }}>
       <div className="mx-auto grid max-w-[1540px] gap-6 px-4 pt-10 lg:grid-cols-[1.6fr_1fr_1fr_1fr] lg:px-12">
         <div>
-          <Link to="/" className="inline-block" aria-label="Logisight 홈">
+          <Link to="/" className="inline-block" aria-label="Logisight ホーム">
             <img src="/logisight_logo.svg" alt="Logisight" className="h-8 w-auto" />
           </Link>
           <p className="mt-2.5 max-w-[280px] text-[12.5px] leading-relaxed text-white/65">
-            한국 화주·포워더를 위한 물류 인텔리전스.
+            日本の荷主・フォワーダーのための物流インテリジェンス。
           </p>
           <div className="mt-3.5 flex flex-wrap gap-2">
-            {["유라시아 코리도어 전문", "공공데이터 기반"].map((t) => (
+            {["公的統計にもとづく", "出典と基準月を明示"].map((t) => (
               <span
                 key={t}
                 className="rounded-full border border-white/20 px-[11px] py-1 text-[11px] font-semibold text-white/75"
@@ -29,41 +38,41 @@ export function Footer() {
           </div>
         </div>
 
-        <FooterCol title="서비스">
-          <li><Link to="/rates" className={linkCls}>운임 대시보드</Link></li>
-          <li><Link to="/rail" className={linkCls}>철도 코리도어</Link></li>
-          <li><Link to="/industries" className={linkCls}>산업별 교역</Link></li>
-          <li><Link to="/methodology" className={linkCls}>데이터 방법론</Link></li>
-          <li><Link to="/faq" className={linkCls}>자주 묻는 질문</Link></li>
+        <FooterCol title="サービス">
+          <li><Link to="/rates" className={linkCls}>運賃</Link></li>
+          <li><Link to="/ports" className={linkCls}>港湾</Link></li>
+          <li><Link to="/trade" className={linkCls}>貿易</Link></li>
+          <li><Link to="/methodology" className={linkCls}>データの方法論</Link></li>
+          <li><Link to="/faq" className={linkCls}>よくある質問</Link></li>
         </FooterCol>
 
-        <FooterCol title="뉴스">
-          {(["해상", "항공", "철도", "무역"] as const).map((cat) => (
-            <li key={cat}>
-              <Link to="/news" search={{ cat }} className={linkCls}>
-                {cat}
+        <FooterCol title="ニュース">
+          {NEWS_CATEGORIES.map((c) => (
+            <li key={c.value}>
+              <Link to="/news" search={{ cat: c.value }} className={linkCls}>
+                {c.label}
               </Link>
             </li>
           ))}
         </FooterCol>
 
         <FooterCol title="Logisight">
-          <li><Link to="/about" className={linkCls}>소개</Link></li>
-          <li><a href="#newsletter" className={linkCls}>뉴스레터 구독</a></li>
-          <li><Link to="/privacy" className={linkCls}>개인정보처리방침</Link></li>
+          <li><Link to="/about" className={linkCls}>会社概要</Link></li>
+          <li><a href="#newsletter" className={linkCls}>ニュースレター登録</a></li>
+          <li><Link to="/privacy" className={linkCls}>プライバシーポリシー</Link></li>
         </FooterCol>
       </div>
 
-      {/* 뉴스레터 밴드 */}
+      {/* ニュースレター帯 */}
       <div className="mx-auto max-w-[1540px] px-4 pt-7 lg:px-12">
         <div
           id="newsletter"
           className="flex flex-wrap items-center justify-between gap-5 rounded-lg border border-white/[0.14] bg-white/[0.04] px-6 py-5"
         >
           <div>
-            <div className="text-[14.5px] font-bold">Weekly Logistics Briefing</div>
+            <div className="text-[14.5px] font-bold">月次マーケットレポート</div>
             <p className="mt-1 text-[12.5px] text-white/65">
-              운임 지수, 정책 변화, 교역 흐름, 유라시아 코리도어 이슈를 매주 정리해 드립니다.
+              運賃(SPPI)・港湾・貿易の動きを毎月お届けします。出典と基準月は必ず明記します。
             </p>
           </div>
           <div className="min-w-[260px] max-w-[420px] flex-1">
@@ -81,11 +90,11 @@ export function Footer() {
           .
         </span>
         <span className="text-[11.5px] text-white/50">
-          주요 데이터 출처는{" "}
+          主なデータの出典は{" "}
           <Link to="/methodology" className="underline transition-colors hover:text-white/80">
-            데이터 방법론
+            データの方法論
           </Link>{" "}
-          페이지를 참조하세요.
+          ページをご覧ください。
         </span>
         <span className="text-[11.5px] text-white/50">
           © 2026 Logisight. All rights reserved.

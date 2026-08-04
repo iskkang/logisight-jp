@@ -14,7 +14,7 @@
 // props:
 //   show   : true면 표시, false로 바뀌면 (minMs 경과 후) 페이드아웃 + 언마운트. 기본 true.
 //   minMs  : 최소 노출 시간(글자 애니메이션이 다 보이도록). 기본 1800ms.
-//   label  : 하단 문구. 기본 "물류 인텔리전스 불러오는 중".
+//   label  : 하단 문구. 기본 "物流インテリジェンスを読み込み中".
 // ─────────────────────────────────────────────────────────────────────────────
 import { useEffect, useRef, useState } from "react";
 
@@ -39,7 +39,7 @@ function gradColor(t: number): string {
 const CSS = `
 .lsgl{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;
   background:radial-gradient(80% 80% at 50% 38%,#0b1426,#070b16);transition:opacity .55s ease;
-  font-family:"Pretendard","Pretendard Variable",system-ui,-apple-system,"Apple SD Gothic Neo","Malgun Gothic",sans-serif}
+  font-family:"Noto Sans JP","Noto Sans JP",system-ui,-apple-system,"Apple SD Gothic Neo","Malgun Gothic",sans-serif}
 .lsgl.hide{opacity:0;pointer-events:none}
 .lsgl-box{display:flex;flex-direction:column;align-items:center;gap:20px}
 .lsgl-word{display:flex;align-items:center;font-size:clamp(34px,6vw,56px);font-weight:800;letter-spacing:-.03em}
@@ -65,7 +65,7 @@ const CSS = `
 export default function LogisightLoader({
   show = true,
   minMs = 1800,
-  label = "물류 인텔리전스 불러오는 중",
+  label = "物流インテリジェンスを読み込み中",
 }: { show?: boolean; minMs?: number; label?: string }) {
   const [mounted, setMounted] = useState(true);
   const [hide, setHide] = useState(false);
@@ -82,7 +82,7 @@ export default function LogisightLoader({
   if (!mounted) return null;
   const chars = WORD.split("");
   return (
-    <div className={`lsgl${hide ? " hide" : ""}`} role="status" aria-label="불러오는 중">
+    <div className={`lsgl${hide ? " hide" : ""}`} role="status" aria-label="読み込み中">
       <style>{CSS}</style>
       <div className="lsgl-box">
         <div className="lsgl-word" aria-hidden="true">

@@ -25,7 +25,7 @@ const CARD_H = "transition-[transform,border-color,box-shadow] duration-200 hove
 const NA = "데이터 수집 중";
 
 const STYLE = `
-.lsgp-root{font-family:"Pretendard","Pretendard Variable",system-ui,-apple-system,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;-webkit-font-smoothing:antialiased;letter-spacing:-.01em}
+.lsgp-root{font-family:"Noto Sans JP","Noto Sans JP",system-ui,-apple-system,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;-webkit-font-smoothing:antialiased;letter-spacing:-.01em}
 .lsg-mono{font-family:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace;font-feature-settings:"tnum" 1;letter-spacing:0}
 .lsg-ls{background:linear-gradient(95deg,#fff 35%,#2dd4bf);-webkit-background-clip:text;background-clip:text;color:transparent}
 @media (prefers-reduced-motion:reduce){.lsgp-root [data-anim]{display:none}}

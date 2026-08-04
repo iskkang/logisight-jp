@@ -6,16 +6,17 @@ import { Wordmark } from "./Wordmark";
 
 const WRAP = "mx-auto w-full max-w-[1360px] px-[18px] min-[620px]:px-7";
 
+// 日本のデータで成立するページのみ。site/Navigation.tsx の SUB_GNB と揃える。
 const SUB_GNB = [
-  { to: "/dashboard", label: "종합" },
-  { to: "/forecasts", label: "전망" },
-  { to: "/rates", label: "운임" },
-  { to: "/rail", label: "철도" },
-  { to: "/port-risk", label: "포트" },
-  { to: "/trade", label: "무역" },
-  { to: "/industries", label: "산업" },
-  { to: "/climate", label: "기상" },
+  { to: "/rates", label: "運賃" },
+  { to: "/ports", label: "港湾" },
+  { to: "/trade", label: "貿易" },
+  { to: "/climate", label: "気象" },
+  { to: "/port-risk", label: "リスク" },
 ] as const;
+
+/** インサイトの入口。/dashboard は日本版で持たないため運賃を先頭に置く。 */
+const INSIGHT_HOME = "/rates";
 
 export function HomeNav({ active = "home" }: { active?: "home" | "news" | "insight" | "reports" }) {
   const [open, setOpen] = useState(false);
@@ -28,17 +29,17 @@ export function HomeNav({ active = "home" }: { active?: "home" | "news" | "insig
         <Link to="/"><Wordmark /></Link>
         <nav className="hidden gap-[26px] text-[14px] font-medium text-[#93a1b7] min-[620px]:flex">
           <Link to="/" className={topCls("home")}>
-            홈{active === "home" && underline}
+            ホーム{active === "home" && underline}
           </Link>
-          <Link to="/news" className={topCls("news")}>뉴스{active === "news" && underline}</Link>
+          <Link to="/news" className={topCls("news")}>ニュース{active === "news" && underline}</Link>
           {active === "insight" ? (
             // 인사이트 내부 페이지 — 하위 SubNav가 이미 있으므로 드롭다운/▼ 없이 활성 표시만.
-            <Link to="/dashboard" className="relative py-1 text-white">인사이트{underline}</Link>
+            <Link to={INSIGHT_HOME} className="relative py-1 text-white">インサイト{underline}</Link>
           ) : (
             // 홈/뉴스 — 인사이트 호버 드롭다운(기존 SUB_GNB)으로 하위 메뉴 노출.
             <div className="group relative py-1">
-              <Link to="/dashboard" className="inline-flex items-center gap-1 text-[#93a1b7] transition-colors hover:text-white">
-                인사이트
+              <Link to={INSIGHT_HOME} className="inline-flex items-center gap-1 text-[#93a1b7] transition-colors hover:text-white">
+                インサイト
                 <span className="text-[9px] text-[#2dd4bf] transition-transform group-hover:rotate-180" aria-hidden>▼</span>
               </Link>
               <div className="invisible absolute left-0 top-full z-50 min-w-[160px] rounded-[10px] border border-[#78a0cd1c] bg-[#0a0f1d] p-1.5 opacity-0 shadow-xl transition-opacity group-hover:visible group-hover:opacity-100">
@@ -51,7 +52,7 @@ export function HomeNav({ active = "home" }: { active?: "home" | "news" | "insig
             </div>
           )}
           <Link to="/reports" className={topCls("reports")}>
-            리포트{active === "reports" && underline}
+            レポート{active === "reports" && underline}
           </Link>
         </nav>
         <button
@@ -65,11 +66,11 @@ export function HomeNav({ active = "home" }: { active?: "home" | "news" | "insig
       </div>
       {open && (
         <nav className="border-t border-[#78a0cd1c] px-[18px] py-2 min-[620px]:hidden">
-          <Link to="/" onClick={() => setOpen(false)} className="block rounded-md px-3 py-2 text-[15px] text-white">홈</Link>
-          <Link to="/news" onClick={() => setOpen(false)} className="block rounded-md px-3 py-2 text-[15px] text-[#93a1b7]">뉴스</Link>
+          <Link to="/" onClick={() => setOpen(false)} className="block rounded-md px-3 py-2 text-[15px] text-white">ホーム</Link>
+          <Link to="/news" onClick={() => setOpen(false)} className="block rounded-md px-3 py-2 text-[15px] text-[#93a1b7]">ニュース</Link>
           {active === "insight" ? (
             // 인사이트 내부 — 하위는 SubNav가 노출하므로 모바일에서도 상위 링크만.
-            <Link to="/dashboard" onClick={() => setOpen(false)} className="block rounded-md px-3 py-2 text-[15px] text-white">인사이트</Link>
+            <Link to={INSIGHT_HOME} onClick={() => setOpen(false)} className="block rounded-md px-3 py-2 text-[15px] text-white">インサイト</Link>
           ) : (
             <>
               <p className="px-3 pt-2 text-[10px] font-bold uppercase tracking-[0.14em] text-[#5d6b80]">Insight</p>
@@ -80,7 +81,7 @@ export function HomeNav({ active = "home" }: { active?: "home" | "news" | "insig
               ))}
             </>
           )}
-          <Link to="/reports" onClick={() => setOpen(false)} className={`block rounded-md px-3 py-2 text-[15px] ${active === "reports" ? "text-white" : "text-[#93a1b7]"}`}>리포트</Link>
+          <Link to="/reports" onClick={() => setOpen(false)} className={`block rounded-md px-3 py-2 text-[15px] ${active === "reports" ? "text-white" : "text-[#93a1b7]"}`}>レポート</Link>
         </nav>
       )}
     </header>

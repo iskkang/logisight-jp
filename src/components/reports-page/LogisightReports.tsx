@@ -203,7 +203,7 @@ const STYLE = `
 @import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css");
 .lsg-root{--bg:#070b16;--bg3:#0e1626;--lineD:#78a0cd1c;--dmut:#93a1b7;--dfaint:#5d6b80;
   --paper:#e6eaf1;--card:#f4f7fb;--line:#d8dfe9;--line2:#e6ebf2;--ink:#1a2433;--body:#54606f;--mute:#828d9d;--teal:#2dd4bf;--teal2:#0d9488;--teal3:#14b8a6;
-  font-family:"Pretendard","Pretendard Variable",system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased;letter-spacing:-.01em}
+  font-family:"Noto Sans JP","Noto Sans JP",system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased;letter-spacing:-.01em}
 .lsg-root *{box-sizing:border-box;margin:0;padding:0}
 .lsg-root .mono{font-feature-settings:"tnum" 1;letter-spacing:0}
 .lsg-root .wrap{max-width:1200px;margin:0 auto;padding:0 44px}

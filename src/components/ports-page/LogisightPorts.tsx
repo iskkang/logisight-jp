@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useSuspenseQuery } from "@tanstack/react-query";
 
 import { PageHero } from "@/components/site/PageHero";
 import {
@@ -19,8 +19,8 @@ function YoyCell({ value }: { value: number | null }) {
 function Row({ port, emphasis }: { port: PortLatest; emphasis?: boolean }) {
   return (
     <tr className={emphasis ? "bg-slate-50 font-semibold" : ""}>
-      <td className="px-3 py-2.5 text-left whitespace-nowrap">{port.name}</td>
-      <td className="px-3 py-2.5 text-right tabular-nums">{formatTeu(port.teu)}</td>
+      <td className="px-3 py-2.5 text-left whitespace-nowrap text-slate-900">{port.name}</td>
+      <td className="px-3 py-2.5 text-right tabular-nums text-slate-900">{formatTeu(port.teu)}</td>
       <td className="px-3 py-2.5 text-right tabular-nums text-slate-600">
         {formatTeu(port.exportTeu)}
       </td>
@@ -35,13 +35,13 @@ function Row({ port, emphasis }: { port: PortLatest; emphasis?: boolean }) {
 }
 
 export function LogisightPorts() {
-  const { data, isLoading, isError } = useQuery(portThroughputQueryOptions());
+  const { data } = useSuspenseQuery(portThroughputQueryOptions());
 
-  const period = data?.period ?? null;
-  const preliminary = data?.total?.isPreliminary ?? data?.latest[0]?.isPreliminary ?? false;
+  const period = data.period;
+  const preliminary = data.total?.isPreliminary ?? data.latest[0]?.isPreliminary ?? false;
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white text-slate-900">
       <PageHero
         eyebrow="港湾"
         titleMain="主要6港"
@@ -55,16 +55,11 @@ export function LogisightPorts() {
       />
 
       <div className="mx-auto max-w-[1100px] px-4 py-10 lg:px-12">
-        {isLoading && <p className="text-sm text-slate-500">読み込み中…</p>}
-        {isError && (
-          <p className="text-sm text-rose-600">データを取得できませんでした。時間をおいて再度お試しください。</p>
-        )}
-
-        {data && data.latest.length === 0 && (
+        {data.latest.length === 0 && (
           <p className="text-sm text-slate-500">公表済みのデータがありません。</p>
         )}
 
-        {data && data.latest.length > 0 && (
+        {data.latest.length > 0 && (
           <>
             <div className="mb-4 flex flex-wrap items-baseline gap-x-3 gap-y-1">
               <h2 className="text-lg font-bold text-slate-900">{formatPortPeriod(period)}</h2>

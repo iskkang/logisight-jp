@@ -341,7 +341,7 @@ export function KpiCard({
             fontSize: 23,
             fontWeight: 700,
             color: "var(--ink)",
-            fontFamily: mono ? "var(--font-mono)" : '"Pretendard Variable", Pretendard, sans-serif',
+            fontFamily: mono ? "var(--font-mono)" : '"Noto Sans JP", sans-serif',
             letterSpacing: "-0.01em",
           }}
         >

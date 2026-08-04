@@ -22,25 +22,26 @@ export function HomeFooter() {
         <div className="grid grid-cols-1 gap-[30px] border-b border-[#78a0cd1c] pb-[30px] min-[980px]:grid-cols-[1.6fr_1fr_1fr_1fr]">
           <div>
             <Wordmark />
-            <p className="mb-3.5 mt-2.5 max-w-[240px] leading-[1.55] text-[#93a1b7]">한국 화주·포워더를 위한 물류 인텔리전스</p>
+            <p className="mb-3.5 mt-2.5 max-w-[240px] leading-[1.55] text-[#93a1b7]">日本の荷主・フォワーダーのための物流インテリジェンス</p>
           </div>
-          <Col title="서비스">
-            <Link to="/rates" className={itemCls}>운임 대시보드</Link>
-            <Link to="/rail" className={itemCls}>철도 코리도어</Link>
-            <Link to="/industries" className={itemCls}>산업별 교역</Link>
-            <Link to="/reports" className={itemCls}>마켓 리포트</Link>
-            <Link to="/methodology" className={itemCls}>데이터 방법론</Link>
-            <Link to="/faq" className={itemCls}>자주 묻는 질문</Link>
+          <Col title="サービス">
+            <Link to="/rates" className={itemCls}>運賃</Link>
+            <Link to="/ports" className={itemCls}>港湾</Link>
+            <Link to="/trade" className={itemCls}>貿易</Link>
+            <Link to="/reports" className={itemCls}>マーケットレポート</Link>
+            <Link to="/methodology" className={itemCls}>データの方法論</Link>
+            <Link to="/faq" className={itemCls}>よくある質問</Link>
           </Col>
-          <Col title="뉴스">
-            {(["해상", "항공", "철도", "무역"] as const).map((cat) => (
-              <Link key={cat} to="/news" search={{ cat }} className={itemCls}>{cat}</Link>
+          <Col title="ニュース">
+            {/* 表示は日本語、絞り込み値は DB の category 列そのまま。 */}
+            {([["海上", "해상"], ["航空", "항공"], ["貿易", "무역"]] as const).map(([label, cat]) => (
+              <Link key={cat} to="/news" search={{ cat }} className={itemCls}>{label}</Link>
             ))}
           </Col>
           <Col title="Logisight">
-            <Link to="/about" className={itemCls}>소개</Link>
-            <a href="#newsletter" className={itemCls}>뉴스레터 구독</a>
-            <Link to="/privacy" className={itemCls}>개인정보처리방침</Link>
+            <Link to="/about" className={itemCls}>会社概要</Link>
+            <a href="#newsletter" className={itemCls}>ニュースレター登録</a>
+            <Link to="/privacy" className={itemCls}>プライバシーポリシー</Link>
           </Col>
         </div>
         <div className="pt-[22px] lsg-mono text-[11.5px] leading-[1.8] text-[#445064]">

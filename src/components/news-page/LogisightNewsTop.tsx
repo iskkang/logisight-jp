@@ -53,7 +53,7 @@ const FALLBACK_PICK: Pick = {
 const STYLE = `
 .lsgn-root{--bg:#070b16;--lineD:#78a0cd1c;--dmut:#93a1b7;--teal:#2dd4bf;
   --ink:#1a2433;--body:#4a5568;--mute:#8a93a3;--line:#e3e8ef;--card:#f7f9fc;--teal2:#0d9488;--blue:#1864ab;--amber:#b45309;
-  font-family:"Pretendard","Pretendard Variable",system-ui,-apple-system,sans-serif;background:#fff;color:var(--ink);-webkit-font-smoothing:antialiased;letter-spacing:-.01em}
+  font-family:"Noto Sans JP","Noto Sans JP",system-ui,-apple-system,sans-serif;background:#fff;color:var(--ink);-webkit-font-smoothing:antialiased;letter-spacing:-.01em}
 .lsgn-root *{box-sizing:border-box;margin:0;padding:0}
 .lsgn-root .mono{font-feature-settings:"tnum" 1;letter-spacing:0}
 /* 본문 편집 영역(max-w-[1280px] px-4 lg:px-6)과 좌우 정렬을 맞춘다. */
