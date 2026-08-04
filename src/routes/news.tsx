@@ -36,9 +36,9 @@ export const Route = createFileRoute("/news")({
     ),
   head: () =>
     seoHead({
-      title: "물류 뉴스 — Logisight",
+      title: "物流ニュース — Logisight",
       description:
-        "해상·항공·철도·물류·무역. 글로벌 운임과 공급망을 흔드는 핵심 뉴스를 한국어 요약과 함께 매주 정리합니다.",
+        "海上・航空・物流・貿易。世界の運賃とサプライチェーンを動かすニュースを選んでお届けします。",
       path: "/news",
     }),
   component: NewsPage,
@@ -76,7 +76,7 @@ function NewsPage() {
       <HomeNav active="news" />
       <LogisightNewsTop
         showNav={false}
-        intro="글로벌 물류·해운·항공·철도·무역 뉴스를 선별해 한국어로 전달합니다."
+        intro="世界の物流・海運・航空・貿易ニュースを選んでお届けします。"
         date={kstDateLabel()}
         category={cat ?? "전체"}
         onCategoryChange={(label) =>
@@ -86,7 +86,7 @@ function NewsPage() {
         onPeriodChange={setPeriod}
         pick={pick}
         pickLoading={false}
-        noteText="최신 수집 기사 중 대표 헤드라인을 자동으로 선별해 보여줍니다."
+        noteText="最新の収集記事から代表的な見出しを自動で選んで表示しています。"
         renderPickLink={(_p, children, className) =>
           featured && isInternalNewsItem(featured) ? (
             <Link
@@ -113,8 +113,8 @@ function NewsPage() {
         {stories.length === 0 ? (
           <div className="mx-auto max-w-[1280px] px-4 py-20 text-center text-sm text-[var(--color-ink-muted)] lg:px-6">
             {allItems.length === 0
-              ? "기사가 수집되는 대로 게재합니다."
-              : "선택한 기간에 해당하는 기사가 더 없습니다."}
+              ? "記事が集まり次第、掲載します。"
+              : "選択した期間に該当する記事はこれ以上ありません。"}
           </div>
         ) : (
           <div className="mx-auto max-w-[1280px] px-4 py-10 lg:px-6 lg:py-14">
@@ -157,7 +157,7 @@ function NewsPage() {
                           loading="eager"
                         />
                         <figcaption className="mt-2 text-[12px] text-[var(--color-ink-muted)]">
-                          사진 · {lead.source}
+                          写真 · {lead.source}
                         </figcaption>
                       </figure>
                     </NewsItemLink>
@@ -206,7 +206,7 @@ function NewsPage() {
                 {/* Most Popular */}
                 <aside className="mt-8 border-t-[3px] border-[var(--color-navy-900)] pt-4">
                   <h3 className="font-serif-display text-lg font-bold text-[var(--color-navy-900)]">
-                    추천 기사
+                    おすすめの記事
                   </h3>
                   <ol className="mt-4 list-none space-y-3">
                     {mostPopular.map((n, i) => (
@@ -234,7 +234,7 @@ function NewsPage() {
             {opinionStrip.length > 0 && (
               <>
                 <div className="mt-14">
-                  <SectionRule label="기획·심층" eyebrow="In Depth" />
+                  <SectionRule label="特集・深掘り" eyebrow="In Depth" />
                 </div>
                 <div className="grid gap-8 border-y border-[var(--color-line)] py-6 md:grid-cols-3">
                   {opinionStrip.map((n) => (
@@ -256,7 +256,7 @@ function NewsPage() {
             {gridSection.length > 0 && (
               <>
                 <div className="mt-14">
-                  <SectionRule label="더 많은 보도" eyebrow="More News" />
+                  <SectionRule label="さらに読む" eyebrow="More News" />
                 </div>
                 <div className="grid gap-x-8 gap-y-10 md:grid-cols-2 lg:grid-cols-3">
                   {gridSection.map((n) => (
@@ -296,7 +296,7 @@ function NewsPage() {
             {moreSection.length > 0 && (
               <>
                 <div className="mt-14">
-                  <SectionRule label="실시간 와이어" eyebrow="Latest Wire" />
+                  <SectionRule label="最新ワイヤー" eyebrow="Latest Wire" />
                 </div>
                 <ul className="grid gap-x-10 gap-y-4 md:grid-cols-2">
                   {moreSection.map((n) => (
@@ -326,7 +326,7 @@ function NewsPage() {
 
             {/* 출처·해석 표기 (페이지 단위 통일 — 카드별 By {source}·발행일은 각 기사에 표기) */}
             <p className="mt-12 border-t border-[var(--color-line)] pt-4 text-[12px] leading-relaxed text-[var(--color-ink-muted)]">
-              원문 출처·발행일은 각 기사에 표기됩니다. 내부 기사(Logisight)는 원문 기반 한국어 요약·해석이며, 외부 기사는 원문 링크로 연결됩니다.
+              出典と発行日は各記事に表示しています。Logisight の記事は原文にもとづく要約・解釈であり、外部記事は原文へリンクします。
             </p>
 
             {/* Newsletter band */}
@@ -335,9 +335,9 @@ function NewsPage() {
               style={{ background: "var(--color-navy-900)" }}
             >
               <div>
-                <div className="text-lg font-bold">📨 매주 한 편의 물류 브리핑</div>
+                <div className="text-lg font-bold">📨 月1回のマーケットレポート</div>
                 <p className="mt-1.5 text-[13px] text-white/78">
-                  운임 지수·정책 변화·회랑 동향을 정리한 뉴스레터를 받아보세요.
+                  運賃・港湾・貿易の動きをまとめたレポートをお届けします。
                 </p>
               </div>
               <div className="min-w-[280px] max-w-[460px] flex-1">
@@ -382,11 +382,11 @@ function Exclusive({ item }: { item: NewsItem }) {
   );
 }
 
-/** is_hero 기사에만 붙는 "주요" 배지. 전용 화주-영향 필드가 없어 편집 hero 플래그를 재사용한다. */
+/** is_hero 기사에만 붙는 "主要" 배지. 전용 화주-영향 필드가 없어 편집 hero 플래그를 재사용한다. */
 function MajorBadge() {
   return (
     <span className="inline-flex items-center rounded-[4px] bg-[var(--color-cyan)] px-1.5 py-0.5 text-[10px] font-bold tracking-wider text-[var(--color-navy-900)]">
-      주요
+      主要
     </span>
   );
 }
@@ -430,7 +430,7 @@ function Byline({ item, className = "" }: { item: NewsItem; className?: string }
       {item.read_minutes != null && (
         <>
           <span>·</span>
-          <span>{item.read_minutes}분</span>
+          <span>{item.read_minutes}分</span>
         </>
       )}
     </div>
@@ -477,8 +477,8 @@ function kstDateLabel(): string {
 function toPick(item: NewsItem): NewsPick {
   const internal = isInternalNewsItem(item);
   return {
-    category: item.category ?? "뉴스",
-    why: "최신 헤드라인",
+    category: item.category ?? "ニュース",
+    why: "最新の見出し",
     headline: item.title,
     source: item.source,
     date: formatPublishedAt(item.published_at),

@@ -1,0 +1,100 @@
+===== src/routes/privacy.tsx
+10: title: "개인정보처리방침 — Logisight",
+11: description: "Logisight 뉴스레터 구독 시 수집·이용하는 개인정보에 관한 처리방침입니다.",
+30: <h1 className="mt-1 text-2xl font-bold text-[var(--color-ink)]">개인정보처리방침</h1>
+31: <p className="mt-2 text-xs text-[var(--color-ink-muted)]">시행일: 2026-06-29</p>
+34: MTL Shipping Agency(이하 “회사”)는 Logisight 뉴스레터 서비스 제공을 위해 아래와 같이 개인정보를
+35: 수집·이용하며, 「개인정보 보호법」 및 「정보통신망 이용촉진 및 정보보호 등에 관한 법률」을 준수합니다.
+38: <Section title="1. 수집하는 개인정보 항목">
+40: <li>필수: 이메일 주소, 이름</li>
+41: <li>선택: 회사명, 관심 분야(해상·항공·철도·무역·물류)</li>
+42: <li>자동 수집: 구독 일시, 동의 일시, 유입 경로</li>
+46: <Section title="2. 수집·이용 목적">
+48: <li>물류 시장 뉴스레터·인텔리전스 브리핑 발송</li>
+49: <li>관심 분야 기반 콘텐츠 맞춤화</li>
+50: <li>구독 관리 및 수신거부 처리</li>
+54: <Section title="3. 보유 및 이용 기간">
+56: 구독 해지 또는 동의 철회 시까지 보유하며, 이후 지체 없이 파기합니다. 관계 법령에 따라 보존이
+57: 필요한 경우 해당 기간 동안 보관합니다.
+61: <Section title="4. 처리 위탁 및 국외 이전">
+63: 원활한 서비스 제공을 위해 이메일 발송 및 데이터 보관 업무를 아래 사업자에 위탁하며, 해당 데이터는
+64: 국외에 저장·처리될 수 있습니다.
+67: <li>이메일 발송: Resend (newsletter@mtlb.co.kr 발신)</li>
+68: <li>데이터 보관(호스팅): Supabase</li>
+72: <Section title="5. 제3자 제공">
+73: <p>회사는 이용자의 개인정보를 외부에 제공하지 않습니다. 단, 법령에 근거가 있는 경우는 예외로 합니다.</p>
+76: <Section title="6. 동의 철회 및 수신거부">
+78: 모든 뉴스레터 하단의 <strong>“수신 거부”</strong> 링크를 통해 언제든지 수신을 중단(동의 철회)할 수
+79: 있습니다. 철회 시 해당 개인정보는 파기됩니다.
+83: <Section title="7. 이용자의 권리">
+84: <p>이용자는 자신의 개인정보에 대한 열람·정정·삭제·처리정지를 요청할 수 있으며, 아래 연락처로 문의할 수 있습니다.</p>
+87: <Section title="8. 문의처">
+89: 개인정보 관련 문의: <a className="underline text-[var(--color-navy-900)]" href="mailto:newsletter@mtlb.co.kr">newsletter@mtlb.co.kr</a>
+===== src/lib/climate-quality.ts
+96: pushIssue(issues, `${HLBL[hIdx]} asset_risk 예보 행 없음`);
+99: pushIssue(issues, `${HLBL[hIdx]} 자산 예보 ${rows.length}/${expectedRows}개만 수신`);
+104: pushIssue(issues, `${HLBL[hIdx]} 예보 갱신 시각 없음`);
+107: pushIssue(issues, `${HLBL[hIdx]} 예보 갱신 ${Math.round(ageHours)}시간 전`);
+110: pushIssue(issues, `${HLBL[hIdx]} 예보 갱신 ${Math.round(ageHours)}시간 전`);
+115: pushIssue(issues, `${HLBL[hIdx]} 핵심 기상 변수 일부 누락`);
+126: ? `${HLBL[hIdx]} 해상 파고는 장기예보 미제공(모델 한계)`
+127: : `${HLBL[hIdx]} 해상 파고 예보 미제공`
+128: : `${HLBL[hIdx]} 해상 파고 ${coverage.wave}/${maritimeRows}개만 수신`,
+161: if (status === "blocked") return "예보 데이터 부족";
+162: if (status === "warn") return "일부 데이터 제한";
+163: return "예보 정상";
+173: if (ageHours == null) return "갱신 시각 없음";
+174: if (ageHours < 1) return "1시간 이내 갱신";
+175: if (ageHours < 24) return `${Math.round(ageHours)}시간 전 갱신`;
+176: return `${Math.round(ageHours / 24)}일 전 갱신`;
+===== src/lib/dataSources.ts
+12: SCFI: "상하이해운거래소 (SSE)",
+13: CCFI: "상하이해운거래소 (SSE)",
+14: KCCI: "한국해양진흥공사 (KOBC)",
+29: trade: "관세청 수출입무역통계",
+30: port: "PORT-MIS (해양수산부)",
+31: air: "KITA 항공운임",
+32: sea: "KITA 해상운임",
+33: fx: "하나은행 고시환율",
+===== src/lib/api/freight-indices.ts
+26: if (!iso) return "업데이트: 수집 예정 (주 1회)";
+28: if (Number.isNaN(d.getTime())) return "업데이트: 수집 예정 (주 1회)";
+29: return `업데이트: ${d.getUTCFullYear()}.${String(d.getUTCMonth() + 1).padStart(2, "0")}.${String(d.getUTCDate()).padStart(2, "0")} 기준`;
+33: "NYFI:ASIA-USWC": "아시아→미서안",
+34: "NYFI:ASIA-USEC": "아시아→미동안",
+35: "NYFI:ASIA-NEUR": "아시아→북유럽",
+36: "NYFI:TRANS-ATLANTIC_WESTBOUND": "대서양(서행)",
+37: "NYFI:TRANS-ATLANTIC_EASTBOUND": "대서양(동행)",
+===== src/lib/congestion.ts
+20: severe: { label: "심각", color: "#ef4444", rank: 3 }, // red
+21: moderate: { label: "중간", color: "#f97316", rank: 2 }, // orange
+22: warning: { label: "주의", color: "#eab308", rank: 1 }, // yellow
+23: normal: { label: "정상", color: "#64748b", rank: 0 }, // slate/gray
+===== src/components/ui/StatBadge.tsx
+8: label: "통계 기준",
+10: "통계상 극저가 레인 · 실제 all-in 견적과 차이 가능. 일부 단거리 항로는 신고/통계 기준상 극저가로 집계될 수 있습니다. 실제 선사 all-in rate, THC, local charge, surcharge는 별도 확인이 필요합니다.",
+14: label: "추정",
+15: title: "산정 방식: 공개 집계 지표 기반 추정값입니다. 단정이 아닌 추정·정합 관점으로 제공됩니다.",
+19: label: "AI 초안",
+20: title: "AI가 생성한 초안으로, 에디터 검수 전 상태입니다.",
+===== src/components/ui/DataMeta.tsx
+16: ["출처", source],
+17: ["기준일", asOf],
+18: ["갱신주기", cadence],
+19: ["단위", unit],
+20: ["산정방식", method],
+===== src/routes/climate.tsx
+8: "전 세계 항만·주요 해협·내륙 철도 거점의 기상 리스크를 AI 예보 기반, 영향을 받는 노선과 리스크를 감지합니다.";
+16: title: "세계 기후 예측 — Logisight",
+===== src/routes/port-risk.tsx
+15: title: "포트 리스크 인텔리전스 — Logisight",
+16: description: "항만 혼잡, 해상 병목, 초크포인트와 규제 이벤트 리스크 모니터.",
+===== src/components/trade/HomeExportWidget.tsx
+92: if (!priodDt) return "잠정치";
+97: if (!Number.isFinite(d) || d <= 0) return "잠정치";
+98: return `1~${d}일 기준`;
+106: <span>이달 수출 현황</span>
+109: 데이터 수집 중입니다
+112: 매월 11일부터 잠정치가 표시됩니다.
+131: <span>이달 수출 현황</span>
+172: → 무역 상세 보기

@@ -2,13 +2,15 @@ import { createFileRoute } from "@tanstack/react-router";
 
 import { seoHead } from "@/lib/seo";
 
-// 개인정보처리방침 — 뉴스레터 구독 시 수집하는 개인정보 기준의 표준 방침.
-// 주의: 회사 법무 검토 후 문구·보유기간·위탁업체를 확정하세요(초안 성격).
+// プライバシーポリシー — ニュースレター登録時に取得する個人情報を前提とした標準方針。
+// 注意: 法務確認のうえ、保有期間・委託先・施行日を確定すること(草案の位置づけ)。
+// 韓国版は個人情報保護法(韓国)を前提にしていたため、日本の個人情報保護法に合わせて書き直している。
 export const Route = createFileRoute("/privacy")({
   head: () =>
     seoHead({
-      title: "개인정보처리방침 — Logisight",
-      description: "Logisight 뉴스레터 구독 시 수집·이용하는 개인정보에 관한 처리방침입니다.",
+      title: "プライバシーポリシー — Logisight",
+      description:
+        "Logisight のニュースレター登録時に取得・利用する個人情報の取り扱いについて定めた方針です。",
       path: "/privacy",
     }),
   component: PrivacyPage,
@@ -26,67 +28,79 @@ function Section({ title, children }: { title: string; children: React.ReactNode
 function PrivacyPage() {
   return (
     <div className="mx-auto max-w-3xl px-4 py-12 lg:px-6">
-      <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--color-ink-muted)]">Logisight</p>
-      <h1 className="mt-1 text-2xl font-bold text-[var(--color-ink)]">개인정보처리방침</h1>
-      <p className="mt-2 text-xs text-[var(--color-ink-muted)]">시행일: 2026-06-29</p>
+      <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--color-ink-muted)]">
+        Logisight
+      </p>
+      <h1 className="mt-1 text-2xl font-bold text-[var(--color-ink)]">プライバシーポリシー</h1>
+      <p className="mt-2 text-xs text-[var(--color-ink-muted)]">施行日: 2026-06-29</p>
 
       <p className="mt-6 text-sm leading-relaxed text-[var(--color-ink-muted)]">
-        MTL Shipping Agency(이하 “회사”)는 Logisight 뉴스레터 서비스 제공을 위해 아래와 같이 개인정보를
-        수집·이용하며, 「개인정보 보호법」 및 「정보통신망 이용촉진 및 정보보호 등에 관한 법률」을 준수합니다.
+        MTL Shipping Agency(以下「当社」)は、Logisight のニュースレターを提供するにあたり、
+        以下のとおり個人情報を取得・利用します。個人情報の保護に関する法律その他の関係法令を遵守します。
       </p>
 
-      <Section title="1. 수집하는 개인정보 항목">
+      <Section title="1. 取得する個人情報">
         <ul className="list-disc space-y-1 pl-5">
-          <li>필수: 이메일 주소, 이름</li>
-          <li>선택: 회사명, 관심 분야(해상·항공·철도·무역·물류)</li>
-          <li>자동 수집: 구독 일시, 동의 일시, 유입 경로</li>
+          <li>必須: メールアドレス、お名前</li>
+          <li>任意: 会社名、関心分野(海上・航空・貿易・物流)</li>
+          <li>自動取得: 登録日時、同意日時、流入経路</li>
         </ul>
       </Section>
 
-      <Section title="2. 수집·이용 목적">
+      <Section title="2. 利用目的">
         <ul className="list-disc space-y-1 pl-5">
-          <li>물류 시장 뉴스레터·인텔리전스 브리핑 발송</li>
-          <li>관심 분야 기반 콘텐츠 맞춤화</li>
-          <li>구독 관리 및 수신거부 처리</li>
+          <li>マーケットレポート・ニュースレターの配信</li>
+          <li>関心分野に応じた内容の調整</li>
+          <li>登録内容の管理および配信停止の処理</li>
         </ul>
       </Section>
 
-      <Section title="3. 보유 및 이용 기간">
+      <Section title="3. 保有期間">
         <p>
-          구독 해지 또는 동의 철회 시까지 보유하며, 이후 지체 없이 파기합니다. 관계 법령에 따라 보존이
-          필요한 경우 해당 기간 동안 보관합니다.
+          配信停止または同意の撤回まで保有し、その後遅滞なく削除します。関係法令により保存が必要な場合は、
+          その期間に限り保管します。
         </p>
       </Section>
 
-      <Section title="4. 처리 위탁 및 국외 이전">
+      <Section title="4. 業務の委託および外国にある第三者への提供">
         <p>
-          원활한 서비스 제공을 위해 이메일 발송 및 데이터 보관 업무를 아래 사업자에 위탁하며, 해당 데이터는
-          국외에 저장·처리될 수 있습니다.
+          サービス提供のため、メール配信およびデータ保管の業務を以下の事業者に委託しています。これらのデータは
+          日本国外で保存・処理される場合があります。
         </p>
         <ul className="list-disc space-y-1 pl-5">
-          <li>이메일 발송: Resend (newsletter@mtlb.co.kr 발신)</li>
-          <li>데이터 보관(호스팅): Supabase</li>
+          <li>メール配信: Resend(送信元 newsletter@logisight.net)</li>
+          <li>データ保管(ホスティング): Supabase</li>
         </ul>
       </Section>
 
-      <Section title="5. 제3자 제공">
-        <p>회사는 이용자의 개인정보를 외부에 제공하지 않습니다. 단, 법령에 근거가 있는 경우는 예외로 합니다.</p>
-      </Section>
-
-      <Section title="6. 동의 철회 및 수신거부">
+      <Section title="5. 第三者提供">
         <p>
-          모든 뉴스레터 하단의 <strong>“수신 거부”</strong> 링크를 통해 언제든지 수신을 중단(동의 철회)할 수
-          있습니다. 철회 시 해당 개인정보는 파기됩니다.
+          当社は、法令に根拠がある場合を除き、ご本人の同意なく個人情報を第三者に提供することはありません。
         </p>
       </Section>
 
-      <Section title="7. 이용자의 권리">
-        <p>이용자는 자신의 개인정보에 대한 열람·정정·삭제·처리정지를 요청할 수 있으며, 아래 연락처로 문의할 수 있습니다.</p>
+      <Section title="6. 同意の撤回・配信停止">
+        <p>
+          すべてのニュースレター下部の<strong>「配信停止」</strong>
+          リンクから、いつでも配信を停止(同意を撤回)できます。撤回された場合、該当する個人情報は削除します。
+        </p>
       </Section>
 
-      <Section title="8. 문의처">
+      <Section title="7. ご本人の権利">
         <p>
-          개인정보 관련 문의: <a className="underline text-[var(--color-navy-900)]" href="mailto:newsletter@mtlb.co.kr">newsletter@mtlb.co.kr</a>
+          ご本人は、自身の個人情報について開示・訂正・削除・利用停止を請求できます。下記の連絡先までお問い合わせください。
+        </p>
+      </Section>
+
+      <Section title="8. お問い合わせ窓口">
+        <p>
+          個人情報に関するお問い合わせ:{" "}
+          <a
+            className="underline text-[var(--color-navy-900)]"
+            href="mailto:newsletter@logisight.net"
+          >
+            newsletter@logisight.net
+          </a>
         </p>
       </Section>
     </div>

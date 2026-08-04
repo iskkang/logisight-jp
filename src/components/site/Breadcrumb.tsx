@@ -6,27 +6,23 @@ export type Crumb = { label: string; to?: string };
 
 // 대시보드 서브 페이지 라벨(서브 GNB와 동일 소스).
 const DASH_SUB: Record<string, string> = {
-  "/forecasts": "전망",
-  "/rates": "운임",
-  "/eurasia": "유라시아",
-  "/port-risk": "포트",
-  "/trade": "무역",
-  "/industries": "산업",
-  "/climate": "기상",
+  "/rates": "運賃",
+  "/ports": "港湾",
+  "/port-risk": "リスク",
+  "/trade": "貿易",
+  "/climate": "気象",
 };
 
-const HOME: Crumb = { label: "홈", to: "/" };
+const HOME: Crumb = { label: "ホーム", to: "/" };
 
 // 경로 → 크럼 배열. 홈/관리자/기사는 null(기사는 제목 필요 → 페이지에서 직접 렌더).
 export function crumbsFor(pathname: string): Crumb[] | null {
   const p = pathname.length > 1 && pathname.endsWith("/") ? pathname.slice(0, -1) : pathname;
   if (p === "/" || p.startsWith("/admin") || p.startsWith("/article")) return null;
 
-  if (p === "/news") return [HOME, { label: "뉴스" }];
-  if (p === "/briefing") return [HOME, { label: "주간 브리핑" }];
-  if (p === "/dashboard") return [HOME, { label: "인사이트" }];
+  if (p === "/news") return [HOME, { label: "ニュース" }];
 
-  const dash: Crumb = { label: "인사이트", to: "/dashboard" };
+  const dash: Crumb = { label: "インサイト", to: "/rates" };
   for (const [path, label] of Object.entries(DASH_SUB)) {
     if (p === path || p.startsWith(`${path}/`)) return [HOME, dash, { label }];
   }
@@ -36,7 +32,7 @@ export function crumbsFor(pathname: string): Crumb[] | null {
 // 프레젠테이션 — 마지막 항목은 현재 페이지(비링크 · aria-current).
 export function Breadcrumb({ items, className = "" }: { items: Crumb[]; className?: string }) {
   return (
-    <nav aria-label="브레드크럼" className={className}>
+    <nav aria-label="パンくずリスト" className={className}>
       <ol className="flex flex-wrap items-center gap-x-1 gap-y-0.5 text-[11.5px] leading-none">
         {items.map((c, i) => {
           const last = i === items.length - 1;

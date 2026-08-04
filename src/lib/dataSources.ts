@@ -9,9 +9,9 @@
 //  - ERAI:      index1520 (Eurasian Rail Alliance Index)
 
 export const INDEX_SOURCE: Record<string, string> = {
-  SCFI: "상하이해운거래소 (SSE)",
-  CCFI: "상하이해운거래소 (SSE)",
-  KCCI: "한국해양진흥공사 (KOBC)",
+  SCFI: "上海航運交易所 (SSE)",
+  CCFI: "上海航運交易所 (SSE)",
+  KCCI: "韓国海洋振興公社 (KOBC)",
   WCI: "Drewry (WCI)",
   FBX: "Freightos (FBX)",
   BDI: "Baltic Exchange (BDI)",
@@ -26,11 +26,11 @@ export function indexSource(code: string): string | null {
 
 // 그 외 데이터셋 출처(지수 외).
 export const DATASET_SOURCE = {
-  trade: "관세청 수출입무역통계",
-  port: "PORT-MIS (해양수산부)",
-  air: "KITA 항공운임",
-  sea: "KITA 해상운임",
-  fx: "하나은행 고시환율",
+  trade: "財務省貿易統計",
+  port: "国土交通省 港湾統計",
+  air: "日本銀行 企業向けサービス価格指数",
+  sea: "日本銀行 企業向けサービス価格指数",
+  fx: "—",
   jetFuel: "IATA / Platts",
   // 코드 추적으로 확인: 호르무즈·Persian Gulf = Shipfinder(risk.functions), 해협 통과 TEU = EconDB
   // (econdb.com/widgets/chokepoint-pass), 항만 혼잡(median 대기일) = Portcast(파이프라인 port-congestion.js).

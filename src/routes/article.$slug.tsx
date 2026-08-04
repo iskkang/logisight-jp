@@ -38,21 +38,21 @@ export const Route = createFileRoute("/article/$slug")({
   },
   head: ({ loaderData, params }) => {
     const a = loaderData?.article;
-    const title = a ? `${a.title} — Logisight` : "기사 — Logisight";
+    const title = a ? `${a.title} — Logisight` : "記事 — Logisight";
     const desc =
       (a?.summary && a.summary.trim().length > 0 ? a.summary : a?.title) ??
-      "Logisight 큐레이션 물류 뉴스 상세 기사.";
+      "Logisight がキュレーションする物流ニュースの記事。";
     const slugParam = a?.slug && a.slug.length > 0 ? a.slug : a ? String(a.id) : params.slug;
     // canonical·og:url은 sitemap <loc>와 문자 단위로 일치해야 통합이 작동 — 동일하게 percent-인코딩
     const url = `${SITE_URL}/article/${encodeURIComponent(slugParam)}`;
     const meta: Array<Record<string, string>> = [
       { title },
       { name: "description", content: desc },
-      { property: "og:title", content: a?.title ?? "기사 — Logisight" },
+      { property: "og:title", content: a?.title ?? "記事 — Logisight" },
       { property: "og:description", content: desc },
       { property: "og:type", content: "article" },
       { property: "og:url", content: url },
-      { name: "twitter:title", content: a?.title ?? "기사 — Logisight" },
+      { name: "twitter:title", content: a?.title ?? "記事 — Logisight" },
       { name: "twitter:description", content: desc },
     ];
     if (a?.image_url) {
@@ -96,12 +96,12 @@ export const Route = createFileRoute("/article/$slug")({
   notFoundComponent: () => (
     <div className="mx-auto max-w-3xl px-4 py-20 text-center">
       <p className="text-sm uppercase tracking-[0.18em] text-[var(--color-ink-muted)]">404</p>
-      <h1 className="mt-2 text-2xl font-bold text-[var(--color-ink)]">기사를 찾을 수 없습니다</h1>
+      <h1 className="mt-2 text-2xl font-bold text-[var(--color-ink)]">記事が見つかりません</h1>
       <Link
         to="/news"
         className="mt-6 inline-block text-sm font-semibold text-[var(--color-navy-600)] underline"
       >
-        물류 뉴스로 돌아가기
+        物流ニュースに戻る
       </Link>
     </div>
   ),
@@ -153,7 +153,7 @@ function ArticlePage() {
       <ReactMarkdown>{normalizedContent}</ReactMarkdown>
     ) : (
       // 본문 없음 → 더미 대신 "수집 예정" 안내(데이터 안전 규칙).
-      <p>이 기사의 전문은 수집 예정입니다.</p>
+      <p>この記事の全文は準備中です。</p>
     ),
     source_origin: isExternalSource ? null : article.source,
     source_url: isExternalSource ? article.url : null,
@@ -174,9 +174,9 @@ function ArticlePage() {
       article={articleProp}
       related={relatedProp}
       reportCta={{
-        heading: "이 뉴스가 운임과 공급망에 미치는 영향은?",
-        body: "이번 주 Logisight 레포트에서 주요 노선 전망과 대응 포인트를 확인하세요.",
-        buttonLabel: "이번 주 레포트 보기",
+        heading: "このニュースは運賃とサプライチェーンにどう影響するか",
+        body: "今月のマーケットレポートで、運賃・港湾・貿易の動きをまとめてご確認ください。",
+        buttonLabel: "今月のレポートを読む",
       }}
       renderRelatedLink={(item, children, className) => {
         const n = item.id ? relatedById.get(item.id) : undefined;

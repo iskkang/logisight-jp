@@ -13,11 +13,11 @@ export interface DataMetaProps {
 
 export function DataMeta({ source, asOf, cadence, unit, method, className = "" }: DataMetaProps) {
   const items = ([
-    ["출처", source],
-    ["기준일", asOf],
-    ["갱신주기", cadence],
-    ["단위", unit],
-    ["산정방식", method],
+    ["出典", source],
+    ["基準日", asOf],
+    ["更新頻度", cadence],
+    ["単位", unit],
+    ["算定方法", method],
   ] as [string, ReactNode][]).filter(([, v]) => v != null && v !== "");
   if (items.length === 0) return null;
   return (

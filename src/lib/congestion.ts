@@ -17,10 +17,10 @@ export const SEVERITY_META: Record<
   Severity,
   { label: string; color: string; rank: number }
 > = {
-  severe: { label: "심각", color: "#ef4444", rank: 3 }, // red
-  moderate: { label: "중간", color: "#f97316", rank: 2 }, // orange
-  warning: { label: "주의", color: "#eab308", rank: 1 }, // yellow
-  normal: { label: "정상", color: "#64748b", rank: 0 }, // slate/gray
+  severe: { label: "深刻", color: "#ef4444", rank: 3 }, // red
+  moderate: { label: "中程度", color: "#f97316", rank: 2 }, // orange
+  warning: { label: "注意", color: "#eab308", rank: 1 }, // yellow
+  normal: { label: "正常", color: "#64748b", rank: 0 }, // slate/gray
 };
 
 export const NO_DATA_COLOR = "#475569";

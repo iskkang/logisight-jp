@@ -37,14 +37,26 @@ type Props = {
   renderPickLink?: (pick: Pick, children: ReactNode, className: string) => ReactNode;
 };
 
-const CATEGORIES = ["전체", "해상", "항공", "철도", "물류", "무역"];
-const PERIODS = ["전체", "오늘", "이번 주", "이번 달"];
-const NAV = [{ l: "홈" }, { l: "뉴스", on: true }, { l: "인사이트" }];
+// 表示は日本語、値は DB の category 列そのまま。値を変えると絞り込みが空になる。
+const CATEGORIES = [
+  { label: "すべて", value: "전체" },
+  { label: "海上", value: "해상" },
+  { label: "航空", value: "항공" },
+  { label: "物流", value: "물류" },
+  { label: "貿易", value: "무역" },
+];
+const PERIODS = [
+  { label: "すべて", value: "전체" },
+  { label: "今日", value: "오늘" },
+  { label: "今週", value: "이번 주" },
+  { label: "今月", value: "이번 달" },
+];
+const NAV = [{ l: "ホーム" }, { l: "ニュース", on: true }, { l: "インサイト" }];
 
 const FALLBACK_PICK: Pick = {
-  category: "수집 중",
-  why: "선정 데이터 준비 중",
-  headline: "이번 주 주목 기사를 집계하는 중입니다",
+  category: "収集中",
+  why: "選定データを準備中",
+  headline: "注目記事を集計しています",
   source: "Logisight",
   date: "—",
   periodLabel: "",
@@ -147,7 +159,7 @@ function Placeholder() {
 
 export default function LogisightNewsTop({
   showNav = true,
-  deskTitle = "마켓 데스크",
+  deskTitle = "マーケットデスク",
   intro,
   date = "",
   category,
@@ -156,11 +168,11 @@ export default function LogisightNewsTop({
   onPeriodChange,
   pick = null,
   pickLoading = false,
-  noteText = "조회수·언급량·물류 영향도를 종합해 매주 자동 선정합니다.",
+  noteText = "閲覧数・言及量・物流への影響度を総合して自動で選定しています。",
   renderPickLink,
 }: Props) {
-  const [catState, setCatState] = useState(CATEGORIES[0]);
-  const [perState, setPerState] = useState(PERIODS[0]);
+  const [catState, setCatState] = useState(CATEGORIES[0].value);
+  const [perState, setPerState] = useState(PERIODS[0].value);
   const cat = category ?? catState;
   const per = period ?? perState;
   const setCat = (c: string) => (onCategoryChange ? onCategoryChange(c) : setCatState(c));
@@ -180,7 +192,7 @@ export default function LogisightNewsTop({
       )}
 
       <div className="wrap">
-        <div className="bc">홈 <b>›</b> 뉴스</div>
+        <div className="bc">ホーム <b>›</b> ニュース</div>
 
         {intro ? <p className="intro">{intro}</p> : null}
 
@@ -191,24 +203,24 @@ export default function LogisightNewsTop({
             {date ? <><span className="sep">·</span><span className="day mono">{date}</span></> : null}
           </div>
           <div className="period">
-            <span className="pk">기간</span>
+            <span className="pk">期間</span>
             <span className="seg">
-              {PERIODS.map((x) => <button key={x} className={x === per ? "on" : undefined} onClick={() => setPer(x)}>{x}</button>)}
+              {PERIODS.map((x) => <button key={x.value} className={x.value === per ? "on" : undefined} onClick={() => setPer(x.value)}>{x.label}</button>)}
             </span>
           </div>
         </div>
 
         {/* 카테고리 탭 */}
         <div className="tabs">
-          {CATEGORIES.map((x) => <button key={x} className={x === cat ? "on" : undefined} onClick={() => setCat(x)}>{x}</button>)}
+          {CATEGORIES.map((x) => <button key={x.value} className={x.value === cat ? "on" : undefined} onClick={() => setCat(x.value)}>{x.label}</button>)}
         </div>
 
         {/* 이번 주 주목 (자동 선정) */}
         <section className="pick">
           <div className="ph-h">
             <span className="ey">WEEKLY PICK</span>
-            <span className="ttl">이번 주 주목</span>
-            <span className="auto">⚡ 자동 선정</span>
+            <span className="ttl">注目記事</span>
+            <span className="auto">⚡ 自動選定</span>
             <span className="per mono">{p.periodLabel ?? ""}</span>
           </div>
 
@@ -231,11 +243,11 @@ export default function LogisightNewsTop({
                   </div>
                   <h2>{p.headline}</h2>
                   <div className="meta">
-                    <b>{p.source}</b> · {p.date}{p.views ? ` · 조회 ${p.views}` : ""}
+                    <b>{p.source}</b> · {p.date}{p.views ? ` · 閲覧 ${p.views}` : ""}
                     {pick && renderPickLink ? (
-                      renderPickLink(p, "읽기 →", "read")
+                      renderPickLink(p, "読む →", "read")
                     ) : (
-                      <a href={p.href ?? "#"} className="read">읽기 →</a>
+                      <a href={p.href ?? "#"} className="read">読む →</a>
                     )}
                   </div>
                 </>

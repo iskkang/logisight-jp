@@ -93,26 +93,26 @@ export function buildClimateForecastQuality(data: ClimateRiskData, nowMs = Date.
 
     if (rows.length === 0) {
       status = "blocked";
-      pushIssue(issues, `${HLBL[hIdx]} asset_risk 예보 행 없음`);
+      pushIssue(issues, `${HLBL[hIdx]} asset_risk の予報行がありません`);
     } else if (expectedRows > 0 && rows.length < expectedRows) {
       status = maxStatus(status, "warn");
-      pushIssue(issues, `${HLBL[hIdx]} 자산 예보 ${rows.length}/${expectedRows}개만 수신`);
+      pushIssue(issues, `${HLBL[hIdx]} 資産の予報が ${rows.length}/${expectedRows} 件のみ`);
     }
 
     if (updatedAtMs == null) {
       status = maxStatus(status, "warn");
-      pushIssue(issues, `${HLBL[hIdx]} 예보 갱신 시각 없음`);
+      pushIssue(issues, `${HLBL[hIdx]} 予報の更新時刻がありません`);
     } else if (ageHours != null && ageHours > STALE_BLOCK_HOURS) {
       status = maxStatus(status, "blocked");
-      pushIssue(issues, `${HLBL[hIdx]} 예보 갱신 ${Math.round(ageHours)}시간 전`);
+      pushIssue(issues, `${HLBL[hIdx]} 予報更新から ${Math.round(ageHours)} 時間経過`);
     } else if (ageHours != null && ageHours > STALE_WARN_HOURS) {
       status = maxStatus(status, "warn");
-      pushIssue(issues, `${HLBL[hIdx]} 예보 갱신 ${Math.round(ageHours)}시간 전`);
+      pushIssue(issues, `${HLBL[hIdx]} 予報更新から ${Math.round(ageHours)} 時間経過`);
     }
 
     if (rows.length > 0 && (coverage.wind < rows.length || coverage.precip < rows.length || coverage.temp < rows.length)) {
       status = maxStatus(status, "warn");
-      pushIssue(issues, `${HLBL[hIdx]} 핵심 기상 변수 일부 누락`);
+      pushIssue(issues, `${HLBL[hIdx]} 主要な気象変数の一部が欠落`);
     }
 
     if (maritimeRows > 0) {
@@ -123,9 +123,9 @@ export function buildClimateForecastQuality(data: ClimateRiskData, nowMs = Date.
           issues,
           coverage.wave === 0
             ? horizonDays > 7
-              ? `${HLBL[hIdx]} 해상 파고는 장기예보 미제공(모델 한계)`
-              : `${HLBL[hIdx]} 해상 파고 예보 미제공`
-            : `${HLBL[hIdx]} 해상 파고 ${coverage.wave}/${maritimeRows}개만 수신`,
+              ? `${HLBL[hIdx]} 波高は長期予報が提供されない(モデルの制約)`
+              : `${HLBL[hIdx]} 波高の予報が提供されていない`
+            : `${HLBL[hIdx]} 波高が ${coverage.wave}/${maritimeRows} 件のみ`,
         );
       }
     }
@@ -158,9 +158,9 @@ export function buildClimateForecastQuality(data: ClimateRiskData, nowMs = Date.
 }
 
 export function forecastQualityLabel(status: ForecastQualityStatus): string {
-  if (status === "blocked") return "예보 데이터 부족";
-  if (status === "warn") return "일부 데이터 제한";
-  return "예보 정상";
+  if (status === "blocked") return "予報データ不足";
+  if (status === "warn") return "一部データに制限";
+  return "予報は正常";
 }
 
 export function forecastQualityTone(status: ForecastQualityStatus): { dot: string; text: string; border: string; bg: string } {
@@ -170,8 +170,8 @@ export function forecastQualityTone(status: ForecastQualityStatus): { dot: strin
 }
 
 export function formatForecastAge(ageHours: number | null): string {
-  if (ageHours == null) return "갱신 시각 없음";
-  if (ageHours < 1) return "1시간 이내 갱신";
-  if (ageHours < 24) return `${Math.round(ageHours)}시간 전 갱신`;
-  return `${Math.round(ageHours / 24)}일 전 갱신`;
+  if (ageHours == null) return "更新時刻なし";
+  if (ageHours < 1) return "1時間以内に更新";
+  if (ageHours < 24) return `${Math.round(ageHours)} 時間前に更新`;
+  return `${Math.round(ageHours / 24)} 日前に更新`;
 }

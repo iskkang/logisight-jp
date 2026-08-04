@@ -5,7 +5,7 @@ import { seoHead } from "@/lib/seo";
 import { LogisightClimate } from "@/components/climate-page/LogisightClimate";
 
 const SUBTITLE =
-  "전 세계 항만·주요 해협·내륙 철도 거점의 기상 리스크를 AI 예보 기반, 영향을 받는 노선과 리스크를 감지합니다.";
+  "世界の主要港湾・海峡・内陸拠点の気象リスクを予報にもとづいて監視し、影響を受ける航路を示します。";
 
 export const Route = createFileRoute("/climate")({
   loader: ({ context }) => {
@@ -13,7 +13,7 @@ export const Route = createFileRoute("/climate")({
   },
   head: () =>
     seoHead({
-      title: "세계 기후 예측 — Logisight",
+      title: "世界の気象リスク — Logisight",
       description: SUBTITLE,
       path: "/climate",
     }),

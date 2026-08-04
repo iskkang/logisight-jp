@@ -7,14 +7,11 @@ const WRAP = "mx-auto w-full max-w-[1240px] px-4 min-[640px]:px-7";
 const SCROLL_HIDE = `.lsg-insight-sub{scrollbar-width:none !important;-ms-overflow-style:none !important}.lsg-insight-sub::-webkit-scrollbar{display:none !important;width:0 !important;height:0 !important}`;
 
 const TABS = [
-  { to: "/dashboard", label: "종합" },
-  { to: "/forecasts", label: "전망" },
-  { to: "/rates", label: "운임" },
-  { to: "/rail", label: "철도" },
-  { to: "/port-risk", label: "포트" },
-  { to: "/trade", label: "무역" },
-  { to: "/industries", label: "산업" },
-  { to: "/climate", label: "기상" },
+  { to: "/rates", label: "運賃" },
+  { to: "/ports", label: "港湾" },
+  { to: "/trade", label: "貿易" },
+  { to: "/climate", label: "気象" },
+  { to: "/port-risk", label: "リスク" },
 ] as const;
 
 export function InsightSubNav() {
