@@ -14,7 +14,7 @@ export const Route = createFileRoute("/news")({
   loaderDeps: ({ search }) => ({ cat: search.cat }),
   loader: ({ context, deps }) =>
     context.queryClient.ensureQueryData(
-      latestNewsQueryOptions({ lang: "ja", limit: 60, category: deps.cat }),
+      latestNewsQueryOptions({ lang: "ja", limit: 50, category: deps.cat }),
     ),
   head: () =>
     seoHead({

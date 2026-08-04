@@ -39,7 +39,7 @@ function CatTag({ category }: { category: string | null }) {
 export function JpNews({ category }: { category?: string }) {
   const navigate = useNavigate();
   const { data: items } = useSuspenseQuery(
-    latestNewsQueryOptions({ lang: "ja", limit: 60, category }),
+    latestNewsQueryOptions({ lang: "ja", limit: 50, category }),
   );
 
   // 日付ごとにまとめる。業界紙の一覧は日付が見出しになる。
