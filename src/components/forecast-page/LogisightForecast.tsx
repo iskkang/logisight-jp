@@ -197,7 +197,7 @@ function Hero({ kpis, lastUpdated, modules, activeModule, onModule }: {
           <p className="mt-4 max-w-[640px] text-[15px] leading-[1.6] text-[#93a1b7]">Logisight AI が現在と過去のデータを分析し、運賃の方向を見通します。</p>
           {modules.length > 0 && (
             <div className="mt-[18px] flex flex-wrap gap-2">
-              <button type="button" onClick={() => onModule(null)} className={`rounded-full border px-3 py-[5px] text-[12px] ${activeModule == null ? "border-[#2dd4bf73] bg-[#0e2a2a] text-[#2dd4bf]" : "border-[#78a0cd1c] bg-[#0e1626] text-[#93a1b7]"}`}>전체</button>
+              <button type="button" onClick={() => onModule(null)} className={`rounded-full border px-3 py-[5px] text-[12px] ${activeModule == null ? "border-[#2dd4bf73] bg-[#0e2a2a] text-[#2dd4bf]" : "border-[#78a0cd1c] bg-[#0e1626] text-[#93a1b7]"}`}>すべて</button>
               {modules.map((m) => (
                 <button key={m.key} type="button" onClick={() => onModule(m.key)} className={`rounded-full border px-3 py-[5px] text-[12px] ${activeModule === m.key ? "border-[#2dd4bf73] bg-[#0e2a2a] text-[#2dd4bf]" : "border-[#78a0cd1c] bg-[#0e1626] text-[#93a1b7]"}`}>{m.label}</button>
               ))}
@@ -359,7 +359,7 @@ function DetailPanel({ f, series }: { f: Forecast; series?: ForecastSeries }) {
             <div>
               <div className="mb-0.5 text-[11px] text-[#828d9d]">信頼度 {confPct(f.confidence)}% · {dir.label} 優勢</div>
               <b className={`text-[18px] font-extrabold ${dirColor}`}>{dir.label} 優勢</b>
-              {f.composite_score != null && <div className="mt-[3px] lsg-mono text-[11.5px] text-[#828d9d]">総合 {f.composite_score > 0 ? "+" : ""}{f.composite_score} · 점수 환산</div>}
+              {f.composite_score != null && <div className="mt-[3px] lsg-mono text-[11.5px] text-[#828d9d]">総合 {f.composite_score > 0 ? "+" : ""}{f.composite_score} · スコア換算</div>}
             </div>
           </div>
           <div className="mt-3.5 pt-3.5">
@@ -405,7 +405,7 @@ function Methodology() {
           </div>
         ))}
       </div>
-      <p className="mt-4 text-[11.5px] leading-[1.6] text-[#828d9d]">この見通しは情報提供が目的であり、投資や契約の勧誘ではありません。欠測した要素は重みを再配分します。因果ではなく相関として記述します。的中率は発行された 見通し 전수를 분모로 합니다.</p>
+      <p className="mt-4 text-[11.5px] leading-[1.6] text-[#828d9d]">この見通しは情報提供が目的であり、投資や契約の勧誘ではありません。欠測した要素は重みを再配分します。因果ではなく相関として記述します。的中率は発行した見通しの全件を分母とします。</p>
     </div>
   );
 }
@@ -444,7 +444,7 @@ export function LogisightForecast() {
   const selectedId = search.sel ?? filtered[0]?.id ?? null;
   const selected = open.find((f) => f.id === selectedId) ?? filtered[0] ?? null;
 
-  const dirSeg = search.dir.length === 1 ? (search.dir[0] === "up" ? "上昇" : search.dir[0] === "flat" ? "横ばい" : search.dir[0] === "down" ? "下落" : "すべての方向") : "전체 방향";
+  const dirSeg = search.dir.length === 1 ? (search.dir[0] === "up" ? "上昇" : search.dir[0] === "flat" ? "横ばい" : search.dir[0] === "down" ? "下落" : "すべての方向") : "すべての方向";
   const cadSeg = search.cadence === "weekly" ? "週次" : search.cadence === "monthly" ? "月次" : "すべて";
 
   const setDir = (v: string) => navigate({ search: (p: ForecastSearch) => ({ ...p, dir: v === "上昇" ? ["up"] : v === "横ばい" ? ["flat"] : v === "下落" ? ["down"] : [] }), replace: true });
