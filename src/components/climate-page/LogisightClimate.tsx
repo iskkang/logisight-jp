@@ -489,7 +489,7 @@ function Impact({ rm, routes, events, nodes, forecasts }: { rm: RiskMap; routes:
   if (rows.length === 0) return null;
   return (
     <>
-      <div className="mb-3.5 mt-[26px] flex items-center justify-between gap-2.5"><h2 className="text-[19px] font-extrabold tracking-[-0.02em] text-[#1a2433]">予報リスク → 影響を受ける航路</h2><span className={CHIP}>asset_risk 예보 · track/AI 분석 우선</span></div>
+      <div className="mb-3.5 mt-[26px] flex items-center justify-between gap-2.5"><h2 className="text-[19px] font-extrabold tracking-[-0.02em] text-[#1a2433]">予報リスク → 影響を受ける航路</h2><span className={CHIP}>asset_risk の予報 · track/AI 分析を優先</span></div>
       <div className="grid grid-cols-1 gap-3.5 min-[1080px]:grid-cols-3">
         {rows.map(({ r, base, evs, lead, worst, forecast }) => {
           const crit = worst === 3;
@@ -543,7 +543,7 @@ function RegionImpact({ events, assets, routes, nodes, forecasts }: { events: Ev
   if (linked.length === 0) return null;
   return (
     <>
-      <div className="mb-3.5 mt-[26px] flex items-center justify-between gap-2.5"><h2 className="text-[19px] font-extrabold tracking-[-0.02em] text-[#1a2433]">地域警報 → 物流への影響</h2><span className={CHIP}>관측 경보 · 물류 거점 근접</span></div>
+      <div className="mb-3.5 mt-[26px] flex items-center justify-between gap-2.5"><h2 className="text-[19px] font-extrabold tracking-[-0.02em] text-[#1a2433]">地域警報 → 物流への影響</h2><span className={CHIP}>観測された警報 · 物流拠点への近さ</span></div>
       <div className="grid grid-cols-1 gap-3.5 min-[1080px]:grid-cols-2">
         {linked.map(({ e, v, fc }) => {
           const b = LOGI_BADGE[v.tier];
@@ -618,7 +618,7 @@ function Straits({ rm, chokes, routes }: { rm: RiskMap; chokes: AssetRow[]; rout
   const sorted = [...chokes].sort((a, b) => riskAt(rm, b.id, 0) - riskAt(rm, a.id, 0));
   return (
     <>
-      <div className="mb-3.5 mt-[26px] flex items-center justify-between gap-2.5"><h2 className="text-[19px] font-extrabold tracking-[-0.02em] text-[#1a2433]">主要海峡のリスクボード</h2><span className={CHIP}>통과 路線 기준 · 지금</span></div>
+      <div className="mb-3.5 mt-[26px] flex items-center justify-between gap-2.5"><h2 className="text-[19px] font-extrabold tracking-[-0.02em] text-[#1a2433]">主要海峡のリスクボード</h2><span className={CHIP}>通過する航路が基準 · 現在</span></div>
       <div className="grid grid-cols-1 gap-3 min-[640px]:grid-cols-2 min-[1080px]:grid-cols-5">
         {sorted.map((s) => {
           const c = level(riskAt(rm, s.id, 0));
@@ -651,7 +651,7 @@ function Timeline({ events, assets, routes, nodes }: { events: EventRow[]; asset
   const sources = [...new Set(events.map((e) => e.source.toUpperCase()))].slice(0, 4).join(" · ");
   return (
     <>
-      <div className="mb-3.5 mt-[26px] flex items-center justify-between gap-2.5"><h2 className="text-[19px] font-extrabold tracking-[-0.02em] text-[#1a2433]">現在の観測・警報イベント</h2><span className={CHIP}>{sources || "감지 소스"} · 예보 점수와 분리</span></div>
+      <div className="mb-3.5 mt-[26px] flex items-center justify-between gap-2.5"><h2 className="text-[19px] font-extrabold tracking-[-0.02em] text-[#1a2433]">現在の観測・警報イベント</h2><span className={CHIP}>{sources || "検知ソース"} · 予報スコアとは別</span></div>
       <div className={`${CARD} py-2`}>
         <div className="flex gap-1.5 px-[18px] pb-1.5 pt-3.5">
           {([["all", "すべて"], ["r", "警報"], ["a", "注意"]] as [typeof filter, string][]).map(([k, lbl]) => (
@@ -668,7 +668,7 @@ function Timeline({ events, assets, routes, nodes }: { events: EventRow[]; asset
           return (
             <div key={e.id ?? i} className="grid grid-cols-1 items-center gap-3 border-t border-[#e6ebf2] px-[18px] py-3 min-[640px]:grid-cols-[90px_70px_1fr_auto]">
               <span className="lsg-mono text-[11.5px] text-[#828d9d]">{KIND_KO[e.kind] || e.kind || "警報"}</span>
-              <span className={`rounded-[6px] px-2 py-[3px] text-center text-[10px] font-bold ${sev === "r" ? "border border-[#fbd5d5] bg-[#fef2f2] text-[#b42318]" : "border border-[#fde6c8] bg-[#fff7ed] text-[#b45309]"}`}>{sev === "r" ? "경보" : "注意"}</span>
+              <span className={`rounded-[6px] px-2 py-[3px] text-center text-[10px] font-bold ${sev === "r" ? "border border-[#fbd5d5] bg-[#fef2f2] text-[#b42318]" : "border border-[#fde6c8] bg-[#fff7ed] text-[#b45309]"}`}>{sev === "r" ? "警報" : "注意"}</span>
               <span className="text-[13px] text-[#1a2433]">{e.url ? <a href={e.url} target="_blank" rel="noopener noreferrer" className="hover:text-[#0d9488]">{e.title}</a> : e.title}{e.area ? <small className="ml-1 font-normal text-[#828d9d]">· {e.area}</small> : null}</span>
               <span className="flex items-center gap-2 text-[11px] text-[#828d9d]">
                 <span className={`inline-flex items-center gap-1 rounded-[6px] border px-2 py-[3px] text-[10px] font-bold ${b.cls}`} title={logiVerdictText(v)}>
@@ -714,7 +714,7 @@ export function LogisightClimate() {
 
   const kpis = [
     { lab: "予報の状態", v: forecastQualityLabel(forecastQuality.status), c: forecastQuality.status === "blocked" ? "#dc2626" : forecastQuality.status === "warn" ? "#b45309" : "#0d9488", s: formatForecastAge(forecastQuality.latestAgeHours) },
-    { lab: "現在の警報(観測)", v: String(alertEvents), c: "#dc2626", s: repEvent ? `${repEvent.source.toUpperCase()} · ${eventName(repEvent)}${parseIntensity(repEvent.title) ? ` (${parseIntensity(repEvent.title)})` : ""}` : "전 세계 정상" },
+    { lab: "現在の警報(観測)", v: String(alertEvents), c: "#dc2626", s: repEvent ? `${repEvent.source.toUpperCase()} · ${eventName(repEvent)}${parseIntensity(repEvent.title) ? ` (${parseIntensity(repEvent.title)})` : ""}` : "全拠点が正常" },
     { lab: "注意の拠点", v: String(cautionAssets), c: "#b45309", s: topCaution ? `${topCaution.name} · ${driverAt(rm, topCaution.id, 0)}` : "注意の拠点なし" },
     { lab: "監視拠点", v: String(data.assets.length), c: "#1a2433", s: "港湾・主要海峡・鉄道" },
   ];

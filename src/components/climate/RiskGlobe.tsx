@@ -52,7 +52,7 @@ type TrackHorizonPosition = {
 };
 
 const MONO = '600 10px "JetBrains Mono", ui-monospace, monospace';
-const KIND_LABEL: Record<string, string> = { cyclone: "台風", storm: "暴風", flood: "洪水", snow: "大雪", earthquake: "地震", tsunami: "津波", other: "경보" };
+const KIND_LABEL: Record<string, string> = { cyclone: "台風", storm: "暴風", flood: "洪水", snow: "大雪", earthquake: "地震", tsunami: "津波", other: "警報" };
 const TYPE_KO: Record<AssetType, string> = { port: "港湾", choke: "チョークポイント", rail: "鉄道", inland: "内陸拠点" };
 const TYPE_BADGE: Record<AssetType, string> = { port: "港湾", choke: "関門", rail: "鉄道", inland: "内陸" };
 
@@ -519,7 +519,7 @@ export function RiskGlobe({ data, forecastQuality }: { data: ClimateRiskData; fo
             ctx.strokeStyle = horizon.outOfRange ? `rgba(${hexrgb(col)},0.45)` : `rgba(${hexrgb(col)},0.98)`;
             ctx.stroke();
             if (horizon.label) badgeLabel(horizon.label, p[0], p[1] - base - 12);
-            else label(KIND_LABEL[e.kind] || "ê²½ë³´", p[0], p[1] - base - 7);
+            else label(KIND_LABEL[e.kind] || "警報", p[0], p[1] - base - 7);
             eventHit.push({ id: e.id, x: p[0], y: p[1], r: base + 10 });
           }
         } else if (horizon.label) {
@@ -657,7 +657,7 @@ export function RiskGlobe({ data, forecastQuality }: { data: ClimateRiskData; fo
         .filter((n) => level(riskScore(riskMap, n.key, hIdx)) !== "g")
         .map((n) => {
           const s = riskScore(riskMap, n.key, hIdx);
-          return { sev: level(s), score: s, text: `${n.name} (${TYPE_KO[n.type]})`, sub: `${assetDriver(riskMap, n.key, hIdx)} · ${hIdx > 0 ? `${HLBL[hIdx]} ` : ""}리스크 ${s}` };
+          return { sev: level(s), score: s, text: `${n.name}(${TYPE_KO[n.type]})`, sub: `${assetDriver(riskMap, n.key, hIdx)} · ${hIdx > 0 ? `${HLBL[hIdx]} ` : ""}リスク ${s}` };
         });
     const ee = events
       .filter((e) => eventVisibleAtHorizon(e, hIdx, nowMs, !!eventTracks[e.id]))
@@ -715,9 +715,9 @@ export function RiskGlobe({ data, forecastQuality }: { data: ClimateRiskData; fo
           <div>
             <div className="rg-ptag">全拠点のサマリー · {HLBL[hIdx]}{hIdx > 0 ? " 予報" : ""}</div>
             <div className="rg-summary">
-              <div className="rg-stat r"><div className="rg-n">{counts.r}</div><div className="rg-l">경보</div></div>
-              <div className="rg-stat a"><div className="rg-n">{counts.a}</div><div className="rg-l">주의</div></div>
-              <div className="rg-stat g"><div className="rg-n">{counts.g}</div><div className="rg-l">정상</div></div>
+              <div className="rg-stat r"><div className="rg-n">{counts.r}</div><div className="rg-l">警報</div></div>
+              <div className="rg-stat a"><div className="rg-n">{counts.a}</div><div className="rg-l">注意</div></div>
+              <div className="rg-stat g"><div className="rg-n">{counts.g}</div><div className="rg-l">正常</div></div>
             </div>
             <div className={`rg-quality ${horizonQuality.status}`}>
               <b>{forecastQualityLabel(horizonQuality.status)}</b>
@@ -728,13 +728,13 @@ export function RiskGlobe({ data, forecastQuality }: { data: ClimateRiskData; fo
           <div>
             {selEvent ? (
               <>
-                <div className="rg-ptag">감지된 이벤트 · {selEvent.source.toUpperCase()}</div>
+                <div className="rg-ptag">検知したイベント · {selEvent.source.toUpperCase()}</div>
                 <div className="rg-detail">
                   {selTrackLabel && <div className="rg-drv"><span>{TRACK_PANEL_LABEL}</span> {selTrackLabel}</div>}
-                  <div className="rg-dh"><div className="rg-dname">{selEvent.title}</div><span className={`rg-pill ${selEvent.severity === "r" ? "r" : "a"}`}>{selEvent.severity === "r" ? "경보" : "注意"}</span></div>
-                  <div className="rg-drv"><span>유형</span> {KIND_LABEL[selEvent.kind] || selEvent.kind}</div>
-                  <div className="rg-drv"><span>지역</span> {selEvent.area || "—"}</div>
-                  {selEvent.url && <div className="rg-drv"><a className="rg-link" href={selEvent.url} target="_blank" rel="noopener noreferrer">출처 보기 ↗</a></div>}
+                  <div className="rg-dh"><div className="rg-dname">{selEvent.title}</div><span className={`rg-pill ${selEvent.severity === "r" ? "r" : "a"}`}>{selEvent.severity === "r" ? "警報" : "注意"}</span></div>
+                  <div className="rg-drv"><span>種別</span> {KIND_LABEL[selEvent.kind] || selEvent.kind}</div>
+                  <div className="rg-drv"><span>地域</span> {selEvent.area || "—"}</div>
+                  {selEvent.url && <div className="rg-drv"><a className="rg-link" href={selEvent.url} target="_blank" rel="noopener noreferrer">出典を見る ↗</a></div>}
                 </div>
               </>
             ) : selRoute ? (
@@ -743,15 +743,15 @@ export function RiskGlobe({ data, forecastQuality }: { data: ClimateRiskData; fo
                 const chk = selRoute.chokes.map((k) => nodes[k]?.name).filter(Boolean).join(" · ") || "—";
                 return (
                   <>
-                    <div className="rg-ptag">항로 · {HLBL[hIdx]}</div>
+                    <div className="rg-ptag">航路 · {HLBL[hIdx]}</div>
                     <div className="rg-detail">
                       <div className="rg-dh"><div className="rg-dname">{selRoute.name}</div><span className={`rg-pill ${c}`}>{levelKo(c)}</span></div>
-                      <div className="rg-drv"><span>통과 초크포인트</span> {chk}</div>
+                      <div className="rg-drv"><span>通過する海峡</span> {chk}</div>
                       <div className="rg-grid2">
-                        <div className="rg-cell"><div className="rg-k">最大 리스크</div><div className="rg-v" style={{ color: rc(c) }}>{rr}</div></div>
-                        <div className="rg-cell"><div className="rg-k">예보 신뢰도</div><div className="rg-v">{HCONF[hIdx]}<small>%</small></div></div>
+                        <div className="rg-cell"><div className="rg-k">最大リスク</div><div className="rg-v" style={{ color: rc(c) }}>{rr}</div></div>
+                        <div className="rg-cell"><div className="rg-k">予報の信頼度</div><div className="rg-v">{HCONF[hIdx]}<small>%</small></div></div>
                       </div>
-                      <div className="rg-action"><div className="rg-k">권장</div><div className="rg-v">{c === "r" ? "고위험 구간 우회(예: 희망봉) 또는 통항 시점 조정 검토" : c === "a" ? "영향 구간 ETA 버퍼 반영, 모니터링 강화" : "정상 — 계획대로 운항"}</div></div>
+                      <div className="rg-action"><div className="rg-k">対応の目安</div><div className="rg-v">{c === "r" ? "高リスク区間の迂回(例: 喜望峰)または通航時期の調整を検討" : c === "a" ? "影響区間の ETA にバッファを設定し、監視を強める" : "正常 — 計画どおり運航"}</div></div>
                     </div>
                   </>
                 );
@@ -765,11 +765,11 @@ export function RiskGlobe({ data, forecastQuality }: { data: ClimateRiskData; fo
                     <div className="rg-ptag">{TYPE_KO[selNode.type]} · {HLBL[hIdx]}</div>
                     <div className="rg-detail">
                       <div className="rg-dh"><div className="rg-dname">{selNode.name}</div><span className={`rg-pill ${c}`}>{levelKo(c)}</span></div>
-                      <div className="rg-drv"><span>주요 기상 요인</span> {assetDriver(riskMap, selNode.key, hIdx)}</div>
+                      <div className="rg-drv"><span>主なリスク要因</span> {assetDriver(riskMap, selNode.key, hIdx)}</div>
                       <div className="rg-grid2">
-                        <div className="rg-cell"><div className="rg-k">리스크 점수</div><div className="rg-v" style={{ color: rc(c) }}>{r}</div></div>
-                        <div className="rg-cell"><div className="rg-k">최초 경보 도달</div><div className="rg-v" style={{ fontSize: 14 }}>{firstAlert(riskMap, selNode.key)}</div></div>
-                        <div className="rg-cell" style={{ gridColumn: "1/3" }}><div className="rg-k">영향 항로</div><div className="rg-v" style={{ fontSize: 13, fontFamily: "inherit" }}>{routeNames}</div></div>
+                        <div className="rg-cell"><div className="rg-k">リスク点数</div><div className="rg-v" style={{ color: rc(c) }}>{r}</div></div>
+                        <div className="rg-cell"><div className="rg-k">最初に警報となる時点</div><div className="rg-v" style={{ fontSize: 14 }}>{firstAlert(riskMap, selNode.key)}</div></div>
+                        <div className="rg-cell" style={{ gridColumn: "1/3" }}><div className="rg-k">影響する航路</div><div className="rg-v" style={{ fontSize: 13, fontFamily: "inherit" }}>{routeNames}</div></div>
                       </div>
                     </div>
                   </>
@@ -777,9 +777,9 @@ export function RiskGlobe({ data, forecastQuality }: { data: ClimateRiskData; fo
               })()
             ) : (
               <>
-                <div className="rg-ptag" style={{ marginBottom: 8 }}>리스크 상위 자산</div>
+                <div className="rg-ptag" style={{ marginBottom: 8 }}>リスクの高い拠点</div>
                 {forecastBlocked ? (
-                  <div className="rg-empty">이 탭은 예보 데이터가 부족해 자산 색상과 순위를 확정하지 않습니다.</div>
+                  <div className="rg-empty">この時点は予報データが足りないため、拠点の色と順位を確定しません。</div>
                 ) : (
                   <div className="rg-list">
                     {topAssets.map((n) => {
@@ -799,19 +799,19 @@ export function RiskGlobe({ data, forecastQuality }: { data: ClimateRiskData; fo
           </div>
 
           <div className="rg-note">
-            <div className="rg-qrow"><span className="rg-qdot" /><span className="rg-q">이 화면 보는 법</span></div>
-            <div className="rg-a">지도 색상은 선택한 시점({HLBL[hIdx]})의 기상 예보로 산출한 자산·항로 리스크 등급입니다. 태풍·지진 등 실제 이벤트는 별도 핀으로 표시되며, 그 시점 예보가 없으면 색상을 표시하지 않습니다. 지구본을 돌리고 시점 탭을 바꿔 확인하세요.</div>
+            <div className="rg-qrow"><span className="rg-qdot" /><span className="rg-q">この画面の読み方</span></div>
+            <div className="rg-a">地図の色は、選んだ時点({HLBL[hIdx]})の気象予報から算出した拠点・航路のリスク等級である。台風・地震などの実際に発生したイベントは別のピンで示し、その時点の予報が無い場合は色を表示しない。地球儀を回し、時点タブを切り替えて確認できる。</div>
           </div>
         </aside>
       </div>
 
       <footer className="rg-alerts">
         {alerts.length === 0 ? (
-          <div className="rg-clear">현재 경보·주의 없음 — 전 세계 정상</div>
+          <div className="rg-clear">現在、警報・注意なし — 全拠点が正常</div>
         ) : (
           alerts.map((al, i) => (
             <div key={i} className={`rg-alert${al.sev === "a" ? " warn" : ""}`}>
-              <span className="rg-sev">{al.sev === "a" ? "注意" : "경보"}</span>
+              <span className="rg-sev">{al.sev === "a" ? "注意" : "警報"}</span>
               <span className="rg-tx"><b>{al.text}</b> · {al.sub}</span>
             </div>
           ))
