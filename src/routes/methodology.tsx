@@ -3,37 +3,53 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { HomeNav } from "@/components/home/HomeNav";
 import { HomeFooter } from "@/components/home/HomeFooter";
 import { seoHead } from "@/lib/seo";
-import { INDEX_SOURCE, DATASET_SOURCE } from "@/lib/dataSources";
 
-// 데이터 방법론 — 출처·단위·갱신주기·표현 원칙을 한곳에 정리한 레퍼런스 페이지.
-// 각 데이터 페이지 하단에서 "데이터 방법론 보기"로 링크한다. 실시간 수치는 각 페이지에서 확인.
+// データの方法論 — 出典・単位・更新頻度・表現原則を一か所にまとめた参照ページ。
+// 各データページから「データの方法論」でリンクする。実際の数値は各ページで確認。
 
-const INDEX_META: { code: string; unit: string; cadence: string }[] = [
-  { code: "KCCI", unit: "$/FEU (지수)", cadence: "주간" },
-  { code: "SCFI", unit: "지수", cadence: "주간" },
-  { code: "CCFI", unit: "지수", cadence: "주간" },
-  { code: "WCI", unit: "$/FEU", cadence: "주간" },
-  { code: "FBX", unit: "$/FEU", cadence: "주간" },
-  { code: "BDI", unit: "지수", cadence: "일간" },
-  { code: "NYFI", unit: "$ (레인별)", cadence: "주간" },
-  { code: "ERAI", unit: "USD/FEU", cadence: "주간/월간" },
-];
-
-const DATASET_META: { name: string; source: string; unit: string; cadence: string }[] = [
-  { name: "교역(수출입)", source: DATASET_SOURCE.trade, unit: "USD·물량", cadence: "월간" },
-  { name: "항만 혼잡", source: DATASET_SOURCE.port, unit: "혼잡도 지수", cadence: "주간" },
-  { name: "항공 운임", source: DATASET_SOURCE.air, unit: "USD/kg", cadence: "월간" },
-  { name: "해상 운임", source: DATASET_SOURCE.sea, unit: "$/FEU·TEU", cadence: "월간" },
-  { name: "환율", source: DATASET_SOURCE.fx, unit: "KRW", cadence: "일간" },
-  { name: "항공유", source: DATASET_SOURCE.jetFuel, unit: "USD/bbl", cadence: "주간" },
+const DATASET_META: {
+  name: string;
+  source: string;
+  unit: string;
+  cadence: string;
+  note: string;
+}[] = [
+  {
+    name: "運賃(企業向けサービス価格指数)",
+    source: "日本銀行",
+    unit: "指数(2020年=100)",
+    cadence: "月次",
+    note: "円ベースと契約通貨ベースを分けて掲載",
+  },
+  {
+    name: "港湾コンテナ取扱量",
+    source: "国土交通省 港湾統計",
+    unit: "TEU",
+    cadence: "月次",
+    note: "主要6港の外国貿易コンテナ。速報値を含む",
+  },
+  {
+    name: "貿易(相手国別)",
+    source: "財務省貿易統計",
+    unit: "千円",
+    cadence: "月次",
+    note: "地域集計(ASIA・EU など)は国別一覧から除く",
+  },
+  {
+    name: "貿易(品目別)",
+    source: "財務省貿易統計 概況品別国別表",
+    unit: "千円",
+    cadence: "月次",
+    note: "概況品目の大分類",
+  },
 ];
 
 export const Route = createFileRoute("/methodology")({
   head: () =>
     seoHead({
-      title: "데이터 방법론 — Logisight",
+      title: "データの方法論 — Logisight",
       description:
-        "Logisight가 사용하는 운임 지수(KCCI·SCFI·CCFI·WCI·FBX·BDI·NYFI·ERAI)와 교역·항만·환율 데이터의 출처·단위·갱신주기, 그리고 추정·정합·상관 표현 원칙과 데이터 부재·극저가 레인 처리 정책.",
+        "Logisight が用いる企業向けサービス価格指数・港湾統計・財務省貿易統計の出典・単位・更新頻度と、因果を断定しない表現原則、欠測データの扱いをまとめています。",
       path: "/methodology",
     }),
   component: MethodologyPage,
@@ -68,49 +84,22 @@ function MethodologyPage() {
       <main className="mx-auto w-full max-w-[920px] px-4 pb-20 pt-10 min-[640px]:px-7">
         <p className="text-[12px] font-semibold uppercase tracking-[0.18em] text-[#2dd4bf]">Methodology</p>
         <h1 className="mt-2 text-[28px] font-extrabold leading-tight text-[#e9eef7] min-[640px]:text-[34px]">
-          데이터 방법론
+          データの方法論
         </h1>
         <p className="mt-3 max-w-[640px] text-[14px] leading-[1.7] text-[#93a1b7]">
-          Logisight가 표시하는 지수·교역·항만·환율 데이터의 출처·단위·갱신주기와 표현 원칙을 정리했습니다.
-          실시간 수치는 각 데이터 페이지에서 확인하세요.
+          掲載しているデータの出典・単位・更新頻度と、表現の原則をまとめています。実際の数値は各データページでご確認ください。
         </p>
 
-        <Section title="운임 지수 출처">
+        <Section title="データの出典">
           <div className="overflow-x-auto">
             <table className="w-full border-collapse">
               <thead>
                 <tr>
-                  <Th>지수</Th>
-                  <Th>발표 기관</Th>
-                  <Th>단위</Th>
-                  <Th>갱신주기</Th>
-                </tr>
-              </thead>
-              <tbody>
-                {INDEX_META.map((r) => (
-                  <tr key={r.code}>
-                    <Td>
-                      <b className="text-[#e9eef7]">{r.code}</b>
-                    </Td>
-                    <Td>{INDEX_SOURCE[r.code] ?? "확인 중"}</Td>
-                    <Td>{r.unit}</Td>
-                    <Td>{r.cadence}</Td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </Section>
-
-        <Section title="교역·항만·환율 데이터 출처">
-          <div className="overflow-x-auto">
-            <table className="w-full border-collapse">
-              <thead>
-                <tr>
-                  <Th>데이터</Th>
-                  <Th>출처</Th>
-                  <Th>단위</Th>
-                  <Th>갱신주기</Th>
+                  <Th>データ</Th>
+                  <Th>出典</Th>
+                  <Th>単位</Th>
+                  <Th>更新頻度</Th>
+                  <Th>備考</Th>
                 </tr>
               </thead>
               <tbody>
@@ -122,6 +111,7 @@ function MethodologyPage() {
                     <Td>{r.source}</Td>
                     <Td>{r.unit}</Td>
                     <Td>{r.cadence}</Td>
+                    <Td>{r.note}</Td>
                   </tr>
                 ))}
               </tbody>
@@ -129,50 +119,59 @@ function MethodologyPage() {
           </div>
         </Section>
 
-        <Section title="표현 원칙 (추정·정합·상관)">
+        <Section title="円ベースと契約通貨ベース">
+          <p className="text-[14px] leading-[1.7] text-[#a9b6c9]">
+            企業向けサービス価格指数には、円ベースと契約通貨ベースの2系列があります。
+            <b className="text-[#e9eef7]">円ベースは契約通貨ベースに為替変動を加えたもの</b>で、両者の差は定義上すべて為替要因です。
+            運賃そのものの動きに近いのは契約通貨ベースであり、両者を区別せずに「運賃が○%上昇」と書くと事実と異なります。
+            なお当媒体は為替レートの時系列データを保有していないため、円安が何円進んだといった記述は行いません。
+          </p>
+        </Section>
+
+        <Section title="基準月の違い">
+          <p className="text-[14px] leading-[1.7] text-[#a9b6c9]">
+            軸ごとに公表タイミングが異なります。とくに港湾統計は他の統計より遅れて公表されるため、
+            同じ号のなかで<b className="text-[#e9eef7]">対象月が揃わないことがあります</b>。
+            その場合は各ページとレポート本文の双方で対象月を明示します。異なる月の数値を同一時点の動きとして比較しないでください。
+          </p>
+        </Section>
+
+        <Section title="表現の原則">
           <ul className="space-y-2.5 text-[14px] leading-[1.7] text-[#a9b6c9]">
             <li>
-              방법론이 확정되지 않은 영역에서는 인과 단정을 피합니다. <b className="text-[#e9eef7]">“~때문에”</b> 같은
-              단정 대신 <b className="text-[#e9eef7]">“~와 정합”, “~추정”, “~상관”</b> 표현을 사용합니다.
+              <b className="text-[#e9eef7]">因果を断定しません。</b>
+              二つの数値が並んでいても、一方が他方を「押し上げた」「牽引した」とは書きません。
+              月次の断面データにあるのは水準と前年同月比だけです。
             </li>
             <li>
-              지수 간 <b className="text-[#e9eef7]">선행·후행 단정은 사용하지 않습니다</b>(방법론 미확정). 상관·정합·추정
-              관점으로만 제공합니다.
+              <b className="text-[#e9eef7]">単月から継続性を主張しません。</b>
+              前年同月比が正であることは、その月が前年同月より高いという意味にとどまります。
+            </li>
+            <li>
+              数値どうしの関係は「上回る」「下回る」「最も大きい」までにとどめ、推測(「〜の可能性がある」)は書きません。
             </li>
           </ul>
         </Section>
 
-        <Section title="데이터가 없을 때">
+        <Section title="データが無いとき">
           <ul className="space-y-2.5 text-[14px] leading-[1.7] text-[#a9b6c9]">
             <li>
-              임의 수치로 채우지 않고 <b className="text-[#e9eef7]">“데이터 수집 중”</b>으로 표시합니다. 값이 없는 것과
-              0은 구분합니다(<b className="text-[#e9eef7]">결측 ≠ 0</b>).
+              任意の数値で埋めず「—」と表示します。値が無いことと 0 は区別します
+              (<b className="text-[#e9eef7]">欠測 ≠ 0</b>)。
             </li>
-            <li>개별 화물 단위 원자료는 노출하지 않으며, 집계 지표만 표시합니다.</li>
+            <li>
+              速報値は<b className="text-[#e9eef7]">速報である旨を明示</b>します。確報とは確定度が異なります。
+            </li>
+            <li>個別貨物の原データは公開せず、集計値のみを掲載します。</li>
           </ul>
-        </Section>
-
-        <Section title="극저가 레인 (통계 기준)">
-          <p className="text-[14px] leading-[1.7] text-[#a9b6c9]">
-            일부 단거리 항로는 신고/통계 기준상 극저가($1/FEU 등)로 집계될 수 있습니다. 이런 값은 숨기지 않고
-            <b className="text-[#e9eef7]"> “통계 기준”</b> 배지로 표시합니다. 실제 선사 all-in rate, THC, local charge,
-            surcharge는 별도 확인이 필요하며 통계값과 차이가 날 수 있습니다.
-          </p>
-        </Section>
-
-        <Section title="AI 전망 (초안·검수)">
-          <p className="text-[14px] leading-[1.7] text-[#a9b6c9]">
-            시장 전망은 정량 모델 채점 결과를 에디터가 검수해 발행하는 AI 초안입니다. 화면에 “AI 초안 · 에디터 검수”로
-            표기하며, 적중률은 발행된 전망 전수를 기준으로 집계합니다(표본 임의 제외 없음).
-          </p>
         </Section>
 
         <div className="mt-12 flex flex-wrap gap-3 text-[13px]">
           <Link to="/faq" className="font-semibold text-[#2dd4bf] hover:underline">
-            자주 묻는 질문 →
+            よくある質問 →
           </Link>
           <Link to="/rates" className="font-semibold text-[#2dd4bf] hover:underline">
-            운임 대시보드 →
+            運賃 →
           </Link>
         </div>
       </main>

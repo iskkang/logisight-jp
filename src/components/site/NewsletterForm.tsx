@@ -17,7 +17,7 @@ const emailSchema = z
   .min(5)
   .max(254)
   .regex(/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/, {
-    message: "올바른 이메일 형식이 아닙니다.",
+    message: "メールアドレスの形式が正しくありません。",
   });
 
 type Status =
@@ -26,7 +26,13 @@ type Status =
   | { kind: "success"; message: string }
   | { kind: "error"; message: string };
 
-const INTERESTS = ["해상", "항공", "철도", "무역", "물류"] as const;
+// 表示は日本語、保存値は DB と共通(韓国語)にする — 値を変えると既存の購読者と揃わない。
+const INTERESTS = [
+  { label: "海上", value: "해상" },
+  { label: "航空", value: "항공" },
+  { label: "貿易", value: "무역" },
+  { label: "物流", value: "물류" },
+] as const;
 
 export function NewsletterForm({ compact = false }: { compact?: boolean }) {
   const [email, setEmail] = useState("");
@@ -34,7 +40,7 @@ export function NewsletterForm({ compact = false }: { compact?: boolean }) {
   const [name, setName] = useState("");
   const [company, setCompany] = useState("");
   const [modalEmail, setModalEmail] = useState("");
-  const [interests, setInterests] = useState<string[]>([...INTERESTS]);
+  const [interests, setInterests] = useState<string[]>(INTERESTS.map((i) => i.value));
   const [consent, setConsent] = useState(false);
   const [status, setStatus] = useState<Status>({ kind: "idle" });
 
@@ -42,13 +48,13 @@ export function NewsletterForm({ compact = false }: { compact?: boolean }) {
     setInterests((prev) => (prev.includes(v) ? prev.filter((x) => x !== v) : [...prev, v]));
   }
 
-  // 인라인 이메일 입력 → "구독하기"는 곧바로 저장하지 않고, 입력값을 들고 팝업을 연다.
+  // 인라인 이메일 입력 → "登録する"는 곧바로 저장하지 않고, 입력값을 들고 팝업을 연다.
   function openModal(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setModalEmail(email);
     setName("");
     setCompany("");
-    setInterests([...INTERESTS]);
+    setInterests(INTERESTS.map((i) => i.value));
     setConsent(false);
     setStatus({ kind: "idle" });
     setOpen(true);
@@ -61,15 +67,15 @@ export function NewsletterForm({ compact = false }: { compact?: boolean }) {
     e.preventDefault();
     const parsed = emailSchema.safeParse(modalEmail);
     if (!parsed.success) {
-      setStatus({ kind: "error", message: parsed.error.issues[0]?.message ?? "이메일을 확인해 주세요." });
+      setStatus({ kind: "error", message: parsed.error.issues[0]?.message ?? "メールアドレスをご確認ください。" });
       return;
     }
     if (!name.trim()) {
-      setStatus({ kind: "error", message: "이름을 입력해 주세요." });
+      setStatus({ kind: "error", message: "お名前をご入力ください。" });
       return;
     }
     if (!consent) {
-      setStatus({ kind: "error", message: "개인정보 수집·이용 및 마케팅 수신에 동의해 주세요." });
+      setStatus({ kind: "error", message: "個人情報の取り扱いと配信への同意が必要です。" });
       return;
     }
     setStatus({ kind: "loading" });
@@ -86,9 +92,9 @@ export function NewsletterForm({ compact = false }: { compact?: boolean }) {
     if (error) {
       const msg = error.message?.toLowerCase() ?? "";
       if (msg.includes("duplicate") || msg.includes("unique") || error.code === "23505") {
-        setStatus({ kind: "error", message: "이미 구독 중인 이메일입니다." });
+        setStatus({ kind: "error", message: "このメールアドレスは登録済みです。" });
       } else {
-        setStatus({ kind: "error", message: "구독에 실패했습니다. 잠시 후 다시 시도해 주세요." });
+        setStatus({ kind: "error", message: "登録できませんでした。しばらくしてから再度お試しください。" });
       }
       return;
     }
@@ -96,7 +102,7 @@ export function NewsletterForm({ compact = false }: { compact?: boolean }) {
     // 퍼널 2단계 = 전환. GA4에서 주요 이벤트로 등록하면 세션→구독 전환율과
     // 유입 경로별 전환이 함께 나온다.
     trackEvent("sign_up", { method: "newsletter" });
-    setStatus({ kind: "success", message: "구독해 주셔서 감사합니다." });
+    setStatus({ kind: "success", message: "ご登録ありがとうございます。" });
   }
 
   const field =
@@ -114,27 +120,27 @@ export function NewsletterForm({ compact = false }: { compact?: boolean }) {
             onChange={(e) => setEmail(e.target.value)}
             placeholder="your@email.com"
             className="min-w-0 flex-1 rounded-md border border-white/15 bg-white/5 px-3 py-2 text-sm text-white placeholder:text-white/40 focus:border-[var(--color-cyan)] focus:outline-none"
-            aria-label="이메일 주소"
+            aria-label="メールアドレス"
           />
           <button
             type="submit"
             className="rounded-md px-4 py-2 text-sm font-semibold text-[var(--color-navy-900)] transition-opacity hover:opacity-90"
             style={{ background: "var(--color-cyan)" }}
           >
-            구독하기
+            登録する
           </button>
         </div>
         <p className="mt-2 text-xs text-white/50">
-          주 1회 발송되며, 언제든 구독을 해지할 수 있습니다.
+          月1回配信、いつでも配信停止できます。
         </p>
       </form>
 
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent className="max-w-md bg-white">
           <DialogHeader>
-            <DialogTitle className="text-[var(--color-ink)]">뉴스레터 구독</DialogTitle>
+            <DialogTitle className="text-[var(--color-ink)]">ニュースレター登録</DialogTitle>
             <DialogDescription className="text-[var(--color-ink-muted)]">
-              주 1회 물류 인텔리전스 브리핑을 보내드립니다. 이름·회사명을 남겨주시면 더 맞춤화해 드립니다.
+              月1回、運賃・港湾・貿易をまとめたマーケットレポートをお届けします。お名前・会社名をご記入いただくと内容を調整します。
             </DialogDescription>
           </DialogHeader>
 
@@ -147,34 +153,34 @@ export function NewsletterForm({ compact = false }: { compact?: boolean }) {
                 className="mt-4 rounded-md px-5 py-2 text-sm font-semibold text-white"
                 style={{ background: "var(--color-navy-900)" }}
               >
-                닫기
+                閉じる
               </button>
             </div>
           ) : (
             <form onSubmit={submit} className="space-y-3">
               <div>
-                <label className="block text-xs font-semibold text-[var(--color-ink)]">이름 *</label>
+                <label className="block text-xs font-semibold text-[var(--color-ink)]">お名前 *</label>
                 <input
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   required
                   maxLength={80}
-                  placeholder="홍길동"
+                  placeholder="山田 太郎"
                   className={field}
                 />
               </div>
               <div>
-                <label className="block text-xs font-semibold text-[var(--color-ink)]">회사명</label>
+                <label className="block text-xs font-semibold text-[var(--color-ink)]">会社名</label>
                 <input
                   value={company}
                   onChange={(e) => setCompany(e.target.value)}
                   maxLength={120}
-                  placeholder="(선택) 소속 회사"
+                  placeholder="(任意) 所属先"
                   className={field}
                 />
               </div>
               <div>
-                <label className="block text-xs font-semibold text-[var(--color-ink)]">이메일 *</label>
+                <label className="block text-xs font-semibold text-[var(--color-ink)]">メールアドレス *</label>
                 <input
                   type="email"
                   value={modalEmail}
@@ -186,15 +192,15 @@ export function NewsletterForm({ compact = false }: { compact?: boolean }) {
                 />
               </div>
               <div>
-                <label className="block text-xs font-semibold text-[var(--color-ink)]">관심 분야</label>
+                <label className="block text-xs font-semibold text-[var(--color-ink)]">関心分野</label>
                 <div className="mt-1.5 flex flex-wrap gap-1.5">
-                  {INTERESTS.map((v) => {
-                    const on = interests.includes(v);
+                  {INTERESTS.map((it) => {
+                    const on = interests.includes(it.value);
                     return (
                       <button
                         type="button"
-                        key={v}
-                        onClick={() => toggleInterest(v)}
+                        key={it.value}
+                        onClick={() => toggleInterest(it.value)}
                         aria-pressed={on}
                         className={`rounded-full border px-3 py-1 text-xs font-medium transition-colors ${
                           on
@@ -202,7 +208,7 @@ export function NewsletterForm({ compact = false }: { compact?: boolean }) {
                             : "border-[var(--color-line)] text-[var(--color-ink-muted)] hover:bg-[var(--color-surface)]"
                         }`}
                       >
-                        {v}
+                        {it.label}
                       </button>
                     );
                   })}
@@ -217,14 +223,14 @@ export function NewsletterForm({ compact = false }: { compact?: boolean }) {
                   className="mt-0.5 flex-none"
                 />
                 <span>
-                  (필수) 개인정보 수집·이용 및 마케팅 정보 수신에 동의합니다.{" "}
+                  (必須) 個人情報の取り扱いおよび配信に同意します。{" "}
                   <a
                     href="/privacy"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="underline text-[var(--color-navy-900)]"
                   >
-                    개인정보처리방침
+                    プライバシーポリシー
                   </a>
                 </span>
               </label>
@@ -236,10 +242,10 @@ export function NewsletterForm({ compact = false }: { compact?: boolean }) {
                 className="w-full rounded-md px-4 py-2.5 text-sm font-semibold text-white transition-opacity hover:opacity-90 disabled:opacity-50"
                 style={{ background: "var(--color-navy-900)" }}
               >
-                {status.kind === "loading" ? "구독 중…" : "구독 완료"}
+                {status.kind === "loading" ? "登録中…" : "登録する"}
               </button>
               <p className="text-center text-[11px] text-[var(--color-ink-muted)]">
-                언제든 수신거부할 수 있습니다.
+                いつでも配信停止できます。
               </p>
             </form>
           )}

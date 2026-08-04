@@ -2,14 +2,14 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 
 import { seoHead } from "@/lib/seo";
 
-// 소개 — 무엇을 발행하는지, 누가 운영하는지, 어떻게 만드는지.
-// 소유 공시를 전역 푸터 링크 칼럼이 아니라 여기에 모은다(미디어 관례).
+// 会社概要 — 何を発行し、誰が運営し、どう作っているか。
+// 所有の開示はフッターのリンク列ではなくここに集める(メディアの慣行)。
 export const Route = createFileRoute("/about")({
   head: () =>
     seoHead({
-      title: "소개 — Logisight",
+      title: "会社概要 — Logisight",
       description:
-        "Logisight는 운임 지수·물류 뉴스·정책 변화를 매주 한 편의 분석으로 정리하는 물류 인텔리전스 매체입니다.",
+        "Logisight は、運賃・港湾・貿易の公的統計を毎月ひとつのレポートにまとめる物流インテリジェンス媒体です。",
       path: "/about",
     }),
   component: AboutPage,
@@ -34,76 +34,81 @@ function AboutPage() {
       <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--color-ink-muted)]">
         Logisight
       </p>
-      <h1 className="mt-1 text-2xl font-bold text-[var(--color-ink)]">소개</h1>
+      <h1 className="mt-1 text-2xl font-bold text-[var(--color-ink)]">会社概要</h1>
 
       <p className="mt-6 text-sm leading-relaxed text-[var(--color-ink-muted)]">
-        Logisight는 운임 지수, 물류 뉴스, 정책 변화, 유라시아 코리도어 동향을 매주 한 편의 분석으로
-        정리하는 물류 인텔리전스 매체입니다. 한국 화주·포워더가 의사결정에 쓸 수 있는 형태로 흩어진
-        정보를 모읍니다.
+        Logisight は、日本の荷主・フォワーダー・物流部門の実務者に向けて、運賃・港湾・貿易の動きを
+        公的統計にもとづいて毎月まとめる物流インテリジェンス媒体です。推計や見通しではなく、
+        公表された数字と、その出典・基準月を示すことを編集方針としています。
       </p>
 
-      <Section title="무엇을 발행하나">
+      <Section title="何を発行するか">
         <ul className="list-disc space-y-1 pl-5">
-          <li>주간 뉴스레터 — 매주 월요일, 한 주의 운임·시황·정책을 한 편으로</li>
           <li>
             <Link to="/reports" className={linkCls}>
-              마켓 리포트
+              月次マーケットレポート
             </Link>{" "}
-            — 주간·월간 심층 분석
-          </li>
-          <li>
-            <Link to="/news" className={linkCls}>
-              물류 뉴스
-            </Link>{" "}
-            — 해상·항공·철도·무역 큐레이션
+            — 運賃・港湾・貿易を一本にまとめた分析
           </li>
           <li>
             <Link to="/rates" className={linkCls}>
-              운임 대시보드
+              運賃
             </Link>{" "}
-            — SCFI·KCCI·WCI·FBX·BDI 등 주요 지수
+            — 企業向けサービス価格指数(日本銀行)の運輸関連系列
+          </li>
+          <li>
+            <Link to="/ports" className={linkCls}>
+              港湾
+            </Link>{" "}
+            — 主要6港の外国貿易コンテナ取扱量(国土交通省)
+          </li>
+          <li>
+            <Link to="/trade" className={linkCls}>
+              貿易
+            </Link>{" "}
+            — 相手国別・品目別の輸出入(財務省貿易統計)
           </li>
         </ul>
       </Section>
 
-      <Section title="어떻게 만드나">
+      <Section title="どう作っているか">
         <p>
-          공개 데이터와 공표 지수를 자체 파이프라인으로 수집·정규화한 뒤, 편집 과정을 거쳐
-          발행합니다. 지표별 산출 근거와 출처는{" "}
+          公表された統計を自社のパイプラインで収集・正規化し、編集を経て発行します。指標ごとの
+          算出根拠と出典は{" "}
           <Link to="/methodology" className={linkCls}>
-            데이터 방법론
+            データの方法論
           </Link>{" "}
-          페이지에 정리돼 있습니다.
+          にまとめています。
         </p>
-        <p>기사에 인용한 외부 매체의 원문은 항상 출처를 밝히고 원문으로 연결합니다.</p>
+        <p>
+          数値には必ず基準月を併記します。軸ごとに公表タイミングが異なるため、異なる月の数値を
+          同一時点として比較しないよう、レポート本文でも対象月を明示しています。
+        </p>
+        <p>外部媒体を引用する場合は、出典を示し原文へリンクします。</p>
       </Section>
 
-      <Section title="운영 주체">
+      <Section title="運営主体">
         <p>
-          Logisight는{" "}
-          <strong className="font-semibold text-[var(--color-ink)]">MTL Shipping Agency</strong>가
-          운영합니다. 유라시아 철도 회랑 등 일부 지표는 운영사가 보유한 실적 데이터를 익명 집계해
-          산출하며, 해당 지표에는 출처를 별도로 표기합니다.
+          Logisight は{" "}
+          <strong className="font-semibold text-[var(--color-ink)]">MTL Shipping Agency</strong>{" "}
+          が運営しています。
         </p>
-        <p>
-          편집 방향은 운영사의 영업과 분리해 운용합니다. 발행물에 광고·협찬이 포함될 경우 해당
-          위치에 명시합니다.
-        </p>
+        <p>編集方針は運営会社の営業と分離して運用します。広告・スポンサードを含む場合はその位置に明示します。</p>
       </Section>
 
-      <Section title="문의">
+      <Section title="お問い合わせ">
         <p>
-          제보·정정 요청·제휴 문의:{" "}
-          <a className={linkCls} href="mailto:newsletter@mtlb.co.kr">
-            newsletter@mtlb.co.kr
+          情報提供・訂正のご依頼・提携のご相談:{" "}
+          <a className={linkCls} href="mailto:newsletter@logisight.net">
+            newsletter@logisight.net
           </a>
         </p>
         <p>
-          개인정보 관련 사항은{" "}
+          個人情報の取り扱いについては{" "}
           <Link to="/privacy" className={linkCls}>
-            개인정보처리방침
-          </Link>
-          을 참조하세요.
+            プライバシーポリシー
+          </Link>{" "}
+          をご覧ください。
         </p>
       </Section>
     </div>
