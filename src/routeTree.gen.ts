@@ -16,19 +16,16 @@ import { Route as ReportsRouteImport } from './routes/reports'
 import { Route as RatesRouteImport } from './routes/rates'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as PortsRouteImport } from './routes/ports'
-import { Route as PortRiskRouteImport } from './routes/port-risk'
 import { Route as PolicyRouteImport } from './routes/policy'
 import { Route as NewsRouteImport } from './routes/news'
 import { Route as MethodologyRouteImport } from './routes/methodology'
 import { Route as FaqRouteImport } from './routes/faq'
-import { Route as ClimateRouteImport } from './routes/climate'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ReportsIndexRouteImport } from './routes/reports.index'
 import { Route as ArticleSlugRouteImport } from './routes/article.$slug'
 import { Route as ReportsMonthlyMonthRouteImport } from './routes/reports.monthly.$month'
 import { Route as ApiWebhooksResendRouteImport } from './routes/api/webhooks/resend'
-import { Route as ApiTradeBriefRouteImport } from './routes/api/trade/brief'
 import { Route as ApiCronIndexnowRouteImport } from './routes/api/cron/indexnow'
 
 const UnsubscribeRoute = UnsubscribeRouteImport.update({
@@ -66,11 +63,6 @@ const PortsRoute = PortsRouteImport.update({
   path: '/ports',
   getParentRoute: () => rootRouteImport,
 } as any)
-const PortRiskRoute = PortRiskRouteImport.update({
-  id: '/port-risk',
-  path: '/port-risk',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const PolicyRoute = PolicyRouteImport.update({
   id: '/policy',
   path: '/policy',
@@ -89,11 +81,6 @@ const MethodologyRoute = MethodologyRouteImport.update({
 const FaqRoute = FaqRouteImport.update({
   id: '/faq',
   path: '/faq',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ClimateRoute = ClimateRouteImport.update({
-  id: '/climate',
-  path: '/climate',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AboutRoute = AboutRouteImport.update({
@@ -126,11 +113,6 @@ const ApiWebhooksResendRoute = ApiWebhooksResendRouteImport.update({
   path: '/api/webhooks/resend',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ApiTradeBriefRoute = ApiTradeBriefRouteImport.update({
-  id: '/api/trade/brief',
-  path: '/api/trade/brief',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const ApiCronIndexnowRoute = ApiCronIndexnowRouteImport.update({
   id: '/api/cron/indexnow',
   path: '/api/cron/indexnow',
@@ -140,12 +122,10 @@ const ApiCronIndexnowRoute = ApiCronIndexnowRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
-  '/climate': typeof ClimateRoute
   '/faq': typeof FaqRoute
   '/methodology': typeof MethodologyRoute
   '/news': typeof NewsRoute
   '/policy': typeof PolicyRoute
-  '/port-risk': typeof PortRiskRoute
   '/ports': typeof PortsRoute
   '/privacy': typeof PrivacyRoute
   '/rates': typeof RatesRoute
@@ -156,19 +136,16 @@ export interface FileRoutesByFullPath {
   '/article/$slug': typeof ArticleSlugRoute
   '/reports/': typeof ReportsIndexRoute
   '/api/cron/indexnow': typeof ApiCronIndexnowRoute
-  '/api/trade/brief': typeof ApiTradeBriefRoute
   '/api/webhooks/resend': typeof ApiWebhooksResendRoute
   '/reports/monthly/$month': typeof ReportsMonthlyMonthRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
-  '/climate': typeof ClimateRoute
   '/faq': typeof FaqRoute
   '/methodology': typeof MethodologyRoute
   '/news': typeof NewsRoute
   '/policy': typeof PolicyRoute
-  '/port-risk': typeof PortRiskRoute
   '/ports': typeof PortsRoute
   '/privacy': typeof PrivacyRoute
   '/rates': typeof RatesRoute
@@ -178,7 +155,6 @@ export interface FileRoutesByTo {
   '/article/$slug': typeof ArticleSlugRoute
   '/reports': typeof ReportsIndexRoute
   '/api/cron/indexnow': typeof ApiCronIndexnowRoute
-  '/api/trade/brief': typeof ApiTradeBriefRoute
   '/api/webhooks/resend': typeof ApiWebhooksResendRoute
   '/reports/monthly/$month': typeof ReportsMonthlyMonthRoute
 }
@@ -186,12 +162,10 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
-  '/climate': typeof ClimateRoute
   '/faq': typeof FaqRoute
   '/methodology': typeof MethodologyRoute
   '/news': typeof NewsRoute
   '/policy': typeof PolicyRoute
-  '/port-risk': typeof PortRiskRoute
   '/ports': typeof PortsRoute
   '/privacy': typeof PrivacyRoute
   '/rates': typeof RatesRoute
@@ -202,7 +176,6 @@ export interface FileRoutesById {
   '/article/$slug': typeof ArticleSlugRoute
   '/reports/': typeof ReportsIndexRoute
   '/api/cron/indexnow': typeof ApiCronIndexnowRoute
-  '/api/trade/brief': typeof ApiTradeBriefRoute
   '/api/webhooks/resend': typeof ApiWebhooksResendRoute
   '/reports/monthly/$month': typeof ReportsMonthlyMonthRoute
 }
@@ -211,12 +184,10 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/about'
-    | '/climate'
     | '/faq'
     | '/methodology'
     | '/news'
     | '/policy'
-    | '/port-risk'
     | '/ports'
     | '/privacy'
     | '/rates'
@@ -227,19 +198,16 @@ export interface FileRouteTypes {
     | '/article/$slug'
     | '/reports/'
     | '/api/cron/indexnow'
-    | '/api/trade/brief'
     | '/api/webhooks/resend'
     | '/reports/monthly/$month'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/about'
-    | '/climate'
     | '/faq'
     | '/methodology'
     | '/news'
     | '/policy'
-    | '/port-risk'
     | '/ports'
     | '/privacy'
     | '/rates'
@@ -249,19 +217,16 @@ export interface FileRouteTypes {
     | '/article/$slug'
     | '/reports'
     | '/api/cron/indexnow'
-    | '/api/trade/brief'
     | '/api/webhooks/resend'
     | '/reports/monthly/$month'
   id:
     | '__root__'
     | '/'
     | '/about'
-    | '/climate'
     | '/faq'
     | '/methodology'
     | '/news'
     | '/policy'
-    | '/port-risk'
     | '/ports'
     | '/privacy'
     | '/rates'
@@ -272,7 +237,6 @@ export interface FileRouteTypes {
     | '/article/$slug'
     | '/reports/'
     | '/api/cron/indexnow'
-    | '/api/trade/brief'
     | '/api/webhooks/resend'
     | '/reports/monthly/$month'
   fileRoutesById: FileRoutesById
@@ -280,12 +244,10 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
-  ClimateRoute: typeof ClimateRoute
   FaqRoute: typeof FaqRoute
   MethodologyRoute: typeof MethodologyRoute
   NewsRoute: typeof NewsRoute
   PolicyRoute: typeof PolicyRoute
-  PortRiskRoute: typeof PortRiskRoute
   PortsRoute: typeof PortsRoute
   PrivacyRoute: typeof PrivacyRoute
   RatesRoute: typeof RatesRoute
@@ -295,7 +257,6 @@ export interface RootRouteChildren {
   UnsubscribeRoute: typeof UnsubscribeRoute
   ArticleSlugRoute: typeof ArticleSlugRoute
   ApiCronIndexnowRoute: typeof ApiCronIndexnowRoute
-  ApiTradeBriefRoute: typeof ApiTradeBriefRoute
   ApiWebhooksResendRoute: typeof ApiWebhooksResendRoute
 }
 
@@ -350,13 +311,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PortsRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/port-risk': {
-      id: '/port-risk'
-      path: '/port-risk'
-      fullPath: '/port-risk'
-      preLoaderRoute: typeof PortRiskRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/policy': {
       id: '/policy'
       path: '/policy'
@@ -383,13 +337,6 @@ declare module '@tanstack/react-router' {
       path: '/faq'
       fullPath: '/faq'
       preLoaderRoute: typeof FaqRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/climate': {
-      id: '/climate'
-      path: '/climate'
-      fullPath: '/climate'
-      preLoaderRoute: typeof ClimateRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/about': {
@@ -434,13 +381,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiWebhooksResendRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/api/trade/brief': {
-      id: '/api/trade/brief'
-      path: '/api/trade/brief'
-      fullPath: '/api/trade/brief'
-      preLoaderRoute: typeof ApiTradeBriefRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/api/cron/indexnow': {
       id: '/api/cron/indexnow'
       path: '/api/cron/indexnow'
@@ -467,12 +407,10 @@ const ReportsRouteWithChildren =
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
-  ClimateRoute: ClimateRoute,
   FaqRoute: FaqRoute,
   MethodologyRoute: MethodologyRoute,
   NewsRoute: NewsRoute,
   PolicyRoute: PolicyRoute,
-  PortRiskRoute: PortRiskRoute,
   PortsRoute: PortsRoute,
   PrivacyRoute: PrivacyRoute,
   RatesRoute: RatesRoute,
@@ -482,7 +420,6 @@ const rootRouteChildren: RootRouteChildren = {
   UnsubscribeRoute: UnsubscribeRoute,
   ArticleSlugRoute: ArticleSlugRoute,
   ApiCronIndexnowRoute: ApiCronIndexnowRoute,
-  ApiTradeBriefRoute: ApiTradeBriefRoute,
   ApiWebhooksResendRoute: ApiWebhooksResendRoute,
 }
 export const routeTree = rootRouteImport

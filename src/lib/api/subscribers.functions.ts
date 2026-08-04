@@ -21,9 +21,9 @@ export type Subscriber = {
 
 // Supabase 액세스 토큰(JWT) 검증. 유효한 로그인 사용자만 통과.
 async function requireUser(token: string) {
-  if (!token) throw new Error("인증이 필요합니다.");
+  if (!token) throw new Error("認証が必要です。");
   const { data, error } = await supabaseAdmin.auth.getUser(token);
-  if (error || !data?.user) throw new Error("권한이 없습니다.");
+  if (error || !data?.user) throw new Error("権限がありません。");
   return data.user;
 }
 

@@ -46,9 +46,9 @@ export function HomeFooter() {
         </div>
         <div className="pt-[22px] lsg-mono text-[11.5px] leading-[1.8] text-[#445064]">
           Logisight is operated by{" "}
-          <Link to="/about" className="underline transition-colors hover:text-[#2dd4bf]">MTL Shipping Agency</Link>. · 주요 데이터 출처는{" "}
-          <Link to="/methodology" className="underline transition-colors hover:text-[#2dd4bf]">데이터 방법론</Link>{" "}
-          페이지 참조<br />
+          <Link to="/about" className="underline transition-colors hover:text-[#2dd4bf]">MTL Shipping Agency</Link>. · 主なデータの出典は{" "}
+          <Link to="/methodology" className="underline transition-colors hover:text-[#2dd4bf]">データの方法論</Link>{" "}
+          をご覧ください<br />
           © 2026 Logisight. All rights reserved.
         </div>
       </div>

@@ -57,7 +57,7 @@ export function HomeNav({ active = "home" }: { active?: "home" | "news" | "insig
         </nav>
         <button
           type="button"
-          aria-label="메뉴 열기"
+          aria-label="メニューを開く"
           onClick={() => setOpen((v) => !v)}
           className="ml-auto inline-flex h-9 w-9 items-center justify-center rounded-md border border-[#78a0cd33] text-white min-[620px]:hidden"
         >

@@ -27,12 +27,7 @@ type Status =
   | { kind: "error"; message: string };
 
 // 表示は日本語、保存値は DB と共通(韓国語)にする — 値を変えると既存の購読者と揃わない。
-const INTERESTS = [
-  { label: "海上", value: "해상" },
-  { label: "航空", value: "항공" },
-  { label: "貿易", value: "무역" },
-  { label: "物流", value: "물류" },
-] as const;
+const INTERESTS = ["海上", "航空", "港湾", "貿易", "物流"] as const;
 
 export function NewsletterForm({ compact = false }: { compact?: boolean }) {
   const [email, setEmail] = useState("");
@@ -40,7 +35,7 @@ export function NewsletterForm({ compact = false }: { compact?: boolean }) {
   const [name, setName] = useState("");
   const [company, setCompany] = useState("");
   const [modalEmail, setModalEmail] = useState("");
-  const [interests, setInterests] = useState<string[]>(INTERESTS.map((i) => i.value));
+  const [interests, setInterests] = useState<string[]>([...INTERESTS]);
   const [consent, setConsent] = useState(false);
   const [status, setStatus] = useState<Status>({ kind: "idle" });
 
@@ -54,7 +49,7 @@ export function NewsletterForm({ compact = false }: { compact?: boolean }) {
     setModalEmail(email);
     setName("");
     setCompany("");
-    setInterests(INTERESTS.map((i) => i.value));
+    setInterests([...INTERESTS]);
     setConsent(false);
     setStatus({ kind: "idle" });
     setOpen(true);
@@ -195,12 +190,12 @@ export function NewsletterForm({ compact = false }: { compact?: boolean }) {
                 <label className="block text-xs font-semibold text-[var(--color-ink)]">関心分野</label>
                 <div className="mt-1.5 flex flex-wrap gap-1.5">
                   {INTERESTS.map((it) => {
-                    const on = interests.includes(it.value);
+                    const on = interests.includes(it);
                     return (
                       <button
                         type="button"
-                        key={it.value}
-                        onClick={() => toggleInterest(it.value)}
+                        key={it}
+                        onClick={() => toggleInterest(it)}
                         aria-pressed={on}
                         className={`rounded-full border px-3 py-1 text-xs font-medium transition-colors ${
                           on
@@ -208,7 +203,7 @@ export function NewsletterForm({ compact = false }: { compact?: boolean }) {
                             : "border-[var(--color-line)] text-[var(--color-ink-muted)] hover:bg-[var(--color-surface)]"
                         }`}
                       >
-                        {it.label}
+                        {it}
                       </button>
                     );
                   })}

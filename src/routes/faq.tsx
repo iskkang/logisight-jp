@@ -110,11 +110,11 @@ function FaqPage() {
       <main className="mx-auto w-full max-w-[920px] px-4 pb-20 pt-10 min-[640px]:px-7">
         <p className="text-[12px] font-semibold uppercase tracking-[0.18em] text-[#2dd4bf]">FAQ</p>
         <h1 className="mt-2 text-[28px] font-extrabold leading-tight text-[#e9eef7] min-[640px]:text-[34px]">
-          자주 묻는 질문
+          よくある質問
         </h1>
         <p className="mt-3 max-w-[640px] text-[14px] leading-[1.7] text-[#93a1b7]">
-          운임·철도·무역·정책·기후·전망과 데이터 방법론에 대한 핵심 질문을 한곳에 모았습니다.
-          실시간 수치는 각 데이터 페이지에서 확인하세요.
+          運賃・港湾・貿易・レポートの読み方と、データの方法論についてのご質問をまとめました。
+          実際の数値は各データページでご確認ください。
         </p>
 
         <div className="mt-9 space-y-10">

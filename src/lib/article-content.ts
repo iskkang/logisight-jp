@@ -34,7 +34,7 @@ export function normalizeArticleContent({
       const image = line.match(/!\[[^\]]*]\(([^)\s]+)(?:\s+["'][^"']*["'])?\)/);
       if (imageUrl && image?.[1] === imageUrl) return false;
       const text = plainText(line);
-      if (/^##\s*(현상|원인과 배경|한국 화주[·ㆍ\-\s]*포워더 영향)\s*$/i.test(line.trim())) {
+      if (/^##\s*(現状|背景|日本の荷主[・\-\s]*フォワーダーへの影響)\s*$/i.test(line.trim())) {
         return false;
       }
       if (creditText && text === creditText) return false;

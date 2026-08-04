@@ -5,7 +5,7 @@ export function Logo({ className = "" }: { className?: string }) {
     <Link
       to="/"
       className={`inline-flex items-center ${className}`}
-      aria-label="Logisight 홈"
+      aria-label="Logisight ホーム"
     >
       <img src="/logisight_logo.svg" alt="Logisight" className="h-9 w-auto lg:h-10" />
     </Link>

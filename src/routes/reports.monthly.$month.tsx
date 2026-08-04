@@ -36,24 +36,24 @@ function MonthlyReportPage() {
       <div className="mx-auto max-w-[820px] px-4 py-16 lg:px-6">
         <div className="text-[12px] text-white/50">
           <Link to="/" className="hover:text-white">
-            홈
+            ホーム
           </Link>{" "}
           ›{" "}
           <Link to="/reports" className="hover:text-white">
-            리포트
+            レポート
           </Link>{" "}
-          › 월간
+          › 月次
         </div>
 
         <span className="mt-6 inline-block rounded-md bg-white/10 px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-[#5eead4]">
-          월간 리포트
+          月次レポート
         </span>
         <h1 className="mt-4 text-[clamp(26px,4vw,38px)] font-extrabold leading-[1.15] tracking-[-0.03em]">
           {r.period_label || r.title}
         </h1>
         {r.published_at && (
           <div className="mt-2 font-mono text-[13px] text-white/50">
-            {formatPublishedAt(r.published_at)} 발행
+            {formatPublishedAt(r.published_at)} 発行
           </div>
         )}
         {r.summary && (
@@ -75,7 +75,7 @@ function MonthlyReportPage() {
           rel="noopener noreferrer"
           className="mt-8 inline-flex items-center gap-2 rounded-[10px] bg-[#2dd4bf] px-6 py-3.5 text-[15px] font-bold text-[#04231f] transition-transform hover:-translate-y-px hover:bg-[#5eead4]"
         >
-          PDF 다운로드 →
+          PDF をダウンロード →
         </a>
 
         <p className="mt-4 text-[12px] text-white/40">

@@ -62,55 +62,19 @@ type Props = {
 };
 
 const FB_ARTICLE: Article = {
-  category: "航空",
+  category: "",
   title: "記事を準備中です",
-  deck: "記事の本文は準備中です。",
-  source: "Air Freight News",
-  published_at: "2026.06.24",
-  read_minutes: 4,
-  image_url: null,
-  image_caption: "",
-  show_placeholder: true,
-  body: [
-    "22주차(5월 25~31일) 글로벌 항공화물 유상중량 기준 물량이 전주 대비 9% 감소한 것으로 나타났다. 성령강림절·미국 현충일 등 공휴일이 집중된 영향으로 분석되며, 지난해 동기 8% 감소와 유사한 수준이다.",
-    "지역별로는 모든 권역에서 물량이 줄었다. 아시아태평양과 중남미가 각각 3% 감소한 데 비해 중동·남아시아(MESA)는 21% 급감하며 가장 큰 낙폭을 보였다. 두바이·방글라데시발이 각각 25%, 45% 줄어든 영향이 컸다.",
-    "운임은 물량 둔화에도 상승세를 이어갔다. 22주차 글로벌 평균 항공운임은 kg당 3.29달러로 전주 대비 2% 올랐고, 전년 동기 대비로는 35% 높은 수준이다. 아프리카(+9%)·MESA(+4%)·아시아태평양(+1%)이 상승을 주도한 반면 미주·유럽은 소폭 하락했다.",
-    "시장에서는 MESA 지역이 연초 대비 17% 오르며 전 권역 중 가장 큰 운임 상승을 견인했다고 분석했다.",
-  ],
-  source_origin: "WorldACD Market Data",
-  source_url: "#",
+  deck: "",
+  source: "",
+  registered_at: "",
+  body: [],
+  key_points: [],
+  impacts: [],
+  impact_note: "",
   tags: [],
-  summary_points: [
-    "22주차(5.25–31) 글로벌 항공화물 물량 전주比 −9% — 공휴일 영향, 전 권역 감소.",
-    "중동·남아시아(MESA) −21%로 최대 낙폭, 아시아태평양·중남미는 각 −3%.",
-    "물량 둔화에도 평균 운임 +2%(kg당 $3.29), 전년比 +35% — MESA가 상승 견인.",
-  ],
-  impact: [
-    { label: "아시아발 운임 강세", dir: "up" },
-    { label: "단기 물량 둔화", dir: "down" },
-  ],
-  impact_note: "물류 영향: 아시아발 노선 운임 강세 지속 · 단기 물량은 공휴일 일시 둔화",
 };
-const FB_RELATED: RelatedArticle[] = [
-  {
-    category: "항공",
-    title: "롱비치항 물동량 31.7% 급증…서안 환적 수요 견인",
-    source: "Asia Cargo News",
-    published_at: "2026.06.24",
-  },
-  {
-    category: "항공",
-    title: "CEVA, 아태–미주 항공화물 증편…베트남·중국발 전세기 투입",
-    source: "Air Freight News",
-    published_at: "2026.06.24",
-  },
-  {
-    category: "항공",
-    title: "Awery, 오리엔탈 스카이를 첫 중국계 GSSA로 플랫폼 연동",
-    source: "Air Cargo Week",
-    published_at: "2026.06.24",
-  },
-];
+
+const FB_RELATED: RelatedArticle[] = [];
 
 const STYLE = `
 @import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css");

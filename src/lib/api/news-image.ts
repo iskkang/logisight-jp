@@ -54,11 +54,11 @@ function pickUnsplashImage(id: number, category: string | null): string {
   const cat = category?.toLowerCase() ?? "";
   const pool =
     UNSPLASH_POOL[cat] ??
-    (cat.includes("port") || cat.includes("항만")
+    (cat.includes("port") || cat.includes("港湾")
       ? UNSPLASH_POOL.port
-      : cat.includes("air") || cat.includes("항공")
+      : cat.includes("air") || cat.includes("航空")
         ? UNSPLASH_POOL.aviation
-        : cat.includes("log") || cat.includes("물류")
+        : cat.includes("log") || cat.includes("物流")
           ? UNSPLASH_POOL.logistics
           : UNSPLASH_POOL.default);
   return unsplashUrl(pool[id % pool.length]);
