@@ -1,8 +1,13 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import ws from "ws";
+import type { SupabaseClient } from "@supabase/supabase-js";
 import { supabasePublicServer } from "@/integrations/supabase/public.server";
 import type { Forecast } from "./forecasts";
+
+// forecasts는 생성된 Database 타입에 없다(climate.functions.ts와 같은 상황).
+// 캐스팅하지 않으면 컬럼명이 never로 좁혀져 .eq("lang", …)이 타입 오류가 된다.
+const sbPublic = supabasePublicServer as unknown as SupabaseClient;
 
 // "*" so new scoring columns (direction/composite/factor_scores/…) flow through when present,
 // and the query never 400s if the scoring migration hasn't been applied yet (resilient).
@@ -27,11 +32,14 @@ async function serviceClient() {
 // Public read — only published/resolved (RLS also enforces this).
 export const getPublishedForecasts = createServerFn({ method: "GET" }).handler(
   async (): Promise<Forecast[]> => {
-    const { data, error } = await supabasePublicServer
+    // lang='ja' に絞る。運賃見通しの日本語生成はまだ無いので、現時点では 0件になる。
+    // 韓国語の本文をそのまま出すよりは空のほうがよい(/forecasts は noindex)。
+    const { data, error } = await sbPublic
       .from("forecasts")
       .select(SELECT)
       .in("status", ["published", "resolved"])
       .in("module", [...RATE_MODULES])
+      .eq("lang", "ja")
       .order("published_at", { ascending: false, nullsFirst: false })
       .limit(100);
     if (error) throw new Error(error.message);

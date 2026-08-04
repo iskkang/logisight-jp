@@ -45,13 +45,16 @@ export const getClimateRisk = createServerFn({ method: "GET" }).handler(
         .from("events")
         .select("id,source,kind,title,severity,lon,lat,area,url,starts_at,ends_at,updated_at,track")
         .limit(500),
-      // 발행된 기후 영향 AI 분석(파이프라인 자동발행) — read만. anon RLS는 published/resolved만 허용.
+      // 発行済みの気象影響 AI 分析(パイプラインが自動発行) — read のみ。anon RLS は published/resolved だけ許す。
+      // lang='ja' に絞る。絞らないと韓国語の本文がそのまま画面に出る。
+      // 日本語行がまだ無い時期は 0件になる — 韓国語を出すよりは空のほうがよい。
       sb
         .from("forecasts")
         .select(
           "id,metric_ref,statement,impact_note,basis,confidence,confidence_reason,data_quality_flags,published_at",
         )
         .eq("module", "climate")
+        .eq("lang", "ja")
         .eq("status", "published")
         .order("published_at", { ascending: false })
         .limit(100),
