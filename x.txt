@@ -1,0 +1,156 @@
+===== LogisightEurasia.tsx
+23| status?: "정상" | "주의" | "지연" | null; // 없으면 delay_days로 자동 산정
+44| const NAV = [{ l: "홈" }, { l: "뉴스" }, { l: "인사이트", on: true }, { l: "리포트" }];
+45| const SUB = ["종합", "전망", "운임", "유라시아", "포트", "무역", "산업", "기후예측"];
+71| { name: "TCR · 중국 철도", state: "active", detail: "정상 · 3건" },
+72| { name: "FESCO · TSR", state: "hold", detail: "보류 · 미수집" },
+222| function statusOf(r: CorridorRecord): "정상" | "주의" | "지연" {
+225| return d >= 14 ? "지연" : d >= 5 ? "주의" : "정상";
+227| const STATUS_CLS: Record<string, string> = { 정상: "b-normal", 주의: "b-warn", 지연: "b-delay" };
+228| const STATUS_ROW: Record<string, string> = { 정상: "s-normal", 주의: "s-warn", 지연: "s-delay" };
+237| return <span className={`delay ${cls} mono`}>{n > 0 ? `+${n}일` : `${n}일`}</span>;
+252| return { active: "정상", empty: "미수집", view_missing: "뷰 없음", error: "오류", hold: "보류" }[
+261| updatedLabel = "5분 전",
+280| "TCR 운영 지연 데이터 수집 중."
+283| TCR {m.n}개 노선 운영 중 —{" "}
+286| 최대 지연{" "}
+288| {m.worst.route_label} +{m.worst.delay_days}일
+297| ? "TCR 스냅샷이 수집되면 노선별 상태·지연이 표시됩니다. FESCO·TSR은 데이터 보류 중입니다."
+298| : `평균 ETA 지연 ${m.avg}일. 지연은 노선 최초 예정 ETA(baseline) 대비입니다. FESCO·TSR은 데이터 보류 중.`;
+322| <a key={s} href="#" className={s === "유라시아" ? "on" : undefined}>
+389| <h1>유라시아 코리도어</h1>
+391| TCR(중국횡단철도) 노선의 운영 상태·ETA 지연을 한눈에. 지연은 노선 최초 예정
+392| ETA(baseline) 대비로 산출합니다.
+397| TCR 정상 <b className="mono">{m.n}</b>개 노선
+401| FESCO·TSR <b>보류</b>
+405| 최대 지연 <b className="mono">{m.worst ? `+${m.worst.delay_days}일` : "—"}</b>
+414| 홈 <b>›</b> 인사이트 <b>›</b> 유라시아
+417| {/* 종합 판단 */}
+424| <div className="jstamp">마지막 업데이트 {updatedLabel}</div>
+436| <div className="k">활성 TCR 노선</div>
+438| <div className="d">{m.n ? "정상 수집 중" : "수집 중"}</div>
+441| <div className="k">평균 ETA 지연 (vs 최초)</div>
+443| {m.avg == null ? "—" : `+${m.avg}일`}
+450| <div className="k">최대 지연 노선</div>
+452| {m.worst ? `+${m.worst.delay_days}일` : "—"}
+454| <div className="d warn">{m.worst ? m.worst.route_label : "수집 중"}</div>
+459| {/* 코리도어 헬스 */}
+461| <h2>지연 현황</h2>
+462| <span className="chip">노선별 상태 · ETA 지연</span>
+468| <th>노선</th>
+469| <th className="c">상태</th>
+470| <th className="c">최초 ETA</th>
+471| <th className="c">최신 ETA</th>
+472| <th className="r">지연(vs 최초)</th>
+479| 불러오는 중…
+485| TCR 지연 데이터 수집 중
+495| <small>{r.note ?? "TCR · 중국 철도"}</small>
+510| <b>지연 = 최신 ETA − 최초 예정 ETA(baseline)</b>. 일일 스냅샷 누적으로 산출하며,
+511| FESCO·TSR은 데이터 보류 중입니다.
+515| {/* 보조: 코리도어 맵 + 소스 상태 */}
+519| <span className="t">코리도어 맵</span>
+520| <span className="chip">TCR 노선 개요</span>
+523| <div className="emptytd">노선 데이터 수집 중</div>
+537| {r.delay_days != null && <div className="bg">+{r.delay_days}일</div>}
+550| <i style={{ background: "#16a34a" }} /> 정상
+553| <i style={{ background: "#d97706" }} /> 주의
+556| <i style={{ background: "#dc2626" }} /> 지연
+558| <span style={{ color: "var(--mute)" }}>FESCO = 보류</span>
+564| <span className="t">소스 상태</span>
+565| <span className="chip">데이터 수집</span>
+579| <span className="t">읽는 법</span>
+583| <span className="sbadge b-normal">● 정상</span> 지연 없음/미미
+586| <span className="sbadge b-warn">● 주의</span> 지연 발생, 관찰
+589| <span className="sbadge b-delay">● 지연</span> 큰 지연, 영향 모니터링
+595| 지연은 최초 예정 ETA(baseline) 대비 최신 ETA 차이입니다.
+601| {/* 보존 모드 슬롯 (집계 지연 지수 / 수동 이슈 등) */}
+612| <p>한국 화주·포워더를 위한 물류 인텔리전스</p>
+615| <h6>서비스</h6>
+616| <a href="#">운임 대시보드</a>
+617| <a href="#">유라시아 코리도어</a>
+618| <a href="#">산업별 교역</a>
+621| <h6>뉴스</h6>
+622| <a href="#">해상</a>
+623| <a href="#">항공</a>
+624| <a href="#">철도</a>
+625| <a href="#">무역</a>
+629| <a href="/about">소개</a>
+630| <a href="#newsletter">뉴스레터 구독</a>
+631| <a href="/privacy">개인정보처리방침</a>
+638| 운임 지수, 정책 변화, 교역 흐름, 유라시아 코리도어 이슈를 매주 정리해 드립니다.
+643| <button>구독하기</button>
+646| 주 1회 발송되며, 언제든 구독을 해지할 수 있습니다.
+651| <a href="/about" style={{ textDecoration: "underline" }}>MTL Shipping Agency</a>. · 주요 데이터 출처는{" "}
+652| <a href="/methodology" style={{ textDecoration: "underline" }}>데이터 방법론</a> 페이지 참조
+===== LogisightForecast.tsx
+46| if (!iso) return "수집 중";
+52| [/(상승\s*우세\s*국면)을\s*나타냈다\.?$/, "$1"],
+53| [/(하락\s*우세\s*국면)을\s*나타냈다\.?$/, "$1"],
+54| [/(보합\s*우세\s*국면)을\s*나타냈다\.?$/, "$1"],
+55| [/오름세가\s*이어지고\s*있다\.?$/, "상승세 이어짐"],
+56| [/하락세가\s*이어지고\s*있다\.?$/, "하락세 이어짐"],
+57| [/오름세를\s*이어왔다\.?$/, "상승세 이어짐"],
+58| [/하락세를\s*이어왔다\.?$/, "하락세 이어짐"],
+59| [/내림세를\s*이어왔다\.?$/, "하락세 이어짐"],
+60| [/오름세를\s*나타냈다\.?$/, "상승중"],
+61| [/하락세를\s*나타냈다\.?$/, "하락중"],
+62| [/내림세를\s*나타냈다\.?$/, "하락중"],
+63| [/보합세를\s*(나타냈다|이어왔다)\.?$/, "보합"],
+105| if (pts.length < 2) return <div className="grid h-[200px] place-items-center text-[12px] text-[#828d9d]">전망 데이터 수집 중</div>;
+141| <text x={(lastX + 6).toFixed(1)} y={pT + ih - 8} fontSize="10" fill="#0d9488" fontFamily={FONT} fontWeight="600">전망 구간</text>
+152| {f.horizon_date && <text x={projX.toFixed(1)} y={H - 7} textAnchor="middle" fontSize="9" fill="#0d9488" fontFamily={FONT} fontWeight="6
+163| { c: "bg-[#2dd4bf]", label: "이번 주 발행", value: `${kpis.publishedThisWeek}건` },
+164| { c: "bg-[#d97706]", label: "판정 대기", value: `${kpis.awaitingJudgment}건` },
+165| { c: "bg-[#3b82f6]", label: "최종 업데이트", value: fmtKstStamp(lastUpdated) },
+196| <h1 className="mt-3.5 text-[clamp(32px,4.4vw,50px)] font-extrabold leading-[1.06] tracking-[-0.035em] text-[#e9eef7]">물류 시장 <span class
+197| <p className="mt-4 max-w-[640px] text-[15px] leading-[1.6] text-[#93a1b7]">Logisight AI가 현재와 과거 데이터를 분석하여 운임 방향을 전망합니다.</p>
+200| <button type="button" onClick={() => onModule(null)} className={`rounded-full border px-3 py-[5px] text-[12px] ${activeModule == null ?
+222| { lab: "방향 적중률 (12주)", ic: "✓", bg: "#16a34a", v: kpis.hitRate.gate ? "누적 중" : `${kpis.hitRate.rate}%`, num: false, s: kpis.hitRate.gat
+223| { lab: "이번 주 발행", ic: "+", bg: "#0d9488", v: `${kpis.publishedThisWeek}건`, num: true, s: "검수 통과 발행" },
+224| { lab: "판정 대기", ic: "⏳", bg: "#d97706", v: `${kpis.awaitingJudgment}건`, num: true, s: "확인 일정 전" },
+225| { lab: "근거 데이터 평균", ic: "◉", bg: "#3b82f6", v: kpis.avgEvidence != null ? `${kpis.avgEvidence}/5` : "—", num: true, s: "발행 전망 기준" },
+226| { lab: "평균 리드타임", ic: "→", bg: "#64748b", v: kpis.leadTimeDays != null ? `${kpis.leadTimeDays}일` : "—", num: true, s: "발행 → 판정" },
+250| <b className="text-[16px] font-bold text-[#1a2433]">주간 방향 적중률 추이</b>
+251| <span className="rounded-full border border-[#d8dfe9] bg-[#eef1f6] px-[9px] py-[3px] text-[11px] text-[#828d9d]">최근 12주 · 분모 = 발행 전수</s
+259| <Tooltip formatter={(v: number) => [`${v}%`, "방향 적중률"]} contentStyle={{ background: "#fff", border: "1px solid #d8dfe9", borderRadius: 
+260| <ReferenceLine y={60} stroke="#828d9d" strokeDasharray="4 4" label={{ value: "목표 60%", position: "insideTopRight", fontSize: 10, fill: 
+267| <b className="text-[13px] font-semibold text-[#54606f]">데이터 수집 중</b>
+268| <span className="text-[11.5px] text-[#828d9d]">판정된 전망이 누적되면 주간 적중률 추이가 표시됩니다.</span>
+277| const CAD_SEG = ["전체", "주간", "월간"] as const;
+278| const DIR_SEG = ["전체 방향", "상승", "보합", "하락"] as const;
+307| aria-label={`${displayLabelOf(c)} 전망 상세 보기`}
+321| <div className="mt-2 flex items-center gap-2"><span className="text-[11.5px] text-[#828d9d]">근거 {ev.present}/{ev.total}</span><Dots n={
+324| {src && <div className="mt-[9px] text-[11px] text-[#828d9d]">기준 지표: {src}</div>}
+338| const cadenceLabel = f.cadence === "weekly" ? "주간" : f.cadence === "monthly" ? "월간" : "—";
+345| {f.horizon_date && <span className="rounded-full border border-[#d8dfe9] bg-[#eef1f6] px-[9px] py-[3px] lsg-mono text-[#54606f]">판정 {f.
+352| <div className="mb-1.5 text-[12px] text-[#828d9d]">지수 추이 · 전망 구간</div>
+356| <div className="mb-1.5 text-[12px] text-[#828d9d]">종합 신호</div>
+360| <div className="mb-0.5 text-[11px] text-[#828d9d]">신뢰도 {confPct(f.confidence)}% · {dir.label} 우세</div>
+361| <b className={`text-[18px] font-extrabold ${dirColor}`}>{dir.label} 우세</b>
+362| {f.composite_score != null && <div className="mt-[3px] lsg-mono text-[11.5px] text-[#828d9d]">종합 {f.composite_score > 0 ? "+" : ""}{f.c
+366| <div className="mb-2.5 text-[12px] font-bold text-[#1a2433]">핵심 인사이트</div>
+368| <p className="text-[12.5px] text-[#828d9d]">전망 본문 수집 중입니다.</p>
+380| <span>전망은 정보 제공 목적이며 투자·계약 권유가 아닙니다. 모든 전망은 확률로 표현됩니다.</span>
+381| <span className="font-semibold text-[#0d9488]">AI 초안 · 에디터 검수</span>
+389| { b: "데이터 수집", s: "관세청 · Drewry · 상하이해운거래소(SSE) · KITA, SCFI/WCI" },
+390| { b: "5팩터 채점", s: "모멘텀 · 공급 · 수요 · 비용 · 가격행동을 −2~+2로 채점" },
+391| { b: "가중 합산", s: "해상: 공급30 · 모멘텀25 · 수요25 · 비용10 · 가격10, 한국발은 중국 수급 보정" },
+392| { b: "AI 산문 + 자동 검증", s: "판정 단위 · 결측 여부 자동 검사" },
+393| { b: "에디터 검수 후 발행", s: "발행 후 본문 폴백, 판정일 실측으로 적중 집계" },
+398| <h3 className="mb-4 text-[15px] font-extrabold text-[#1a2433]">모델 방법론</h3>
+408| <p className="mt-4 text-[11.5px] leading-[1.6] text-[#828d9d]">본 전망은 정보 제공 목적이며 투자·계약 권유가 아닙니다. 결측 팩터는 가중치를 재분배하며, 인과가 아닌 상관 정합 추정으로 기술
+447| const dirSeg = search.dir.length === 1 ? (search.dir[0] === "up" ? "상승" : search.dir[0] === "flat" ? "보합" : search.dir[0] === "down" ? 
+448| const cadSeg = search.cadence === "weekly" ? "주간" : search.cadence === "monthly" ? "월간" : "전체";
+450| const setDir = (v: string) => navigate({ search: (p: ForecastSearch) => ({ ...p, dir: v === "상승" ? ["up"] : v === "보합" ? ["flat"] : v =
+451| const setCad = (v: string) => navigate({ search: (p: ForecastSearch) => ({ ...p, cadence: v === "주간" ? "weekly" : v === "월간" ? "monthly
+464| <div className="pt-[26px] text-[12.5px] text-[#828d9d]">홈 <b className="font-medium text-[#54606f]">›</b> 인사이트 <b className="font-mediu
+466| {/* GEO: 보이지 않는 Article JSON-LD만 유지 (시각 요소 없음) */}
+469| headline: "물류 시장 전망 — AI 초안 · 에디터 검수",
+471| "Logisight AI가 현재·과거 데이터를 분석해 운임·유라시아·무역·정책 방향을 확률·방향으로 전망합니다. 발행 전 에디터 검수.",
+484| <h2 className="text-[19px] font-extrabold tracking-[-0.02em] text-[#1a2433]">철도 전망</h2>
+485| <span className="rounded-full border border-[#d8dfe9] bg-[#eef1f6] px-[9px] py-[3px] text-[11px] text-[#828d9d]">유라시아 · AI</span>
+496| <div className="mt-3.5 border-t border-[#d8dfe9] pt-2.5 text-[11px] text-[#828d9d]">AI 분석 · 유라시아 격주 시장 리포트 기반{railBrief.generatedAt ? `
+503| <p className="text-[14px] font-semibold text-[#1a2433]">데이터 수집 중</p>
+504| <p className="mt-1 text-[12px] text-[#828d9d]">검수를 통과한 전망이 게재되면 이곳에 표시됩니다.</p>
+511| <span className="ml-auto text-[12px] text-[#828d9d]">카드 클릭 시 전망 상세 · 팩터 스코어 · 판정 결과</span>
+513| <div className="mb-3.5 mt-[26px] flex items-center justify-between"><h2 className="text-[19px] font-extrabold tracking-[-0.02em] text-[

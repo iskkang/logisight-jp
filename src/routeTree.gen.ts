@@ -14,15 +14,27 @@ import { Route as TradeRouteImport } from './routes/trade'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as ReportsRouteImport } from './routes/reports'
 import { Route as RatesRouteImport } from './routes/rates'
+import { Route as RailMapRouteImport } from './routes/rail-map'
+import { Route as RailRouteImport } from './routes/rail'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as PortsRouteImport } from './routes/ports'
+import { Route as PortRiskRouteImport } from './routes/port-risk'
 import { Route as PolicyRouteImport } from './routes/policy'
 import { Route as NewsRouteImport } from './routes/news'
 import { Route as MethodologyRouteImport } from './routes/methodology'
+import { Route as ForecastsRouteImport } from './routes/forecasts'
 import { Route as FaqRouteImport } from './routes/faq'
+import { Route as EurasiaRouteImport } from './routes/eurasia'
+import { Route as DashboardRouteImport } from './routes/dashboard'
+import { Route as ClimateRouteImport } from './routes/climate'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ReportsIndexRouteImport } from './routes/reports.index'
+import { Route as RailIndexRouteImport } from './routes/rail.index'
+import { Route as RailEuropeRouteImport } from './routes/rail.europe'
+import { Route as RailEurasiaRouteImport } from './routes/rail.eurasia'
+import { Route as RailAmericasRouteImport } from './routes/rail.americas'
+import { Route as Index1520RoutesRouteImport } from './routes/index1520.routes'
 import { Route as ArticleSlugRouteImport } from './routes/article.$slug'
 import { Route as ReportsMonthlyMonthRouteImport } from './routes/reports.monthly.$month'
 import { Route as ApiWebhooksResendRouteImport } from './routes/api/webhooks/resend'
@@ -53,6 +65,16 @@ const RatesRoute = RatesRouteImport.update({
   path: '/rates',
   getParentRoute: () => rootRouteImport,
 } as any)
+const RailMapRoute = RailMapRouteImport.update({
+  id: '/rail-map',
+  path: '/rail-map',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RailRoute = RailRouteImport.update({
+  id: '/rail',
+  path: '/rail',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PrivacyRoute = PrivacyRouteImport.update({
   id: '/privacy',
   path: '/privacy',
@@ -61,6 +83,11 @@ const PrivacyRoute = PrivacyRouteImport.update({
 const PortsRoute = PortsRouteImport.update({
   id: '/ports',
   path: '/ports',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PortRiskRoute = PortRiskRouteImport.update({
+  id: '/port-risk',
+  path: '/port-risk',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PolicyRoute = PolicyRouteImport.update({
@@ -78,9 +105,29 @@ const MethodologyRoute = MethodologyRouteImport.update({
   path: '/methodology',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ForecastsRoute = ForecastsRouteImport.update({
+  id: '/forecasts',
+  path: '/forecasts',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const FaqRoute = FaqRouteImport.update({
   id: '/faq',
   path: '/faq',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EurasiaRoute = EurasiaRouteImport.update({
+  id: '/eurasia',
+  path: '/eurasia',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DashboardRoute = DashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ClimateRoute = ClimateRouteImport.update({
+  id: '/climate',
+  path: '/climate',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AboutRoute = AboutRouteImport.update({
@@ -97,6 +144,31 @@ const ReportsIndexRoute = ReportsIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => ReportsRoute,
+} as any)
+const RailIndexRoute = RailIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => RailRoute,
+} as any)
+const RailEuropeRoute = RailEuropeRouteImport.update({
+  id: '/europe',
+  path: '/europe',
+  getParentRoute: () => RailRoute,
+} as any)
+const RailEurasiaRoute = RailEurasiaRouteImport.update({
+  id: '/eurasia',
+  path: '/eurasia',
+  getParentRoute: () => RailRoute,
+} as any)
+const RailAmericasRoute = RailAmericasRouteImport.update({
+  id: '/americas',
+  path: '/americas',
+  getParentRoute: () => RailRoute,
+} as any)
+const Index1520RoutesRoute = Index1520RoutesRouteImport.update({
+  id: '/index1520/routes',
+  path: '/index1520/routes',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const ArticleSlugRoute = ArticleSlugRouteImport.update({
   id: '/article/$slug',
@@ -122,18 +194,30 @@ const ApiCronIndexnowRoute = ApiCronIndexnowRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/climate': typeof ClimateRoute
+  '/dashboard': typeof DashboardRoute
+  '/eurasia': typeof EurasiaRoute
   '/faq': typeof FaqRoute
+  '/forecasts': typeof ForecastsRoute
   '/methodology': typeof MethodologyRoute
   '/news': typeof NewsRoute
   '/policy': typeof PolicyRoute
+  '/port-risk': typeof PortRiskRoute
   '/ports': typeof PortsRoute
   '/privacy': typeof PrivacyRoute
+  '/rail': typeof RailRouteWithChildren
+  '/rail-map': typeof RailMapRoute
   '/rates': typeof RatesRoute
   '/reports': typeof ReportsRouteWithChildren
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/trade': typeof TradeRoute
   '/unsubscribe': typeof UnsubscribeRoute
   '/article/$slug': typeof ArticleSlugRoute
+  '/index1520/routes': typeof Index1520RoutesRoute
+  '/rail/americas': typeof RailAmericasRoute
+  '/rail/eurasia': typeof RailEurasiaRoute
+  '/rail/europe': typeof RailEuropeRoute
+  '/rail/': typeof RailIndexRoute
   '/reports/': typeof ReportsIndexRoute
   '/api/cron/indexnow': typeof ApiCronIndexnowRoute
   '/api/webhooks/resend': typeof ApiWebhooksResendRoute
@@ -142,17 +226,28 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/climate': typeof ClimateRoute
+  '/dashboard': typeof DashboardRoute
+  '/eurasia': typeof EurasiaRoute
   '/faq': typeof FaqRoute
+  '/forecasts': typeof ForecastsRoute
   '/methodology': typeof MethodologyRoute
   '/news': typeof NewsRoute
   '/policy': typeof PolicyRoute
+  '/port-risk': typeof PortRiskRoute
   '/ports': typeof PortsRoute
   '/privacy': typeof PrivacyRoute
+  '/rail-map': typeof RailMapRoute
   '/rates': typeof RatesRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/trade': typeof TradeRoute
   '/unsubscribe': typeof UnsubscribeRoute
   '/article/$slug': typeof ArticleSlugRoute
+  '/index1520/routes': typeof Index1520RoutesRoute
+  '/rail/americas': typeof RailAmericasRoute
+  '/rail/eurasia': typeof RailEurasiaRoute
+  '/rail/europe': typeof RailEuropeRoute
+  '/rail': typeof RailIndexRoute
   '/reports': typeof ReportsIndexRoute
   '/api/cron/indexnow': typeof ApiCronIndexnowRoute
   '/api/webhooks/resend': typeof ApiWebhooksResendRoute
@@ -162,18 +257,30 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/climate': typeof ClimateRoute
+  '/dashboard': typeof DashboardRoute
+  '/eurasia': typeof EurasiaRoute
   '/faq': typeof FaqRoute
+  '/forecasts': typeof ForecastsRoute
   '/methodology': typeof MethodologyRoute
   '/news': typeof NewsRoute
   '/policy': typeof PolicyRoute
+  '/port-risk': typeof PortRiskRoute
   '/ports': typeof PortsRoute
   '/privacy': typeof PrivacyRoute
+  '/rail': typeof RailRouteWithChildren
+  '/rail-map': typeof RailMapRoute
   '/rates': typeof RatesRoute
   '/reports': typeof ReportsRouteWithChildren
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/trade': typeof TradeRoute
   '/unsubscribe': typeof UnsubscribeRoute
   '/article/$slug': typeof ArticleSlugRoute
+  '/index1520/routes': typeof Index1520RoutesRoute
+  '/rail/americas': typeof RailAmericasRoute
+  '/rail/eurasia': typeof RailEurasiaRoute
+  '/rail/europe': typeof RailEuropeRoute
+  '/rail/': typeof RailIndexRoute
   '/reports/': typeof ReportsIndexRoute
   '/api/cron/indexnow': typeof ApiCronIndexnowRoute
   '/api/webhooks/resend': typeof ApiWebhooksResendRoute
@@ -184,18 +291,30 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/about'
+    | '/climate'
+    | '/dashboard'
+    | '/eurasia'
     | '/faq'
+    | '/forecasts'
     | '/methodology'
     | '/news'
     | '/policy'
+    | '/port-risk'
     | '/ports'
     | '/privacy'
+    | '/rail'
+    | '/rail-map'
     | '/rates'
     | '/reports'
     | '/sitemap.xml'
     | '/trade'
     | '/unsubscribe'
     | '/article/$slug'
+    | '/index1520/routes'
+    | '/rail/americas'
+    | '/rail/eurasia'
+    | '/rail/europe'
+    | '/rail/'
     | '/reports/'
     | '/api/cron/indexnow'
     | '/api/webhooks/resend'
@@ -204,17 +323,28 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/about'
+    | '/climate'
+    | '/dashboard'
+    | '/eurasia'
     | '/faq'
+    | '/forecasts'
     | '/methodology'
     | '/news'
     | '/policy'
+    | '/port-risk'
     | '/ports'
     | '/privacy'
+    | '/rail-map'
     | '/rates'
     | '/sitemap.xml'
     | '/trade'
     | '/unsubscribe'
     | '/article/$slug'
+    | '/index1520/routes'
+    | '/rail/americas'
+    | '/rail/eurasia'
+    | '/rail/europe'
+    | '/rail'
     | '/reports'
     | '/api/cron/indexnow'
     | '/api/webhooks/resend'
@@ -223,18 +353,30 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/about'
+    | '/climate'
+    | '/dashboard'
+    | '/eurasia'
     | '/faq'
+    | '/forecasts'
     | '/methodology'
     | '/news'
     | '/policy'
+    | '/port-risk'
     | '/ports'
     | '/privacy'
+    | '/rail'
+    | '/rail-map'
     | '/rates'
     | '/reports'
     | '/sitemap.xml'
     | '/trade'
     | '/unsubscribe'
     | '/article/$slug'
+    | '/index1520/routes'
+    | '/rail/americas'
+    | '/rail/eurasia'
+    | '/rail/europe'
+    | '/rail/'
     | '/reports/'
     | '/api/cron/indexnow'
     | '/api/webhooks/resend'
@@ -244,18 +386,26 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
+  ClimateRoute: typeof ClimateRoute
+  DashboardRoute: typeof DashboardRoute
+  EurasiaRoute: typeof EurasiaRoute
   FaqRoute: typeof FaqRoute
+  ForecastsRoute: typeof ForecastsRoute
   MethodologyRoute: typeof MethodologyRoute
   NewsRoute: typeof NewsRoute
   PolicyRoute: typeof PolicyRoute
+  PortRiskRoute: typeof PortRiskRoute
   PortsRoute: typeof PortsRoute
   PrivacyRoute: typeof PrivacyRoute
+  RailRoute: typeof RailRouteWithChildren
+  RailMapRoute: typeof RailMapRoute
   RatesRoute: typeof RatesRoute
   ReportsRoute: typeof ReportsRouteWithChildren
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   TradeRoute: typeof TradeRoute
   UnsubscribeRoute: typeof UnsubscribeRoute
   ArticleSlugRoute: typeof ArticleSlugRoute
+  Index1520RoutesRoute: typeof Index1520RoutesRoute
   ApiCronIndexnowRoute: typeof ApiCronIndexnowRoute
   ApiWebhooksResendRoute: typeof ApiWebhooksResendRoute
 }
@@ -297,6 +447,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RatesRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/rail-map': {
+      id: '/rail-map'
+      path: '/rail-map'
+      fullPath: '/rail-map'
+      preLoaderRoute: typeof RailMapRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/rail': {
+      id: '/rail'
+      path: '/rail'
+      fullPath: '/rail'
+      preLoaderRoute: typeof RailRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/privacy': {
       id: '/privacy'
       path: '/privacy'
@@ -309,6 +473,13 @@ declare module '@tanstack/react-router' {
       path: '/ports'
       fullPath: '/ports'
       preLoaderRoute: typeof PortsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/port-risk': {
+      id: '/port-risk'
+      path: '/port-risk'
+      fullPath: '/port-risk'
+      preLoaderRoute: typeof PortRiskRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/policy': {
@@ -332,11 +503,39 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MethodologyRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/forecasts': {
+      id: '/forecasts'
+      path: '/forecasts'
+      fullPath: '/forecasts'
+      preLoaderRoute: typeof ForecastsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/faq': {
       id: '/faq'
       path: '/faq'
       fullPath: '/faq'
       preLoaderRoute: typeof FaqRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/eurasia': {
+      id: '/eurasia'
+      path: '/eurasia'
+      fullPath: '/eurasia'
+      preLoaderRoute: typeof EurasiaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dashboard': {
+      id: '/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof DashboardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/climate': {
+      id: '/climate'
+      path: '/climate'
+      fullPath: '/climate'
+      preLoaderRoute: typeof ClimateRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/about': {
@@ -359,6 +558,41 @@ declare module '@tanstack/react-router' {
       fullPath: '/reports/'
       preLoaderRoute: typeof ReportsIndexRouteImport
       parentRoute: typeof ReportsRoute
+    }
+    '/rail/': {
+      id: '/rail/'
+      path: '/'
+      fullPath: '/rail/'
+      preLoaderRoute: typeof RailIndexRouteImport
+      parentRoute: typeof RailRoute
+    }
+    '/rail/europe': {
+      id: '/rail/europe'
+      path: '/europe'
+      fullPath: '/rail/europe'
+      preLoaderRoute: typeof RailEuropeRouteImport
+      parentRoute: typeof RailRoute
+    }
+    '/rail/eurasia': {
+      id: '/rail/eurasia'
+      path: '/eurasia'
+      fullPath: '/rail/eurasia'
+      preLoaderRoute: typeof RailEurasiaRouteImport
+      parentRoute: typeof RailRoute
+    }
+    '/rail/americas': {
+      id: '/rail/americas'
+      path: '/americas'
+      fullPath: '/rail/americas'
+      preLoaderRoute: typeof RailAmericasRouteImport
+      parentRoute: typeof RailRoute
+    }
+    '/index1520/routes': {
+      id: '/index1520/routes'
+      path: '/index1520/routes'
+      fullPath: '/index1520/routes'
+      preLoaderRoute: typeof Index1520RoutesRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/article/$slug': {
       id: '/article/$slug'
@@ -391,6 +625,22 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface RailRouteChildren {
+  RailAmericasRoute: typeof RailAmericasRoute
+  RailEurasiaRoute: typeof RailEurasiaRoute
+  RailEuropeRoute: typeof RailEuropeRoute
+  RailIndexRoute: typeof RailIndexRoute
+}
+
+const RailRouteChildren: RailRouteChildren = {
+  RailAmericasRoute: RailAmericasRoute,
+  RailEurasiaRoute: RailEurasiaRoute,
+  RailEuropeRoute: RailEuropeRoute,
+  RailIndexRoute: RailIndexRoute,
+}
+
+const RailRouteWithChildren = RailRoute._addFileChildren(RailRouteChildren)
+
 interface ReportsRouteChildren {
   ReportsIndexRoute: typeof ReportsIndexRoute
   ReportsMonthlyMonthRoute: typeof ReportsMonthlyMonthRoute
@@ -407,18 +657,26 @@ const ReportsRouteWithChildren =
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
+  ClimateRoute: ClimateRoute,
+  DashboardRoute: DashboardRoute,
+  EurasiaRoute: EurasiaRoute,
   FaqRoute: FaqRoute,
+  ForecastsRoute: ForecastsRoute,
   MethodologyRoute: MethodologyRoute,
   NewsRoute: NewsRoute,
   PolicyRoute: PolicyRoute,
+  PortRiskRoute: PortRiskRoute,
   PortsRoute: PortsRoute,
   PrivacyRoute: PrivacyRoute,
+  RailRoute: RailRouteWithChildren,
+  RailMapRoute: RailMapRoute,
   RatesRoute: RatesRoute,
   ReportsRoute: ReportsRouteWithChildren,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   TradeRoute: TradeRoute,
   UnsubscribeRoute: UnsubscribeRoute,
   ArticleSlugRoute: ArticleSlugRoute,
+  Index1520RoutesRoute: Index1520RoutesRoute,
   ApiCronIndexnowRoute: ApiCronIndexnowRoute,
   ApiWebhooksResendRoute: ApiWebhooksResendRoute,
 }

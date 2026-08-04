@@ -91,9 +91,30 @@ function AboutPage() {
         <p>
           Logisight は{" "}
           <strong className="font-semibold text-[var(--color-ink)]">MTL Shipping Agency</strong>{" "}
-          が運営しています。
+          が運営しています。日本国内の窓口は下記の日本法人が担当します。
         </p>
         <p>編集方針は運営会社の営業と分離して運用します。広告・スポンサードを含む場合はその位置に明示します。</p>
+      </Section>
+
+      <Section title="日本法人">
+        <dl className="grid grid-cols-[92px_1fr] gap-x-4 gap-y-2 text-sm">
+          <dt className="text-[var(--color-ink-muted)]">商号</dt>
+          <dd className="text-[var(--color-ink)]">MTL JAPAN CO.,LTD.(株式会社脈日通運)</dd>
+          <dt className="text-[var(--color-ink-muted)]">所在地</dt>
+          <dd className="text-[var(--color-ink)]">
+            〒102-0073
+            <br />
+            東京都千代田区九段北1-4-4 九段下ASNビル7F
+          </dd>
+          <dt className="text-[var(--color-ink-muted)]">電話</dt>
+          <dd className="text-[var(--color-ink)]">
+            <a className={linkCls} href="tel:0362844506">
+              03-6284-4506
+            </a>
+          </dd>
+          <dt className="text-[var(--color-ink-muted)]">FAX</dt>
+          <dd className="text-[var(--color-ink)]">03-6284-4507</dd>
+        </dl>
       </Section>
 
       <Section title="お問い合わせ">

@@ -67,7 +67,13 @@ export function JpFooter() {
             <Link to="/about" className="underline hover:text-[#0b2d52]">
               MTL Shipping Agency
             </Link>{" "}
-            が運営しています。お問い合わせ:{" "}
+            が運営しています。日本窓口: MTL JAPAN CO.,LTD.(株式会社脈日通運)
+          </p>
+          <p>
+            〒102-0073 東京都千代田区九段北1-4-4 九段下ASNビル7F ／ TEL 03-6284-4506 ／ FAX 03-6284-4507
+          </p>
+          <p>
+            お問い合わせ:{" "}
             <a href="mailto:newsletter@logisight.net" className="underline hover:text-[#0b2d52]">
               newsletter@logisight.net
             </a>

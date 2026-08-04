@@ -1,0 +1,428 @@
+import { createServerFn } from "@tanstack/react-start";
+import { setResponseHeader } from "@tanstack/react-start/server";
+import { z } from "zod";
+
+import { supabasePublicServer } from "@/integrations/supabase/public.server";
+import { percentile52wSeries, normalRange52w, type FreightIndexPoint } from "@/server/signals";
+import type {
+  FreightIndexHistoryRow,
+  FreightRateRow,
+  BunkerPriceRow,
+  RateFilterOptions,
+  KitaAirRateRow,
+  KitaSeaRateRow,
+  KitaPercentileResult,
+  IndexStats,
+  KcciRouteStat,
+  EraiStat,
+} from "./rates";
+
+const CODES = ["SCFI", "FBX", "KCCI", "CCFI", "WCI", "BDI"] as const;
+const PAGE_SIZE = 1000;
+
+export const getFreightIndicesHistory = createServerFn({ method: "GET" }).handler(
+  async (): Promise<FreightIndexHistoryRow[]> => {
+    const all: FreightIndexHistoryRow[] = [];
+    let from = 0;
+    while (true) {
+      const { data, error } = await supabasePublicServer
+        .from("freight_indices")
+        .select("index_code,value,change_pct,week_date,source,source_url")
+        .in("index_code", CODES as unknown as string[])
+        .order("week_date", { ascending: true })
+        .range(from, from + PAGE_SIZE - 1);
+      if (error) throw new Error(error.message);
+      const rows = (data ?? []) as FreightIndexHistoryRow[];
+      all.push(...rows);
+      if (rows.length < PAGE_SIZE) break;
+      from += PAGE_SIZE;
+      if (from > 10000) break;
+    }
+    return all;
+  },
+);
+
+export const getRateFilterOptions = createServerFn({ method: "GET" }).handler(
+  async (): Promise<RateFilterOptions> => {
+    const { data, error } = await supabasePublicServer
+      .from("freight_rates")
+      .select("pol_code,pol_name,pod_code,pod_name,container_type")
+      .limit(5000);
+    if (error) throw new Error(error.message);
+
+    const polMap = new Map<string, string>();
+    const podMap = new Map<string, string>();
+    const ctypeSet = new Set<string>();
+    for (const r of data ?? []) {
+      if (r.pol_code) polMap.set(r.pol_code, r.pol_name ?? r.pol_code);
+      if (r.pod_code) podMap.set(r.pod_code, r.pod_name ?? r.pod_code);
+      if (r.container_type) ctypeSet.add(r.container_type);
+    }
+    return {
+      pols: [...polMap.entries()]
+        .map(([code, name]) => ({ code, name }))
+        .sort((a, b) => a.name.localeCompare(b.name, "ko")),
+      pods: [...podMap.entries()]
+        .map(([code, name]) => ({ code, name }))
+        .sort((a, b) => a.name.localeCompare(b.name, "ko")),
+      containerTypes: [...ctypeSet].sort(),
+    };
+  },
+);
+
+export const getFreightRates = createServerFn({ method: "GET" })
+  .inputValidator(
+    z.object({
+      polCode: z.string().min(1).max(20).optional(),
+      podCode: z.string().min(1).max(20).optional(),
+      containerType: z.string().min(1).max(20).optional(),
+      limit: z.number().int().min(1).max(200).default(80),
+    }),
+  )
+  .handler(async ({ data }): Promise<FreightRateRow[]> => {
+    let q = supabasePublicServer
+      .from("freight_rates")
+      .select(
+        "id,carrier,pol_code,pol_name,pod_code,pod_name,container_type,rate_usd,currency,weekly_change_pct,is_partner_rate,transit_days,valid_from,valid_until,data_source,source_updated_at,display_order",
+      )
+      .order("display_order", { ascending: true, nullsFirst: false })
+      .order("rate_usd", { ascending: true, nullsFirst: false })
+      .limit(data.limit);
+    if (data.polCode) q = q.eq("pol_code", data.polCode);
+    if (data.podCode) q = q.eq("pod_code", data.podCode);
+    if (data.containerType) q = q.eq("container_type", data.containerType);
+    const { data: rows, error } = await q;
+    if (error) throw new Error(error.message);
+    return (rows ?? []) as FreightRateRow[];
+  });
+
+export const getKitaAirRates = createServerFn({ method: "GET" }).handler(
+  async (): Promise<KitaAirRateRow[]> => {
+    const all: KitaAirRateRow[] = [];
+    let from = 0;
+    while (true) {
+      const { data, error } = await supabasePublicServer
+        .from("kita_air_rates")
+        .select("origin,dest,region,year_mon,kg100,kg300,kg500,chg100,chg300,chg500")
+        .order("year_mon", { ascending: false })
+        .range(from, from + PAGE_SIZE - 1);
+      if (error) throw new Error(error.message);
+      const rows = (data ?? []) as KitaAirRateRow[];
+      all.push(...rows);
+      if (rows.length < PAGE_SIZE) break;
+      from += PAGE_SIZE;
+      if (from > 10000) break;
+    }
+    return all;
+  },
+);
+
+export const getKitaSeaRates = createServerFn({ method: "GET" }).handler(
+  async (): Promise<KitaSeaRateRow[]> => {
+    const all: KitaSeaRateRow[] = [];
+    let from = 0;
+    while (true) {
+      const { data, error } = await supabasePublicServer
+        .from("kita_sea_rates")
+        .select("origin,dest,region,year_mon,teu,feu,teu_chg,feu_chg")
+        .order("year_mon", { ascending: false })
+        .range(from, from + PAGE_SIZE - 1);
+      if (error) throw new Error(error.message);
+      const rows = (data ?? []) as KitaSeaRateRow[];
+      all.push(...rows);
+      if (rows.length < PAGE_SIZE) break;
+      from += PAGE_SIZE;
+      if (from > 10000) break;
+    }
+    return all;
+  },
+);
+
+// 52-week percentile and normal range (mean ±1σ) — computed server-side, never on missing data
+export const getKitaAirPercentile = createServerFn({ method: "GET" })
+  .inputValidator(
+    z.object({ origin: z.string(), dest: z.string(), tier: z.enum(["kg100", "kg300", "kg500"]) }),
+  )
+  .handler(async ({ data }): Promise<KitaPercentileResult | null> => {
+    const { data: rows, error } = await supabasePublicServer
+      .from("kita_air_rates")
+      .select("year_mon,kg100,kg300,kg500")
+      .eq("origin", data.origin)
+      .eq("dest", data.dest)
+      .order("year_mon", { ascending: true })
+      .limit(60);
+    if (error) throw new Error(error.message);
+    if (!rows || rows.length < 4) return null;
+
+    const values = rows
+      .map((r) => r[data.tier] as number | null)
+      .filter((v): v is number => v !== null);
+    if (values.length < 4) return null;
+
+    const latest = values[values.length - 1];
+    const mean = values.reduce((s, v) => s + v, 0) / values.length;
+    const variance = values.reduce((s, v) => s + (v - mean) ** 2, 0) / values.length;
+    const sigma = Math.sqrt(variance);
+    const pct = Math.round((values.filter((v) => v <= latest).length / values.length) * 100);
+    const asOf = rows[rows.length - 1].year_mon;
+
+    return { pct52w: pct, normalLow: mean - sigma, normalHigh: mean + sigma, asOf };
+  });
+
+const INDEX_CODES = ["SCFI", "KCCI", "CCFI", "FBX", "WCI", "BDI"] as const;
+
+export const getIndexStats = createServerFn({ method: "GET" }).handler(
+  async (): Promise<IndexStats[]> => {
+    // 운임 지수는 주 단위 갱신 → CDN 1시간 캐시 + 24시간 stale-while-revalidate.
+    setResponseHeader(
+      "cache-control",
+      "public, max-age=0, s-maxage=3600, stale-while-revalidate=86400",
+    );
+    const rows: (FreightIndexPoint & { index_code: string; source: string | null })[] = [];
+    let from = 0;
+    while (true) {
+      const { data, error } = await supabasePublicServer
+        .from("freight_indices")
+        .select("index_code,value,change_pct,week_date,source")
+        .in("index_code", INDEX_CODES as unknown as string[])
+        .order("week_date", { ascending: true })
+        .range(from, from + PAGE_SIZE - 1);
+      if (error) throw new Error(error.message);
+      const pageRows = (data ?? []) as (FreightIndexPoint & {
+        index_code: string;
+        source: string | null;
+      })[];
+      rows.push(...pageRows);
+      if (pageRows.length < PAGE_SIZE) break;
+      from += PAGE_SIZE;
+      if (from > 10000) break;
+    }
+
+    const grouped = new Map<string, (FreightIndexPoint & { source: string | null })[]>();
+    for (const r of rows) {
+      const arr = grouped.get(r.index_code) ?? [];
+      arr.push(r);
+      grouped.set(r.index_code, arr);
+    }
+
+    return INDEX_CODES.map((code) => {
+      const series = grouped.get(code) ?? [];
+      const last = series.at(-1);
+      if (!last || last.value === null) {
+        return {
+          index_code: code,
+          latest_value: null,
+          latest_date: null,
+          change_pct: null,
+          mom_pct: null,
+          yoy_pct: null,
+          pct_52w: null,
+          normal_range: null,
+          source: null,
+        };
+      }
+
+      const lastDate = new Date(last.week_date).getTime();
+      const monthAgo = series
+        .filter(
+          (p) => p.value !== null && new Date(p.week_date).getTime() <= lastDate - 28 * 86400000,
+        )
+        .at(-1);
+      const yearAgo = series
+        .filter(
+          (p) => p.value !== null && new Date(p.week_date).getTime() <= lastDate - 365 * 86400000,
+        )
+        .at(-1);
+
+      const mom_pct =
+        monthAgo?.value && last.value
+          ? Math.round(((last.value - monthAgo.value) / monthAgo.value) * 1000) / 10
+          : null;
+      const yoy_pct =
+        yearAgo?.value && last.value
+          ? Math.round(((last.value - yearAgo.value) / yearAgo.value) * 1000) / 10
+          : null;
+
+      const pct_52w = percentile52wSeries(series, last.value);
+      const normal_range = normalRange52w(series);
+
+      return {
+        index_code: code,
+        latest_value: last.value,
+        latest_date: last.week_date,
+        change_pct: last.change_pct,
+        mom_pct,
+        yoy_pct,
+        pct_52w,
+        normal_range,
+        source: last.source,
+      };
+    });
+  },
+);
+
+// KCCI 권역별 항로 — 한국발 $/FEU. WoW는 KOBC 보고 change_pct, MoM은 4주 전 대비(주차 누락에도 날짜 기준).
+const KCCI_ROUTE_CODES = [
+  "KCCI_USWC", "KCCI_USEC", "KCCI_NEU", "KCCI_MED", "KCCI_ME",
+  "KCCI_SEA", "KCCI_CN", "KCCI_JP", "KCCI_SAE", "KCCI_SAW",
+  "KCCI_ZAF", "KCCI_WAF", "KCCI_AU",
+] as const;
+
+export const getKcciRouteStats = createServerFn({ method: "GET" }).handler(
+  async (): Promise<KcciRouteStat[]> => {
+    setResponseHeader(
+      "cache-control",
+      "public, max-age=0, s-maxage=3600, stale-while-revalidate=86400",
+    );
+    type Row = { index_code: string; value: number | null; change_pct: number | null; week_date: string };
+    const rows: Row[] = [];
+    let from = 0;
+    while (true) {
+      const { data, error } = await supabasePublicServer
+        .from("freight_indices")
+        .select("index_code,value,change_pct,week_date")
+        .in("index_code", KCCI_ROUTE_CODES as unknown as string[])
+        .order("week_date", { ascending: true })
+        .range(from, from + PAGE_SIZE - 1);
+      if (error) throw new Error(error.message);
+      const pageRows = (data ?? []) as Row[];
+      rows.push(...pageRows);
+      if (pageRows.length < PAGE_SIZE) break;
+      from += PAGE_SIZE;
+      if (from > 10000) break;
+    }
+
+    const grouped = new Map<string, Row[]>();
+    for (const r of rows) {
+      const arr = grouped.get(r.index_code) ?? [];
+      arr.push(r);
+      grouped.set(r.index_code, arr);
+    }
+
+    return KCCI_ROUTE_CODES.map((code) => {
+      const series = grouped.get(code) ?? [];
+      const last = series.at(-1);
+      if (!last || last.value === null) {
+        return { index_code: code, latest_value: null, latest_date: null, change_pct: null, mom_pct: null };
+      }
+      const lastDate = new Date(last.week_date).getTime();
+      const monthAgo = series
+        .filter((p) => p.value !== null && new Date(p.week_date).getTime() <= lastDate - 28 * 86400000)
+        .at(-1);
+      const mom_pct =
+        monthAgo?.value && last.value
+          ? Math.round(((last.value - monthAgo.value) / monthAgo.value) * 1000) / 10
+          : null;
+      return {
+        index_code: code,
+        latest_value: last.value,
+        latest_date: last.week_date,
+        change_pct: last.change_pct,
+        mom_pct,
+      };
+    });
+  },
+);
+
+// ERAI(index1520 유라시아 철도 운임 컴포지트, USD/FEU 월별) + 철도 transit time. change_pct=출처 보고 MoM.
+const ERAI_CODES = ["ERAI", "ERAI_EAST", "ERAI_WEST", "ERAI_TRANSIT_DAYS"] as const;
+
+export const getEraiStats = createServerFn({ method: "GET" }).handler(
+  async (): Promise<EraiStat[]> => {
+    setResponseHeader(
+      "cache-control",
+      "public, max-age=0, s-maxage=3600, stale-while-revalidate=86400",
+    );
+    type Row = { index_code: string; value: number | null; change_pct: number | null; week_date: string };
+    const rows: Row[] = [];
+    let from = 0;
+    while (true) {
+      const { data, error } = await supabasePublicServer
+        .from("freight_indices")
+        .select("index_code,value,change_pct,week_date")
+        .in("index_code", ERAI_CODES as unknown as string[])
+        .order("week_date", { ascending: true })
+        .range(from, from + PAGE_SIZE - 1);
+      if (error) throw new Error(error.message);
+      const pageRows = (data ?? []) as Row[];
+      rows.push(...pageRows);
+      if (pageRows.length < PAGE_SIZE) break;
+      from += PAGE_SIZE;
+      if (from > 10000) break;
+    }
+    const grouped = new Map<string, Row[]>();
+    for (const r of rows) {
+      const arr = grouped.get(r.index_code) ?? [];
+      arr.push(r);
+      grouped.set(r.index_code, arr);
+    }
+    return ERAI_CODES.map((code) => {
+      const series = grouped.get(code) ?? [];
+      const last = series.at(-1);
+      return {
+        index_code: code,
+        latest_value: last?.value ?? null,
+        latest_date: last?.week_date ?? null,
+        change_pct: last?.change_pct ?? null,
+      };
+    });
+  },
+);
+
+export type IataJetFuelRow = {
+  as_of: string;
+  price_usd_bbl: number | null;
+  fuel_wow_pct: number | null;
+  span_label: string | null;
+  source: string | null;
+};
+
+export const getIataJetFuelHistory = createServerFn({ method: "GET" }).handler(
+  async (): Promise<IataJetFuelRow[]> => {
+    const cutoff = new Date();
+    cutoff.setMonth(cutoff.getMonth() - 6);
+    const { data, error } = await supabasePublicServer
+      .from("iata_jet_fuel_weekly")
+      .select("as_of,price_usd_bbl,fuel_wow_pct,span_label,source")
+      .gte("as_of", cutoff.toISOString().split("T")[0])
+      .order("as_of", { ascending: true })
+      .limit(30);
+    if (error) throw new Error(error.message);
+    return (data ?? []) as unknown as IataJetFuelRow[];
+  },
+);
+
+export const getBunkerHistory = createServerFn({ method: "GET" }).handler(
+  async (): Promise<BunkerPriceRow[]> => {
+    const cutoff = new Date();
+    cutoff.setMonth(cutoff.getMonth() - 6);
+    const { data, error } = await supabasePublicServer
+      .from("bunker_prices")
+      .select("grade,port,price_usd,obs_date,source,source_url")
+      .gte("obs_date", cutoff.toISOString().split("T")[0])
+      .order("obs_date", { ascending: true })
+      .limit(500);
+    if (error) throw new Error(error.message);
+    return (data ?? []) as BunkerPriceRow[];
+  },
+);
+
+export const getBunkerPrices = createServerFn({ method: "GET" }).handler(
+  async (): Promise<BunkerPriceRow[]> => {
+    const { data, error } = await supabasePublicServer
+      .from("bunker_prices")
+      .select("grade,port,price_usd,obs_date,source,source_url")
+      .order("obs_date", { ascending: false })
+      .limit(200);
+    if (error) throw new Error(error.message);
+
+    const latest = new Map<string, BunkerPriceRow>();
+    for (const r of (data ?? []) as BunkerPriceRow[]) {
+      const k = `${r.grade}__${r.port}`;
+      if (!latest.has(k)) latest.set(k, r);
+    }
+    return [...latest.values()].sort((a, b) =>
+      a.port === b.port ? a.grade.localeCompare(b.grade) : a.port.localeCompare(b.port),
+    );
+  },
+);
