@@ -2,6 +2,9 @@ import { Link, useRouterState } from "@tanstack/react-router";
 import { useState } from "react";
 import { Menu, X } from "lucide-react";
 
+import { AuthModal, type AuthMode } from "./AuthModal";
+import { signOut, useSession } from "@/lib/auth";
+
 // ヘッダー。白地・細い罫線に、現在地を藍の下線で示す。
 // メニューは隠さず一列に並べる — 日本の業界メディアの導線に合わせる。
 const NAV = [
@@ -17,6 +20,8 @@ const NAV = [
 
 export function JpHeader({ today }: { today: string }) {
   const [open, setOpen] = useState(false);
+  const [auth, setAuth] = useState<AuthMode | null>(null);
+  const { session, loading } = useSession();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const active = (to: string) =>
     to === "/" ? pathname === "/" : pathname === to || pathname.startsWith(`${to}/`);
@@ -49,9 +54,45 @@ export function JpHeader({ today }: { today: string }) {
           ))}
         </nav>
 
-        <span className="ml-auto hidden text-[11.5px] tabular-nums text-[#8b94a0] min-[820px]:inline">
+        <span className="ml-auto hidden text-[11.5px] tabular-nums text-[#8b94a0] min-[1000px]:inline">
           {today}
         </span>
+
+        {/* SSR では session を知りようがないので、確定するまでは何も出さない。
+            先に「ログイン」を描くと、ログイン済みの利用者に一瞬それが見える。 */}
+        <div className="ml-auto hidden items-center gap-2 min-[820px]:flex min-[1000px]:ml-4">
+          {loading ? null : session ? (
+            <>
+              <span className="max-w-[150px] truncate text-[12px] text-[#5b6672]" title={session.user.email ?? ""}>
+                {session.user.email}
+              </span>
+              <button
+                type="button"
+                onClick={() => void signOut()}
+                className="rounded-[6px] border border-[#e3e7ec] px-3 py-1.5 text-[12.5px] font-semibold text-[#16202c] transition-colors hover:bg-[#f6f8fb]"
+              >
+                ログアウト
+              </button>
+            </>
+          ) : (
+            <>
+              <button
+                type="button"
+                onClick={() => setAuth("login")}
+                className="rounded-[6px] px-2.5 py-1.5 text-[12.5px] font-semibold text-[#16202c] transition-colors hover:bg-[#f6f8fb]"
+              >
+                ログイン
+              </button>
+              <button
+                type="button"
+                onClick={() => setAuth("signup")}
+                className="rounded-[6px] bg-[#0d2137] px-3 py-1.5 text-[12.5px] font-bold text-white transition-opacity hover:opacity-90"
+              >
+                新規登録
+              </button>
+            </>
+          )}
+        </div>
 
         <button
           type="button"
@@ -78,9 +119,40 @@ export function JpHeader({ today }: { today: string }) {
                 {n.label}
               </Link>
             ))}
+
+            <div className="mt-1.5 flex gap-2 border-t border-[#e3e7ec] px-3 py-3">
+              {loading ? null : session ? (
+                <button
+                  type="button"
+                  onClick={() => { setOpen(false); void signOut(); }}
+                  className="flex-1 rounded-[6px] border border-[#e3e7ec] px-3 py-2 text-[13.5px] font-semibold text-[#16202c]"
+                >
+                  ログアウト
+                </button>
+              ) : (
+                <>
+                  <button
+                    type="button"
+                    onClick={() => { setOpen(false); setAuth("login"); }}
+                    className="flex-1 rounded-[6px] border border-[#e3e7ec] px-3 py-2 text-[13.5px] font-semibold text-[#16202c]"
+                  >
+                    ログイン
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => { setOpen(false); setAuth("signup"); }}
+                    className="flex-1 rounded-[6px] bg-[#0d2137] px-3 py-2 text-[13.5px] font-bold text-white"
+                  >
+                    新規登録
+                  </button>
+                </>
+              )}
+            </div>
           </div>
         </nav>
       )}
+
+      <AuthModal open={auth !== null} mode={auth ?? "login"} onClose={() => setAuth(null)} />
     </header>
   );
 }
