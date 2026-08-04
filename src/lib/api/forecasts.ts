@@ -64,10 +64,10 @@ export type { ForecastSeries, RiskNote, DataUpdate };
 export { saveForecastDraft, publishForecast, resolveForecast, annotateForecast };
 
 export const MODULE_LABEL: Record<ForecastModule, string> = {
-  rates: "운임",
-  eurasia: "유라시아",
-  trade: "무역",
-  policy: "정책",
+  rates: "運賃",
+  eurasia: "ユーラシア",
+  trade: "貿易",
+  policy: "政策",
 };
 
 /** A resolved miss/partial without an editor retrospective yet → "복기 작성 중". */

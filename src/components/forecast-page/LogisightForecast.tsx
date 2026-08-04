@@ -149,7 +149,7 @@ function ForecastDetailChart({ series, f }: { series?: ForecastSeries; f: Foreca
         </text>
       )}
       {dateTicks.map((i) => <text key={i} x={X(i).toFixed(1)} y={H - 7} textAnchor="middle" fontSize="9" fill="#828d9d" fontFamily={FONT}>{pts[i].date.slice(5)}</text>)}
-      {f.horizon_date && <text x={projX.toFixed(1)} y={H - 7} textAnchor="middle" fontSize="9" fill="#0d9488" fontFamily={FONT} fontWeight="600">{f.horizon_date.slice(5)} 판정</text>}
+      {f.horizon_date && <text x={projX.toFixed(1)} y={H - 7} textAnchor="middle" fontSize="9" fill="#0d9488" fontFamily={FONT} fontWeight="600">{f.horizon_date.slice(5)} 判定</text>}
     </svg>
   );
 }
@@ -219,7 +219,7 @@ function Hero({ kpis, lastUpdated, modules, activeModule, onModule }: {
 /* ============================ KPIs ============================ */
 function Kpis({ kpis }: { kpis: ReturnType<typeof computeKpis> }) {
   const items = [
-    { lab: "方向的中率(12週)", ic: "✓", bg: "#16a34a", v: kpis.hitRate.gate ? "集計中" : `${kpis.hitRate.rate}%`, num: false, s: kpis.hitRate.gate ? `判定サンプル ${kpis.hitRate.sample}/10` : `${kpis.hitRate.sample}件 판정 기준` },
+    { lab: "方向的中率(12週)", ic: "✓", bg: "#16a34a", v: kpis.hitRate.gate ? "集計中" : `${kpis.hitRate.rate}%`, num: false, s: kpis.hitRate.gate ? `判定サンプル ${kpis.hitRate.sample}/10` : `判定済み ${kpis.hitRate.sample}件` },
     { lab: "今週の発行", ic: "+", bg: "#0d9488", v: `${kpis.publishedThisWeek}件`, num: true, s: "校閲を通過して発行" },
     { lab: "判定待ち", ic: "⏳", bg: "#d97706", v: `${kpis.awaitingJudgment}件`, num: true, s: "確認予定日の前" },
     { lab: "根拠データ 平均", ic: "◉", bg: "#3b82f6", v: kpis.avgEvidence != null ? `${kpis.avgEvidence}/5` : "—", num: true, s: "発行済みの見通しが基準" },
