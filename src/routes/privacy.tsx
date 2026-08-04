@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 
 import { seoHead } from "@/lib/seo";
+import { JpPage } from "@/components/jp/JpPage";
 
 // プライバシーポリシー — ニュースレター登録時に取得する個人情報を前提とした標準方針。
 // 注意: 法務確認のうえ、保有期間・委託先・施行日を確定すること(草案の位置づけ)。
@@ -27,12 +28,12 @@ function Section({ title, children }: { title: string; children: React.ReactNode
 
 function PrivacyPage() {
   return (
-    <div className="mx-auto max-w-3xl px-4 py-12 lg:px-6">
-      <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--color-ink-muted)]">
-        Logisight
-      </p>
-      <h1 className="mt-1 text-2xl font-bold text-[var(--color-ink)]">プライバシーポリシー</h1>
-      <p className="mt-2 text-xs text-[var(--color-ink-muted)]">施行日: 2026-06-29</p>
+    <JpPage
+      crumbs={[{ label: "ホーム", to: "/" }, { label: "プライバシーポリシー" }]}
+      title="プライバシーポリシー"
+      meta={<span className="text-[12px] text-[#6b7683]">施行日: 2026-06-29</span>}
+    >
+      <div className="max-w-[760px] pb-4">
 
       <p className="mt-6 text-sm leading-relaxed text-[var(--color-ink-muted)]">
         MTL Shipping Agency(以下「当社」)は、Logisight のニュースレターを提供するにあたり、
@@ -103,6 +104,7 @@ function PrivacyPage() {
           </a>
         </p>
       </Section>
-    </div>
+      </div>
+    </JpPage>
   );
 }

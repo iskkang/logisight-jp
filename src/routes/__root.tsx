@@ -13,8 +13,6 @@ import {
 import { Analytics } from "@vercel/analytics/react";
 
 import appCss from "../styles.css?url";
-import { Navigation } from "@/components/site/Navigation";
-import { Footer } from "@/components/site/Footer";
 import LogisightLoader from "@/components/LogisightLoader";
 import { SITE_URL, SITE_HOST } from "@/lib/seo";
 
@@ -23,13 +21,19 @@ import { SITE_URL, SITE_HOST } from "@/lib/seo";
 // 日本の流入が混ざり、計測そのものが壊れる。プロパティ作成後にここへ入れる。
 const GA_MEASUREMENT_ID = "";
 
-// Minimal shell without IndexBar — safe to use outside QueryClientProvider
+// 404・エラー画面用の最小の枠。QueryClientProvider の外でも使えるよう
+// データ取得を伴う JpPage は使わない。
 function MinimalShell({ children }: { children: React.ReactNode }) {
   return (
-    <div className="flex min-h-screen flex-col" style={{ background: "var(--color-surface)" }}>
-      <Navigation />
+    <div className="flex min-h-screen flex-col bg-white text-[#1a1f26]">
+      <div className="border-b border-[#d5d9de]">
+        <div className="mx-auto max-w-[1120px] px-4 py-4">
+          <a href="/" className="text-[22px] font-bold tracking-[-0.02em] text-[#0b2d52]">
+            Logisight
+          </a>
+        </div>
+      </div>
       <main className="flex-1">{children}</main>
-      <Footer />
     </div>
   );
 }
@@ -234,60 +238,12 @@ function RootComponent() {
   );
 }
 
-// Product pages keep the dark/light toggle; editorial pages are pinned light
-// via the .theme-light scope. 종합(/dashboard)은 dashboard.css 라이트 전용 디자인이라
-// 토글에서 제외하고 강제 라이트로 둔다(전역 다크가 켜져 있어도 일관 라이트).
-const THEME_TOGGLE_PREFIXES = [
-  "/rates",
-  "/trade",
-  "/port-risk",
-  "/eurasia",
-  "/forecasts",
-  "/industries",
-];
 
+/**
+ * 全ページが JpPage(ヘッダー・パンくず・フッター)を自前で持つ。
+ * 以前はここでグローバルの Navigation/Footer を被せる分岐があり、
+ * ページごとにヘッダーが違って見える原因になっていた。
+ */
 function SiteShell({ children }: { children: React.ReactNode }) {
-  const pathname = useRouterState({ select: (s) => s.location.pathname });
-
-  // 자체 Nav/Footer를 가진 리디자인 페이지(홈·뉴스·기사·포트·종합·전망)는 전체 레이아웃을 스스로
-  // 책임진다 → 글로벌 Navigation/Footer/theme-light 래퍼를 건너뛴다. 다른 라우트는 영향 없음.
-  // /article/<slug>는 동적 경로라 정확 일치가 안 되므로 prefix로 판별한다.
-  if (
-    [
-      "/",
-      "/news",
-      "/reports",
-      "/port-risk",
-      "/policy",
-      "/dashboard",
-      "/forecasts",
-      "/rates",
-      "/eurasia",
-      "/climate",
-      "/trade",
-      "/industries",
-      "/briefing",
-      "/faq",
-      "/methodology",
-    ].includes(pathname) ||
-    pathname.startsWith("/article/") ||
-    pathname.startsWith("/rail") // /rail 허브는 자체 HomeNav/Footer를 가짐 → 글로벌 Navigation 중복 방지
-  ) {
-    return <>{children}</>;
-  }
-
-  const isThemeTogglePage = THEME_TOGGLE_PREFIXES.some(
-    (p) => pathname === p || pathname.startsWith(`${p}/`),
-  );
-
-  return (
-    <div
-      className={`flex min-h-screen flex-col ${isThemeTogglePage ? "" : "theme-light"}`}
-      style={{ background: "var(--color-surface)" }}
-    >
-      <Navigation />
-      <main className="flex-1">{children}</main>
-      <Footer />
-    </div>
-  );
+  return <>{children}</>;
 }

@@ -1,7 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 
-import { HomeNav } from "@/components/home/HomeNav";
-import { HomeFooter } from "@/components/home/HomeFooter";
+import { JpPage } from "@/components/jp/JpPage";
 import { seoHead, faqPageSchema, type FaqItem } from "@/lib/seo";
 
 // よくある質問 — 主題別セクションで一元管理。定義・方法論中心の Q&A のみ置く
@@ -105,42 +104,28 @@ export const Route = createFileRoute("/faq")({
 
 function FaqPage() {
   return (
-    <div className="min-h-screen bg-[#070b16] text-[#c7d2e0]">
-      <HomeNav />
-      <main className="mx-auto w-full max-w-[920px] px-4 pb-20 pt-10 min-[640px]:px-7">
-        <p className="text-[12px] font-semibold uppercase tracking-[0.18em] text-[#2dd4bf]">FAQ</p>
-        <h1 className="mt-2 text-[28px] font-extrabold leading-tight text-[#e9eef7] min-[640px]:text-[34px]">
-          よくある質問
-        </h1>
-        <p className="mt-3 max-w-[640px] text-[14px] leading-[1.7] text-[#93a1b7]">
-          運賃・港湾・貿易・レポートの読み方と、データの方法論についてのご質問をまとめました。
-          実際の数値は各データページでご確認ください。
-        </p>
-
-        <div className="mt-9 space-y-10">
-          {SECTIONS.map((section) => (
-            <section key={section.title}>
-              <h2 className="mb-3 border-b border-[#22304a] pb-2 text-[13px] font-bold uppercase tracking-[0.12em] text-[#8595ab]">
-                {section.title}
-              </h2>
-              <dl className="divide-y divide-[#161f31]">
-                {section.items.map((item) => (
-                  <div key={item.q} className="py-4">
-                    <dt className="text-[15px] font-semibold text-[#e9eef7]">{item.q}</dt>
-                    <dd className="mt-2 text-[14px] leading-[1.7] text-[#a9b6c9]">{item.a}</dd>
-                  </div>
-                ))}
-              </dl>
-            </section>
-          ))}
-        </div>
-      </main>
-      <HomeFooter />
-
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqPageSchema(ALL_ITEMS)) }}
-      />
-    </div>
+    <JpPage
+      crumbs={[{ label: "ホーム", to: "/" }, { label: "よくある質問" }]}
+      title="よくある質問"
+      lead="運賃・港湾・貿易・レポートの読み方と、データの方法論についてのご質問をまとめました。実際の数値は各データページでご確認ください。"
+    >
+      <div className="max-w-[820px] pb-4">
+        {SECTIONS.map((sec) => (
+          <section key={sec.title} className="mt-8">
+            <h2 className="border-b-2 border-[#0b2d52] pb-1.5 text-[15px] font-bold text-[#0b2d52]">
+              {sec.title}
+            </h2>
+            <dl className="mt-1">
+              {sec.items.map((it) => (
+                <div key={it.q} className="border-b border-[#eef0f2] py-3.5">
+                  <dt className="text-[14px] font-bold leading-[1.6] text-[#1a1f26]">{it.q}</dt>
+                  <dd className="mt-1.5 text-[13.5px] leading-[1.9] text-[#4a5462]">{it.a}</dd>
+                </div>
+              ))}
+            </dl>
+          </section>
+        ))}
+      </div>
+    </JpPage>
   );
 }

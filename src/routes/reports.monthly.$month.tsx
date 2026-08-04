@@ -3,8 +3,7 @@ import { useSuspenseQuery } from "@tanstack/react-query";
 
 import { monthlyReportQueryOptions } from "@/lib/api/reports";
 import { formatPublishedAt } from "@/lib/api/news";
-import { HomeNav } from "@/components/home/HomeNav";
-import { HomeFooter } from "@/components/home/HomeFooter";
+import { Chip, JpPage } from "@/components/jp/JpPage";
 import { seoHead } from "@/lib/seo";
 
 export const Route = createFileRoute("/reports/monthly/$month")({
@@ -31,40 +30,27 @@ function MonthlyReportPage() {
   const r = report;
 
   return (
-    <div className="min-h-screen bg-[#070b16] text-white">
-      <HomeNav active="reports" />
-      <div className="mx-auto max-w-[820px] px-4 py-16 lg:px-6">
-        <div className="text-[12px] text-white/50">
-          <Link to="/" className="hover:text-white">
-            ホーム
-          </Link>{" "}
-          ›{" "}
-          <Link to="/reports" className="hover:text-white">
-            レポート
-          </Link>{" "}
-          › 月次
-        </div>
-
-        <span className="mt-6 inline-block rounded-md bg-white/10 px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-[#5eead4]">
-          月次レポート
-        </span>
-        <h1 className="mt-4 text-[clamp(26px,4vw,38px)] font-extrabold leading-[1.15] tracking-[-0.03em]">
-          {r.period_label || r.title}
-        </h1>
-        {r.published_at && (
-          <div className="mt-2 font-mono text-[13px] text-white/50">
-            {formatPublishedAt(r.published_at)} 発行
-          </div>
-        )}
-        {r.summary && (
-          <p className="mt-5 text-[16px] leading-[1.7] text-white/75">{r.summary}</p>
-        )}
-
+    <JpPage
+      crumbs={[
+        { label: "ホーム", to: "/" },
+        { label: "レポート", to: "/reports" },
+        { label: "月次" },
+      ]}
+      title={r.period_label || r.title}
+      lead={r.summary ?? undefined}
+      meta={
+        <>
+          {r.published_at && <Chip label="発行" value={formatPublishedAt(r.published_at)} />}
+          <Chip label="形式" value="PDF" />
+        </>
+      }
+    >
+      <div className="max-w-[820px] pb-6">
         {r.cover_url && (
           <img
             src={r.cover_url}
             alt={r.title}
-            className="mt-8 w-full rounded-[14px] border border-white/10"
+            className="mt-6 w-full border border-[#e2e6ea]"
             loading="lazy"
           />
         )}
@@ -73,20 +59,19 @@ function MonthlyReportPage() {
           href={r.pdf_url}
           target="_blank"
           rel="noopener noreferrer"
-          className="mt-8 inline-flex items-center gap-2 rounded-[10px] bg-[#2dd4bf] px-6 py-3.5 text-[15px] font-bold text-[#04231f] transition-transform hover:-translate-y-px hover:bg-[#5eead4]"
+          className="mt-7 inline-flex items-center gap-2 bg-[#0b2d52] px-5 py-3 text-[14px] font-bold text-white transition-colors hover:bg-[#123f70]"
         >
           PDF をダウンロード →
         </a>
 
-        <p className="mt-4 text-[12px] text-white/40">
+        <p className="mt-3 text-[12px] text-[#8a929c]">
           レポートは PDF でご覧いただけます。一覧は{" "}
-          <Link to="/reports" className="text-[#5eead4] hover:underline">
+          <Link to="/reports" className="text-[#0b2d52] underline hover:no-underline">
             レポート一覧
           </Link>
           からご確認いただけます。
         </p>
       </div>
-      <HomeFooter />
-    </div>
+    </JpPage>
   );
 }

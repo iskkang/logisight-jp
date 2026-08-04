@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 
 import { seoHead } from "@/lib/seo";
+import { JpPage } from "@/components/jp/JpPage";
 
 // 会社概要 — 何を発行し、誰が運営し、どう作っているか。
 // 所有の開示はフッターのリンク列ではなくここに集める(メディアの慣行)。
@@ -30,12 +31,11 @@ const linkCls = "underline transition-colors hover:text-[var(--color-navy-600)]"
 
 function AboutPage() {
   return (
-    <div className="mx-auto max-w-3xl px-4 py-12 lg:px-6">
-      <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--color-ink-muted)]">
-        Logisight
-      </p>
-      <h1 className="mt-1 text-2xl font-bold text-[var(--color-ink)]">会社概要</h1>
-
+    <JpPage
+      crumbs={[{ label: "ホーム", to: "/" }, { label: "会社概要" }]}
+      title="会社概要"
+    >
+      <div className="max-w-[760px] pb-4">
       <p className="mt-6 text-sm leading-relaxed text-[var(--color-ink-muted)]">
         Logisight は、日本の荷主・フォワーダー・物流部門の実務者に向けて、運賃・港湾・貿易の動きを
         公的統計にもとづいて毎月まとめる物流インテリジェンス媒体です。推計や見通しではなく、
@@ -111,6 +111,7 @@ function AboutPage() {
           をご覧ください。
         </p>
       </Section>
-    </div>
+      </div>
+    </JpPage>
   );
 }
