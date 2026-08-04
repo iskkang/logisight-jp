@@ -1,17 +1,21 @@
 # Logisight
 
-> 운임 지수, 교역 흐름, 정책 변화 동향을 매주 한 편의 분석으로 정리하는 물류 인텔리전스 플랫폼. (주)MTL Shipping Agency 운영. 한국–CIS/유라시아 회랑 특화.
+> 運賃・港湾・貿易の公的統計を毎月ひとつのレポートにまとめる物流インテリジェンス媒体。MTL Shipping Agency 運営。日本の荷主・フォワーダー向け。
 
-## 주요 페이지
-- [홈](https://logisight.net/): 운임 지수·시장 핵심 요약·주간 브리핑
-- [뉴스](https://logisight.net/news): 해상·항공·철도(CIS)·무역 뉴스
-- [운임](https://logisight.net/rates): SCFI·KCCI·CCFI·FBX·WCI·BDI 대시보드
-- [전망](https://logisight.net/forecasts): 시장 전망 분석
-- [철도](https://logisight.net/rail): TCR/TSR 유라시아 철도 회랑
-- [기후예측](https://logisight.net/climate): 태풍·해협 리스크 예측
-- [무역](https://logisight.net/trade): HS 챕터별 수출입 동향
-- [산업](https://logisight.net/industries): 산업별 물동량·운임
-- [리포트](https://logisight.net/reports): 마켓 인텔리전스 리포트
+## 主要ページ
+- [ホーム](https://jpn.logisight.net/): 運賃・港湾・貿易の最新公表値
+- [ニュース](https://jpn.logisight.net/news): 海上・航空・物流・貿易のニュース
+- [運賃](https://jpn.logisight.net/rates): 企業向けサービス価格指数(SPPI)の運輸関連系列。円ベースと契約通貨ベースを併記
+- [港湾](https://jpn.logisight.net/ports): 主要6港(東京・横浜・名古屋・神戸・大阪・川崎)の外国貿易コンテナ取扱量
+- [貿易](https://jpn.logisight.net/trade): 相手国別・品目別の輸出入
+- [気象](https://jpn.logisight.net/climate): 港湾・海峡の気象リスクと影響航路
+- [リスク](https://jpn.logisight.net/port-risk): 港湾混雑・チョークポイント・規制イベント
+- [レポート](https://jpn.logisight.net/reports): 月次マーケットレポート
+- [データの方法論](https://jpn.logisight.net/methodology): 出典・単位・更新頻度と表現の原則
 
-## 데이터 출처
-PORT-MIS, 관세청, 해양수산부 공공데이터 기반.
+## データの出典
+日本銀行 企業向けサービス価格指数、国土交通省 港湾統計、財務省貿易統計。
+
+## 編集方針
+公表された数字のみを扱い、出典と基準月を必ず明示する。軸ごとに公表タイミングが異なるため、
+異なる月の数値を同一時点として比較しない。因果の断定と推測表現は用いない。

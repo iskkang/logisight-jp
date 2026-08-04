@@ -22,19 +22,22 @@ export const Route = createFileRoute("/sitemap.xml")({
   server: {
     handlers: {
       GET: async () => {
+        // 実在するルートだけを載せる。日本版で削除した /briefing・/eurasia・/industries を
+        // 残したまま提出すると、クローラーに 404 を渡すことになる。
+        // ルートを増減したらここも合わせて直す。
         const entries: SitemapEntry[] = [
           { path: "/", changefreq: "daily", priority: "1.0" },
           { path: "/news", changefreq: "daily", priority: "0.9" },
-          { path: "/rates", changefreq: "daily", priority: "0.9" },
-          { path: "/briefing", changefreq: "daily", priority: "0.9" },
-          { path: "/reports", changefreq: "weekly", priority: "0.9" },
-          { path: "/eurasia", changefreq: "weekly", priority: "0.8" },
-          { path: "/industries", changefreq: "weekly", priority: "0.8" },
+          { path: "/rates", changefreq: "monthly", priority: "0.9" },
+          { path: "/ports", changefreq: "monthly", priority: "0.9" },
+          { path: "/trade", changefreq: "monthly", priority: "0.9" },
+          { path: "/reports", changefreq: "monthly", priority: "0.9" },
           { path: "/climate", changefreq: "daily", priority: "0.8" },
           { path: "/port-risk", changefreq: "daily", priority: "0.8" },
           { path: "/about", changefreq: "monthly", priority: "0.5" },
           { path: "/methodology", changefreq: "monthly", priority: "0.5" },
           { path: "/faq", changefreq: "monthly", priority: "0.5" },
+          { path: "/privacy", changefreq: "yearly", priority: "0.3" },
         ];
 
         try {
