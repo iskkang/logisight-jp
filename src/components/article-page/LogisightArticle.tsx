@@ -56,20 +56,20 @@ type Props = {
   article?: Article;
   related?: RelatedArticle[];
   renderRelatedLink?: (item: RelatedArticle, children: ReactNode, className: string) => ReactNode;
-  breadcrumb?: ReactNode; // 기본 "홈 › 뉴스 › {category}" 대신 커스텀 breadcrumb(예: 브리핑)
+  breadcrumb?: ReactNode; // 기본 "ホーム › ニュース › {category}" 대신 커스텀 breadcrumb
   // 하단 레포트 유도 CTA(뉴스 기사에만 전달). 있으면 공유바 뉴스레터 문구를 대체.
   reportCta?: { heading: string; body: string; buttonLabel: string };
 };
 
 const FB_ARTICLE: Article = {
-  category: "항공",
-  title: "항공화물 물량 9% 급감…운임은 2% 반등",
-  deck: "WorldACD 주간 동향에 따르면 5월 25~31일 연휴로 물동량은 감소했으나 운임은 유지됨. 아시아발 노선 운임이 강세를 보이며 주요 노선에서 안정적 가격이 유지됐다.",
+  category: "航空",
+  title: "記事を準備中です",
+  deck: "記事の本文は準備中です。",
   source: "Air Freight News",
   published_at: "2026.06.24",
   read_minutes: 4,
   image_url: null,
-  image_caption: "Air Cargo Market Trends — 최근 5주 · 출처: Air Freight News",
+  image_caption: "",
   show_placeholder: true,
   body: [
     "22주차(5월 25~31일) 글로벌 항공화물 유상중량 기준 물량이 전주 대비 9% 감소한 것으로 나타났다. 성령강림절·미국 현충일 등 공휴일이 집중된 영향으로 분석되며, 지난해 동기 8% 감소와 유사한 수준이다.",
@@ -79,7 +79,7 @@ const FB_ARTICLE: Article = {
   ],
   source_origin: "WorldACD Market Data",
   source_url: "#",
-  tags: ["항공화물", "WorldACD", "운임", "MESA"],
+  tags: [],
   summary_points: [
     "22주차(5.25–31) 글로벌 항공화물 물량 전주比 −9% — 공휴일 영향, 전 권역 감소.",
     "중동·남아시아(MESA) −21%로 최대 낙폭, 아시아태평양·중남미는 각 −3%.",
@@ -250,12 +250,12 @@ export default function LogisightArticle({
 }: Props) {
   const a = article;
   const paras = toParagraphs(a.body);
-  const readBit = a.read_minutes ? `읽는 시간 약 ${a.read_minutes}분` : null;
+  const readBit = a.read_minutes ? `読了目安 約${a.read_minutes}分` : null;
   // registered_at 있으면 Logisight 등록일 중심 바이라인, 아니면 기존 출처+발행일.
   const brand = Boolean(a.registered_at);
-  const bylineName = brand ? "Logisight" : (a.source ?? "출처");
+  const bylineName = brand ? "Logisight" : (a.source ?? "出典");
   const bylineDate = brand
-    ? [`등록 ${a.registered_at}`, readBit].filter(Boolean).join(" · ")
+    ? [`掲載 ${a.registered_at}`, readBit].filter(Boolean).join(" · ")
     : [a.published_at, readBit].filter(Boolean).join(" · ");
 
   const [copied, setCopied] = useState(false);
@@ -297,7 +297,7 @@ export default function LogisightArticle({
             <div className="bc">
               {breadcrumb ?? (
                 <>
-                  <Link to="/">홈</Link> <b>›</b> <Link to="/news">뉴스</Link>
+                  <Link to="/">ホーム</Link> <b>›</b> <Link to="/news">ニュース</Link>
                   {a.category ? (
                     <>
                       {" "}
@@ -337,13 +337,13 @@ export default function LogisightArticle({
                 </div>
               </div>
               <div className="share">
-                <button type="button" className="ib" title="공유" onClick={shareArticle}>
+                <button type="button" className="ib" title="共有" onClick={shareArticle}>
                   <IconShare />
                 </button>
                 <button
                   type="button"
                   className="ib"
-                  title={copied ? "복사됨!" : "링크 복사"}
+                  title={copied ? "コピーしました" : "リンクをコピー"}
                   onClick={copyLink}
                 >
                   <IconLink />
@@ -353,7 +353,7 @@ export default function LogisightArticle({
 
             {a.summary_points && a.summary_points.length > 0 && (
               <div className="tldr">
-                <div className="lbl">⚡ 핵심 요약</div>
+                <div className="lbl">⚡ 要点</div>
                 <ul>
                   {a.summary_points.map((p, i) => (
                     <li key={i}>{p}</li>
@@ -371,7 +371,7 @@ export default function LogisightArticle({
             ) : a.show_placeholder ? (
               <figure>
                 <div className="imgph">
-                  <span className="tag">출처 차트</span>
+                  <span className="tag">出典チャート</span>
                   <svg
                     viewBox="0 0 400 260"
                     fill="none"
@@ -427,12 +427,12 @@ export default function LogisightArticle({
 
             {(a.source_origin || a.source_url) && (
               <div className="srcblk">
-                <span className="k">출처</span>
+                <span className="k">出典</span>
                 {a.source_origin ? ` · ${a.source_origin}` : ""}
                 {a.source_url ? (
                   <>
                     {" "}
-                    · 원문 <a href={a.source_url}>{a.source ?? "원문"} →</a>
+                    · 原文 <a href={a.source_url}>{a.source ?? "原文"} →</a>
                   </>
                 ) : null}
               </div>
@@ -461,21 +461,21 @@ export default function LogisightArticle({
             <div className="sharebar">
               <div className="t">
                 {reportCta ? (
-                  "이 기사 공유하기"
+                  "この記事を共有"
                 ) : (
                   <>
-                    이 기사가 유용했나요?<span>매주 핵심만 추린 물류 브리핑을 받아보세요.</span>
+                    この記事は役に立ちましたか?<span>月1回のマーケットレポートをお届けします。</span>
                   </>
                 )}
               </div>
               <div className="b">
-                <button type="button" className="ib" title="공유" onClick={shareArticle}>
+                <button type="button" className="ib" title="共有" onClick={shareArticle}>
                   <IconShare />
                 </button>
                 <button
                   type="button"
                   className="ib"
-                  title={copied ? "복사됨!" : "링크 복사"}
+                  title={copied ? "コピーしました" : "リンクをコピー"}
                   onClick={copyLink}
                 >
                   <IconLink />
@@ -485,7 +485,7 @@ export default function LogisightArticle({
 
             {related && related.length > 0 && (
               <>
-                <div className="rel-h">관련 기사</div>
+                <div className="rel-h">関連記事</div>
                 <div className="rel">
                   {related.map((r, i) => {
                     const inner = (

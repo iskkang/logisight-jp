@@ -52,12 +52,12 @@ type TrackHorizonPosition = {
 };
 
 const MONO = '600 10px "JetBrains Mono", ui-monospace, monospace';
-const KIND_LABEL: Record<string, string> = { cyclone: "태풍", storm: "폭풍", flood: "홍수", snow: "폭설", earthquake: "지진", tsunami: "쓰나미", other: "경보" };
-const TYPE_KO: Record<AssetType, string> = { port: "항만", choke: "초크포인트", rail: "철도", inland: "내륙거점" };
-const TYPE_BADGE: Record<AssetType, string> = { port: "항만", choke: "관문", rail: "철도", inland: "내륙" };
+const KIND_LABEL: Record<string, string> = { cyclone: "台風", storm: "暴風", flood: "洪水", snow: "大雪", earthquake: "地震", tsunami: "津波", other: "경보" };
+const TYPE_KO: Record<AssetType, string> = { port: "港湾", choke: "チョークポイント", rail: "鉄道", inland: "内陸拠点" };
+const TYPE_BADGE: Record<AssetType, string> = { port: "港湾", choke: "関門", rail: "鉄道", inland: "内陸" };
 
 const level = (r: number) => (r >= 60 ? "r" : r >= 30 ? "a" : "g");
-const levelKo = (c: string) => (c === "r" ? "경보" : c === "a" ? "주의" : "정상");
+const levelKo = (c: string) => (c === "r" ? "警報" : c === "a" ? "注意" : "正常");
 const rc = (c: string) => (c === "r" ? "#EF4444" : c === "a" ? "#F59E0B" : "#22C55E");
 const hexrgb = (h: string) =>
   `${parseInt(h.slice(1, 3), 16)},${parseInt(h.slice(3, 5), 16)},${parseInt(h.slice(5, 7), 16)}`;
@@ -77,7 +77,7 @@ function riskScore(rm: RiskMap, key: string, h: number): number {
 }
 function assetDriver(rm: RiskMap, key: string, h: number): string {
   const row = rm[key]?.[HDAYS[h]];
-  return row && row.score >= 30 ? row.driver || "정상" : "정상";
+  return row && row.score >= 30 ? row.driver || "正常" : "正常";
 }
 function routeRisk(rm: RiskMap, R: GRoute, h: number): number {
   let m = 0;
@@ -88,9 +88,9 @@ function routeRisk(rm: RiskMap, R: GRoute, h: number): number {
   return m;
 }
 function firstAlert(rm: RiskMap, key: string): string {
-  for (let i = 0; i < HDAYS.length; i++) if ((rm[key]?.[HDAYS[i]]?.score ?? 0) >= 60) return `경보 ${HLBL[i]}`;
-  for (let i = 0; i < HDAYS.length; i++) if ((rm[key]?.[HDAYS[i]]?.score ?? 0) >= 30) return `주의 ${HLBL[i]}`;
-  return "없음";
+  for (let i = 0; i < HDAYS.length; i++) if ((rm[key]?.[HDAYS[i]]?.score ?? 0) >= 60) return `警報 ${HLBL[i]}`;
+  for (let i = 0; i < HDAYS.length; i++) if ((rm[key]?.[HDAYS[i]]?.score ?? 0) >= 30) return `注意 ${HLBL[i]}`;
+  return "なし";
 }
 
 function finiteNumber(v: unknown): number | null {
@@ -551,7 +551,7 @@ export function RiskGlobe({ data, forecastQuality }: { data: ClimateRiskData; fo
         ctx.beginPath(); ctx.arc(p[0], p[1], base + pulse * 10, 0, 7); ctx.fillStyle = `rgba(${hexrgb(col)},0.10)`; ctx.fill();
         ctx.beginPath(); ctx.arc(p[0], p[1], base, 0, 7); ctx.fillStyle = `rgba(${hexrgb(col)},0.55)`; ctx.fill();
         ctx.lineWidth = 1.6; ctx.strokeStyle = `rgba(${hexrgb(col)},0.95)`; ctx.stroke();
-        label(KIND_LABEL[e.kind] || "경보", p[0], p[1] - base - 7);
+        label(KIND_LABEL[e.kind] || "警報", p[0], p[1] - base - 7);
         eventHit.push({ id: e.id, x: p[0], y: p[1], r: base + 8 });
       }
 
@@ -677,15 +677,15 @@ export function RiskGlobe({ data, forecastQuality }: { data: ClimateRiskData; fo
   const selTrackLabel = selTrackPosition
     ? selTrackPosition.label || `${HLBL[hIdx]} ${TRACK_POSITION_LABEL} ${formatLonLat(selTrackPosition.point)}`
     : selTrackMissing ? TRACK_MISSING_LABEL : null;
-  const qualityIssue = horizonQuality.issues[0] ?? `자산 예보 ${horizonQuality.rows}/${horizonQuality.expectedRows}개 수신`;
+  const qualityIssue = horizonQuality.issues[0] ?? `拠点の予報 ${horizonQuality.rows}/${horizonQuality.expectedRows} 件を受信`;
 
   return (
     <div className="risk-globe">
       <div className="rg-controls">
-        <button className="rg-spin" onClick={() => setZoom((z) => clampZoom(z / 1.3))} aria-label="축소" title="축소">－</button>
-        <button className="rg-spin" onClick={() => setZoom((z) => clampZoom(z * 1.3))} aria-label="확대" title="확대">＋</button>
-        <button className="rg-spin" data-on={spinOn} onClick={() => setSpinOn((v) => !v)}>↻ 회전</button>
-        <div className="rg-horizon" role="group" aria-label="예보 시점">
+        <button className="rg-spin" onClick={() => setZoom((z) => clampZoom(z / 1.3))} aria-label="縮小" title="縮小">－</button>
+        <button className="rg-spin" onClick={() => setZoom((z) => clampZoom(z * 1.3))} aria-label="拡大" title="拡大">＋</button>
+        <button className="rg-spin" data-on={spinOn} onClick={() => setSpinOn((v) => !v)}>↻ 回転</button>
+        <div className="rg-horizon" role="group" aria-label="予報の時点">
           {HLBL.map((lbl, i) => (
             <button key={lbl} aria-pressed={hIdx === i} onClick={() => setHIdx(i)}>{lbl}</button>
           ))}
@@ -697,23 +697,23 @@ export function RiskGlobe({ data, forecastQuality }: { data: ClimateRiskData; fo
           <canvas ref={canvasRef} className="rg-canvas" />
           <div className="rg-legend">
             <div className="rg-lrow">
-              <span className="rg-sw" style={{ background: "var(--g)" }} />정상
-              <span className="rg-sw" style={{ background: "var(--a)" }} />주의
-              <span className="rg-sw" style={{ background: "var(--r)" }} />경보
+              <span className="rg-sw" style={{ background: "var(--g)" }} />正常
+              <span className="rg-sw" style={{ background: "var(--a)" }} />注意
+              <span className="rg-sw" style={{ background: "var(--r)" }} />警報
             </div>
             <div className="rg-lrow">
-              <span className="rg-sw" style={{ width: 8, height: 8 }} />항만&nbsp;
-              <span className="rg-dia" />초크&nbsp;
-              <span className="rg-sq" />철도&nbsp;
-              <span className="rg-ring" />결빙
+              <span className="rg-sw" style={{ width: 8, height: 8 }} />港湾&nbsp;
+              <span className="rg-dia" />関門&nbsp;
+              <span className="rg-sq" />鉄道&nbsp;
+              <span className="rg-ring" />結氷
             </div>
           </div>
-          <div className="rg-hint">드래그 회전 · 휠 확대/축소 · 클릭으로 선택·회전 토글</div>
+          <div className="rg-hint">ドラッグで回転 · ホイールで拡大縮小 · クリックで選択・回転切替</div>
         </div>
 
         <aside className="rg-panel">
           <div>
-            <div className="rg-ptag">전 세계 자산 요약 · {HLBL[hIdx]}{hIdx > 0 ? " 예보" : ""}</div>
+            <div className="rg-ptag">全拠点のサマリー · {HLBL[hIdx]}{hIdx > 0 ? " 予報" : ""}</div>
             <div className="rg-summary">
               <div className="rg-stat r"><div className="rg-n">{counts.r}</div><div className="rg-l">경보</div></div>
               <div className="rg-stat a"><div className="rg-n">{counts.a}</div><div className="rg-l">주의</div></div>

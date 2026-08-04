@@ -54,7 +54,7 @@ function NewsPage() {
 
   // 기간 세그먼트는 클라이언트 측 최신성 필터(전체=비필터)로 동작 — 초기 렌더는 항상 "전체"라
   // SSR/하이드레이션 불일치가 없다. 카테고리는 URL(cat)로 서버 측 필터된다.
-  const [period, setPeriod] = useState("전체");
+  const [period, setPeriod] = useState("すべて");
   const items = filterByPeriod(allItems, period);
 
   // "이번 주 주목" = 현재 노출 목록의 최신 대표 헤드라인(실데이터). 별도 큐레이션 소스가 없으므로
@@ -120,7 +120,7 @@ function NewsPage() {
           <div className="mx-auto max-w-[1280px] px-4 py-10 lg:px-6 lg:py-14">
             {/* Section label */}
             <SectionRule
-              label={period === "전체" ? "주요 기사" : `${period} · 주요 기사`}
+              label={period === "すべて" ? "主要記事" : `${period} · 主要記事`}
               eyebrow="Top Stories"
             />
 
@@ -440,15 +440,15 @@ function Byline({ item, className = "" }: { item: NewsItem; className?: string }
 /** 기간 세그먼트(전체/오늘/이번 주/이번 달) — 클라이언트 측 최신성 필터.
  *  "전체"는 비필터라 초기 SSR 렌더에서 Date 호출이 없어 하이드레이션 불일치가 없다. */
 function filterByPeriod(items: NewsItem[], period: string): NewsItem[] {
-  if (period === "전체") return items;
+  if (period === "すべて") return items;
   const today = todayKST(); // "YYYY-MM-DD" (KST)
   return items.filter((n) => {
     if (!n.published_at) return false;
     const pub = new Date(n.published_at).toLocaleDateString("sv-SE", { timeZone: "Asia/Seoul" });
-    if (period === "오늘") return pub === today;
+    if (period === "今日") return pub === today;
     const diff = daysBetween(pub, today);
-    if (period === "이번 주") return diff >= 0 && diff <= 7;
-    if (period === "이번 달") return diff >= 0 && diff <= 31;
+    if (period === "今週") return diff >= 0 && diff <= 7;
+    if (period === "今月") return diff >= 0 && diff <= 31;
     return true;
   });
 }

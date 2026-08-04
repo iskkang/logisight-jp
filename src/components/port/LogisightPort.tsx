@@ -22,7 +22,7 @@ import {
 const WRAP = "mx-auto w-full max-w-[1240px] px-4 min-[640px]:px-7";
 const CARD = "rounded-[14px] border border-[#d8dfe9] bg-[#f4f7fb] shadow-[0_1px_2px_rgba(16,24,40,0.04)]";
 const CARD_H = "transition-[transform,border-color,box-shadow] duration-200 hover:-translate-y-0.5 hover:border-[#c8d2df] hover:shadow-[0_14px_30px_-20px_rgba(16,24,40,0.26)]";
-const NA = "데이터 수집 중";
+const NA = "データ収集中";
 
 const STYLE = `
 .lsgp-root{font-family:"Noto Sans JP","Noto Sans JP",system-ui,-apple-system,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;-webkit-font-smoothing:antialiased;letter-spacing:-.01em}
@@ -48,7 +48,7 @@ function fmtTeu(v: number | null | undefined): string {
 }
 function fmtDwell(v: number | null | undefined): string {
   if (v == null || !Number.isFinite(v)) return "—";
-  return `${v.toFixed(1)}일`;
+  return `${v.toFixed(1)}日`;
 }
 function highestPortDelay(ports: PortRiskRow[]): PortRiskRow | null {
   return [...ports].sort((a, b) => (b.delayPercent ?? -1) - (a.delayPercent ?? -1))[0] ?? null;
@@ -111,10 +111,10 @@ function Hero({ onToggleImpact, impactOpen }: { onToggleImpact: () => void; impa
         <div>
           <span className="text-[11px] font-bold uppercase tracking-[0.22em] text-[#2dd4bf]">Port Risk Intelligence</span>
           <h1 className="mt-3.5 text-[clamp(34px,4.6vw,52px)] font-extrabold leading-[1.05] tracking-[-0.035em] text-[#e9eef7]">포트 <span className="text-[#2dd4bf]">리스크</span></h1>
-          <p className="mt-4 max-w-[560px] text-[15.5px] leading-[1.6] text-[#93a1b7]">항만 혼잡·해상 병목·주요 해협·호르무즈 동향을 한 화면에서 모니터링합니다.</p>
+          <p className="mt-4 max-w-[560px] text-[15.5px] leading-[1.6] text-[#93a1b7]">港湾の混雑、海上のボトルネック、主要海峡、ホルムズ海峡の動向を一画面で監視します。</p>
         </div>
         <button type="button" onClick={onToggleImpact} className="whitespace-nowrap rounded-[9px] border border-[#78a0cd33] bg-white/5 px-5 py-3 text-[14px] font-semibold text-[#e9eef7] transition-transform hover:-translate-y-px hover:border-[#2dd4bf73] hover:bg-white/10">
-          {impactOpen ? "분석 닫기" : "내 화물 영향 분석 →"}
+          {impactOpen ? "分析を閉じる" : "自社貨物への影響を見る →"}
         </button>
       </div>
     </section>
@@ -203,9 +203,9 @@ export function LogisightPort() {
           {/* GEO: 보이지 않는 Article JSON-LD만 유지 (시각 블록 제거) */}
           <GeoArticleSchema
             article={{
-              headline: "포트 리스크 인텔리전스 — 항만·초크포인트·규제 모니터",
+              headline: "港湾リスク — 港湾・チョークポイント・規制の監視",
               description:
-                "항만 혼잡·해상 병목·주요 해협·규제 이벤트 리스크를 한 화면에서 모니터링하는 대시보드.",
+                "港湾の混雑、海上のボトルネック、主要海峡、規制イベントのリスクを一画面で監視するダッシュボード。",
               path: "/port-risk",
               datePublished: geo.refDate,
               dateModified: geo.refDate,
@@ -223,16 +223,16 @@ export function LogisightPort() {
           {impactOpen && <CargoImpactPanel />}
 
           {/* KPIs */}
-          <Sect title="실시간 리스크 개요" desc="직접 수집한 항만 혼잡·주요 해협 TEU·호르무즈 통항 매크로 지표를 한 화면에 표시합니다.">
+          <Sect title="リスクの概況" desc="港湾の混雑、主要海峡の通過 TEU、ホルムズ海峡の通航をまとめて表示します。">
             <div className="grid grid-cols-1 gap-3.5 min-[640px]:grid-cols-2 min-[1080px]:grid-cols-4">
               <KpiCard
-                lab="최고 항만 지연율"
+                lab="最大の港湾遅延率"
                 val={topPort ? fmtPct(topPort.delayPercent) : NA}
                 tone="red"
                 sub={topPort ? `${topPort.name} · 혼잡도 ${fmtNum(topPort.congestion, 1)} · dwell ${fmtDwell(topPort.importDwell)}` : NA}
               />
               <KpiCard
-                lab="주요 해협 최대 변동"
+                lab="主要海峡の最大変動"
                 val={topChoke ? fmtPct(topChoke.wowPct) : NA}
                 tone="red"
                 sub={topChoke ? `${topChoke.name} · ${fmtTeu(topChoke.latestTotalTeu)} TEU · 기준 ${topChoke.asOf ?? "—"}` : NA}
@@ -248,7 +248,7 @@ export function LogisightPort() {
                 sparkColor="#0d9488"
               />
               <KpiCard
-                lab="호르무즈 일별 통항"
+                lab="ホルムズ海峡の日次通航"
                 val={`${hormuz.crossingCount}척`}
                 sub={`${hormuz.crossingDate} · 유조선 ${hormuz.tankerCount} · 벌크 ${hormuz.bulkCount}`}
               />
@@ -257,7 +257,7 @@ export function LogisightPort() {
           </Sect>
 
           {/* Chokepoints */}
-          <Sect title="주요 해협 TEU 흐름" desc="Suez · Panama · Cape · Malacca · Hormuz의 방향별 통과 TEU와 최근 통항 추이.">
+          <Sect title="主要海峡の TEU の流れ" desc="Suez・Panama・Cape・Malacca・Hormuz の方向別通過 TEU と直近の通航推移。">
             {risk.chokepoints.length === 0 ? (
               <div className={`px-4 py-8 text-center text-sm text-[#828d9d] ${CARD}`}>{NA}</div>
             ) : (
@@ -272,9 +272,9 @@ export function LogisightPort() {
                         <Spark vals={k.spark} color={up ? "#16a34a" : "#dc2626"} className="h-7 w-20" />
                       </div>
                       <div className="my-3.5 flex justify-between gap-2">
-                        <Stat label="최신" v={`${fmtTeu(k.latestTotalTeu)}`} />
+                        <Stat label="最新" v={`${fmtTeu(k.latestTotalTeu)}`} />
                         <Stat label="WoW" v={fmtPct(k.wowPct)} tone={up ? "up" : "down"} />
-                        <Stat label="8주 평균" v={`${fmtTeu(k.avg8w)}`} />
+                        <Stat label="8週平均" v={`${fmtTeu(k.avg8w)}`} />
                       </div>
                       {k.directions.map((d) => (
                         <Bar key={d.code} label={`${d.name} (${d.code})`} v={fmtTeu(d.value)} pct={Math.round(((d.value ?? 0) / sum) * 100)} />
@@ -294,7 +294,7 @@ export function LogisightPort() {
           <section className="pt-[30px]">
             <div className="grid grid-cols-1 items-start gap-[18px] min-[1080px]:grid-cols-2">
               <div className={`p-[22px] ${CARD}`}>
-                <div><div className="text-[16px] font-bold text-[#1a2433]">호르무즈 상황판</div><div className="mt-[3px] text-[12px] text-[#828d9d]">Persian Gulf 선박 수와 Strait of Hormuz 일별 통항 상세</div></div>
+                <div><div className="text-[16px] font-bold text-[#1a2433]">ホルムズ海峡の状況</div><div className="mt-[3px] text-[12px] text-[#828d9d]">Persian Gulf 선박 수와 Strait of Hormuz 일별 통항 상세</div></div>
                 <DataMeta className="mt-2" source={DATASET_SOURCE.shipfinder} cadence="일간" unit="척" method="Persian Gulf 선박 수 · Strait of Hormuz 통항" />
                 <div className="my-[18px] grid grid-cols-1 gap-x-[18px] gap-y-3.5 min-[640px]:grid-cols-2">
                   <div><div className="text-[11px] text-[#828d9d]">Gulf 선박 수</div><div className="mt-[3px] lsg-mono text-[19px] font-bold text-[#0d9488]">{fmtNum(hormuz.gulfShipCount)}</div><div className="mt-0.5 lsg-mono text-[11px] text-[#828d9d]">7일 변화 {fmtPct(hormuz.gulfShipWowPct)}</div></div>
@@ -320,7 +320,7 @@ export function LogisightPort() {
               </div>
 
               <div className={`p-[22px] ${CARD}`}>
-                <div className="mb-1.5 text-[16px] font-bold text-[#1a2433]">호르무즈 최근 뉴스</div>
+                <div className="mb-1.5 text-[16px] font-bold text-[#1a2433]">ホルムズ海峡の最新ニュース</div>
                 {hormuz.news.length === 0 ? (
                   <p className="py-6 text-center text-[12.5px] text-[#828d9d]">{NA}</p>
                 ) : (
@@ -340,7 +340,7 @@ export function LogisightPort() {
           </section>
 
           {/* Port table */}
-          <Sect title="전세계 항만 Top 20" desc="지연율 75% 이상은 alert, 60% 이상은 caution으로 표시. dwell time과 TEU MoM을 같은 항만에서 비교합니다.">
+          <Sect title="世界の港湾 Top 20" desc="遅延率 75% 以上を alert、60% 以上を caution として表示。dwell time と TEU MoM を同じ港湾で比較します。">
             {risk.ports.length === 0 ? (
               <div className={`px-4 py-8 text-center text-sm text-[#828d9d] ${CARD}`}>{NA}</div>
             ) : (
@@ -348,8 +348,8 @@ export function LogisightPort() {
                 <table className="w-full min-w-[840px] border-collapse text-[13px]">
                   <thead>
                     <tr className="bg-[#eaeef4]">
-                      {["Rank", "항만", "지연율"].map((h) => (<th key={h} className="border-b border-[#d8dfe9] px-3.5 py-[13px] text-left text-[10.5px] font-bold uppercase tracking-[0.06em] text-[#828d9d]">{h}</th>))}
-                      {["혼잡도", "Import dwell", "Export dwell", "TS dwell", "선석 선박", "TEU MoM"].map((h) => (<th key={h} className="border-b border-[#d8dfe9] px-3.5 py-[13px] text-right text-[10.5px] font-bold uppercase tracking-[0.06em] text-[#828d9d]">{h}</th>))}
+                      {["Rank", "港湾", "遅延率"].map((h) => (<th key={h} className="border-b border-[#d8dfe9] px-3.5 py-[13px] text-left text-[10.5px] font-bold uppercase tracking-[0.06em] text-[#828d9d]">{h}</th>))}
+                      {["混雑度", "Import dwell", "Export dwell", "TS dwell", "着岸船舶", "TEU MoM"].map((h) => (<th key={h} className="border-b border-[#d8dfe9] px-3.5 py-[13px] text-right text-[10.5px] font-bold uppercase tracking-[0.06em] text-[#828d9d]">{h}</th>))}
                     </tr>
                   </thead>
                   <tbody>
@@ -373,7 +373,7 @@ export function LogisightPort() {
           </Sect>
 
           {/* Macros */}
-          <Sect title="글로벌 TEU·운임 매크로" desc="Global exports, Shanghai freight index, Global TEU liftings를 최신 기준일과 변화율로 표시합니다.">
+          <Sect title="世界の TEU・運賃マクロ" desc="Global exports、Shanghai freight index、Global TEU liftings を最新基準日と変化率で表示します。">
             {risk.macroTrends.length === 0 ? (
               <div className={`px-4 py-8 text-center text-sm text-[#828d9d] ${CARD}`}>{NA}</div>
             ) : (

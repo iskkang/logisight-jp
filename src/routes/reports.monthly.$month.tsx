@@ -17,8 +17,8 @@ export const Route = createFileRoute("/reports/monthly/$month")({
   },
   head: ({ loaderData, params }) =>
     seoHead({
-      title: `${loaderData?.title ?? "월간 리포트"} — Logisight`,
-      description: "Logisight가 매월 발행하는 물류 시장 인텔리전스 리포트.",
+      title: `${loaderData?.title ?? "月次レポート"} — Logisight`,
+      description: "Logisight が毎月発行するマーケットレポート。",
       path: `/reports/monthly/${params.month}`,
     }),
   component: MonthlyReportPage,
@@ -79,11 +79,11 @@ function MonthlyReportPage() {
         </a>
 
         <p className="mt-4 text-[12px] text-white/40">
-          월간 리포트는 PDF로 제공됩니다. 주간 브리핑은{" "}
+          レポートは PDF でご覧いただけます。一覧は{" "}
           <Link to="/reports" className="text-[#5eead4] hover:underline">
-            리포트 목록
+            レポート一覧
           </Link>
-          에서 웹으로 읽을 수 있습니다.
+          からご確認いただけます。
         </p>
       </div>
       <HomeFooter />
