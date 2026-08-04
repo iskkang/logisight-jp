@@ -9,7 +9,6 @@ const NAV = [
   { to: "/rates", label: "運賃" },
   { to: "/ports", label: "港湾" },
   { to: "/trade", label: "貿易" },
-  { to: "/climate", label: "気象" },
   { to: "/reports", label: "レポート" },
 ] as const;
 

@@ -11,8 +11,6 @@ const SUB_GNB = [
   { to: "/rates", label: "運賃" },
   { to: "/ports", label: "港湾" },
   { to: "/trade", label: "貿易" },
-  { to: "/climate", label: "気象" },
-  { to: "/port-risk", label: "リスク" },
 ] as const;
 
 /** インサイトの入口。/dashboard は日本版で持たないため運賃を先頭に置く。 */

@@ -18,8 +18,6 @@ const SUB_GNB = [
   { to: "/rates", label: "運賃" },
   { to: "/ports", label: "港湾" },
   { to: "/trade", label: "貿易" },
-  { to: "/climate", label: "気象" },
-  { to: "/port-risk", label: "リスク" },
 ] as const;
 
 // サブ GNB を出す領域。
@@ -29,7 +27,7 @@ export const DASHBOARD_PREFIXES = SUB_GNB.map((i) => i.to);
  * ダークテーマに対応済みのページだけ。サブ GNB に載っているかどうかとは別物である —
  * /ports・/climate はライト専用の配色で、ダークにすると本文が白飛びする。
  */
-const DARK_CAPABLE = ["/rates", "/trade", "/port-risk"] as const;
+const DARK_CAPABLE = [] as const;
 
 function matches(pathname: string, prefixes: readonly string[]): boolean {
   return prefixes.some((p) => pathname === p || pathname.startsWith(`${p}/`));

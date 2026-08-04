@@ -8,8 +8,6 @@
 - [運賃](https://jpn.logisight.net/rates): 企業向けサービス価格指数(SPPI)の運輸関連系列。円ベースと契約通貨ベースを併記
 - [港湾](https://jpn.logisight.net/ports): 主要6港(東京・横浜・名古屋・神戸・大阪・川崎)の外国貿易コンテナ取扱量
 - [貿易](https://jpn.logisight.net/trade): 相手国別・品目別の輸出入
-- [気象](https://jpn.logisight.net/climate): 港湾・海峡の気象リスクと影響航路
-- [リスク](https://jpn.logisight.net/port-risk): 港湾混雑・チョークポイント・規制イベント
 - [レポート](https://jpn.logisight.net/reports): 月次マーケットレポート
 - [データの方法論](https://jpn.logisight.net/methodology): 出典・単位・更新頻度と表現の原則
 

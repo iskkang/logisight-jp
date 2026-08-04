@@ -8,9 +8,7 @@ export type Crumb = { label: string; to?: string };
 const DASH_SUB: Record<string, string> = {
   "/rates": "運賃",
   "/ports": "港湾",
-  "/port-risk": "リスク",
   "/trade": "貿易",
-  "/climate": "気象",
 };
 
 const HOME: Crumb = { label: "ホーム", to: "/" };

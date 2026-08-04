@@ -1,14 +1,13 @@
 import { Link } from "@tanstack/react-router";
 
 // 日本の業界紙のフッター。会社情報と出典を隠さず並べる — 信頼の手掛かりを前に出す。
-const COLS: { title: string; items: { label: string; to: "/rates" | "/ports" | "/trade" | "/climate" | "/port-risk" | "/reports" | "/news" | "/about" | "/methodology" | "/faq" | "/privacy" }[] }[] = [
+const COLS: { title: string; items: { label: string; to: "/rates" | "/ports" | "/trade" | "/reports" | "/news" | "/about" | "/methodology" | "/faq" | "/privacy" }[] }[] = [
   {
     title: "データ",
     items: [
       { label: "運賃(SPPI)", to: "/rates" },
       { label: "港湾", to: "/ports" },
       { label: "貿易", to: "/trade" },
-      { label: "気象リスク", to: "/climate" },
     ],
   },
   {
