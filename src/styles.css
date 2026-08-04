@@ -488,3 +488,14 @@
     system-ui, "Apple SD Gothic Neo", "Malgun Gothic", "Segoe UI", Roboto,
     sans-serif !important;
 }
+
+/* ブランドのワードマーク「Logi(s)ight」の s。
+   もともとページ毎の <style> にしか定義がなく、その定義を持つコンポーネントを
+   差し替えた時点でホーム等から消え、暗い文字色を継承してヘッダーに溶けた。
+   ロゴは全ページで使うのでグローバルに置く。 */
+.lsg-ls {
+  background: linear-gradient(95deg, #fff 35%, #2dd4bf);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
