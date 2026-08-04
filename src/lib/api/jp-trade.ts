@@ -51,6 +51,38 @@ export type JpTradeCommodity = {
   sharePct: number;
 };
 
+/** jp_trade_by_commodity の1行。品目 × 相手国の粒度である。 */
+export type CommodityRow = {
+  direction: string;
+  commodity_name: string;
+  value_jpy: number | null;
+};
+
+/**
+ * 品目別に集計する。
+ *
+ * このテーブルは品目 × 相手国の粒度で、2026-06 だけで 2,907 行ある。
+ * 集計せずに行をそのまま並べると、同じ品目が何十回も出て、しかも1国あたりの
+ * 金額は小さいため表示が「0億円 / 0.0%」で埋まる。実際にそうなっていた。
+ */
+export function aggregateCommodities(
+  rows: CommodityRow[],
+  direction: string,
+): JpTradeCommodity[] {
+  const sum = new Map<string, number>();
+  for (const r of rows) {
+    if (r.direction !== direction) continue;
+    const v = Number(r.value_jpy);
+    if (!Number.isFinite(v) || v <= 0) continue;
+    sum.set(r.commodity_name, (sum.get(r.commodity_name) ?? 0) + v);
+  }
+  const total = [...sum.values()].reduce((a, b) => a + b, 0);
+  if (total === 0) return [];
+  return [...sum.entries()]
+    .map(([name, valueJpy]) => ({ name, valueJpy, sharePct: (valueJpy / total) * 100 }))
+    .sort((a, b) => b.valueJpy - a.valueJpy);
+}
+
 export type JpTradeData = {
   period: string | null; // "2026-06"
   total: JpTradeCountry | null;

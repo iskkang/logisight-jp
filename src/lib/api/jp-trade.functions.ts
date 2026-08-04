@@ -4,7 +4,13 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 import { supabasePublicServer } from "@/integrations/supabase/public.server";
 import { setResponseHeader } from "@tanstack/react-start/server";
 import { PUBLIC_SWR_CACHE } from "@/lib/cache-control";
-import { countryJa, type JpTradeCommodity, type JpTradeCountry, type JpTradeData } from "./jp-trade";
+import {
+  aggregateCommodities,
+  countryJa,
+  type CommodityRow,
+  type JpTradeCountry,
+  type JpTradeData,
+} from "./jp-trade";
 
 // jp_* は生成済み Database 型にまだ無い → レポ慣例どおりキャストして使う。
 const sb = supabasePublicServer as unknown as SupabaseClient;
@@ -18,14 +24,6 @@ type CountryRow = {
   import_jpy: number | null;
   yoy_export_pct: number | null;
   yoy_import_pct: number | null;
-};
-
-type CommodityRow = {
-  direction: string;
-  commodity_name: string;
-  year: number;
-  month: number;
-  value_jpy: number | null;
 };
 
 const num = (v: number | null) => (v === null ? null : Number(v));
@@ -43,19 +41,6 @@ function toCountry(r: CountryRow): JpTradeCountry {
   };
 }
 
-/** 方向ごとに構成比を出す。分母はその月・その方向の合計。 */
-function toItems(rows: CommodityRow[], direction: string): JpTradeCommodity[] {
-  const mine = rows.filter((r) => r.direction === direction && Number(r.value_jpy) > 0);
-  const total = mine.reduce((a, r) => a + Number(r.value_jpy), 0);
-  if (total === 0) return [];
-  return mine
-    .map((r) => ({
-      name: r.commodity_name,
-      valueJpy: Number(r.value_jpy),
-      sharePct: (Number(r.value_jpy) / total) * 100,
-    }))
-    .sort((a, b) => b.valueJpy - a.valueJpy);
-}
 
 export const getJpTrade = createServerFn({ method: "GET" }).handler(
   async (): Promise<JpTradeData> => {
@@ -88,22 +73,29 @@ export const getJpTrade = createServerFn({ method: "GET" }).handler(
       .sort((a, b) => (b.exportJpy ?? 0) - (a.exportJpy ?? 0))
       .slice(0, 10);
 
-    const { data: iData, error: iErr } = await sb
-      .from("jp_trade_by_commodity")
-      .select("direction,commodity_name,year,month,value_jpy")
-      .eq("year", year)
-      .eq("month", month)
-      .limit(1000);
-    if (iErr) throw new Error(iErr.message);
-
-    const items = (iData ?? []) as CommodityRow[];
+    // 品目 × 相手国の粒度なので1か月でも数千行になる。PostgREST の既定上限(1000)で
+    // 黙って切れると合計が過少になるため、必ずページングして全件取る。
+    const items: CommodityRow[] = [];
+    const PAGE = 1000;
+    for (let from = 0; ; from += PAGE) {
+      const { data: iData, error: iErr } = await sb
+        .from("jp_trade_by_commodity")
+        .select("direction,commodity_name,value_jpy")
+        .eq("year", year)
+        .eq("month", month)
+        .range(from, from + PAGE - 1);
+      if (iErr) throw new Error(iErr.message);
+      const page = (iData ?? []) as CommodityRow[];
+      items.push(...page);
+      if (page.length < PAGE) break;
+    }
 
     return {
       period,
       total: totalRow ? toCountry(totalRow) : null,
       countries,
-      exportItems: toItems(items, "export"),
-      importItems: toItems(items, "import"),
+      exportItems: aggregateCommodities(items, "export"),
+      importItems: aggregateCommodities(items, "import"),
     };
   },
 );
