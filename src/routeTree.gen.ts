@@ -27,6 +27,7 @@ import { Route as FaqRouteImport } from './routes/faq'
 import { Route as EurasiaRouteImport } from './routes/eurasia'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as ClimateRouteImport } from './routes/climate'
+import { Route as BenchmarkRouteImport } from './routes/benchmark'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ReportsIndexRouteImport } from './routes/reports.index'
@@ -130,6 +131,11 @@ const ClimateRoute = ClimateRouteImport.update({
   path: '/climate',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BenchmarkRoute = BenchmarkRouteImport.update({
+  id: '/benchmark',
+  path: '/benchmark',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AboutRoute = AboutRouteImport.update({
   id: '/about',
   path: '/about',
@@ -194,6 +200,7 @@ const ApiCronIndexnowRoute = ApiCronIndexnowRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/benchmark': typeof BenchmarkRoute
   '/climate': typeof ClimateRoute
   '/dashboard': typeof DashboardRoute
   '/eurasia': typeof EurasiaRoute
@@ -226,6 +233,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/benchmark': typeof BenchmarkRoute
   '/climate': typeof ClimateRoute
   '/dashboard': typeof DashboardRoute
   '/eurasia': typeof EurasiaRoute
@@ -257,6 +265,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/benchmark': typeof BenchmarkRoute
   '/climate': typeof ClimateRoute
   '/dashboard': typeof DashboardRoute
   '/eurasia': typeof EurasiaRoute
@@ -291,6 +300,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/about'
+    | '/benchmark'
     | '/climate'
     | '/dashboard'
     | '/eurasia'
@@ -323,6 +333,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/about'
+    | '/benchmark'
     | '/climate'
     | '/dashboard'
     | '/eurasia'
@@ -353,6 +364,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/about'
+    | '/benchmark'
     | '/climate'
     | '/dashboard'
     | '/eurasia'
@@ -386,6 +398,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
+  BenchmarkRoute: typeof BenchmarkRoute
   ClimateRoute: typeof ClimateRoute
   DashboardRoute: typeof DashboardRoute
   EurasiaRoute: typeof EurasiaRoute
@@ -538,6 +551,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ClimateRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/benchmark': {
+      id: '/benchmark'
+      path: '/benchmark'
+      fullPath: '/benchmark'
+      preLoaderRoute: typeof BenchmarkRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/about': {
       id: '/about'
       path: '/about'
@@ -657,6 +677,7 @@ const ReportsRouteWithChildren =
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
+  BenchmarkRoute: BenchmarkRoute,
   ClimateRoute: ClimateRoute,
   DashboardRoute: DashboardRoute,
   EurasiaRoute: EurasiaRoute,

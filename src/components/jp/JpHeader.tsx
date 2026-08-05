@@ -12,6 +12,7 @@ const NAV = [
   { to: "/news", label: "ニュース" },
   { to: "/dashboard", label: "総合" },
   { to: "/rates", label: "運賃" },
+  { to: "/benchmark", label: "ベンチマーク" },
   { to: "/ports", label: "港湾" },
   { to: "/trade", label: "貿易" },
   { to: "/rail", label: "鉄道" },
