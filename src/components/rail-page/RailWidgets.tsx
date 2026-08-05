@@ -6,7 +6,7 @@ import { formatPublishedAt, type NewsItem } from "@/lib/api/news";
 import { DataMeta } from "@/components/ui/DataMeta";
 import { INDEX_SOURCE } from "@/lib/dataSources";
 
-const WRAP = "mx-auto w-full max-w-[1240px] px-4 min-[640px]:px-7";
+const WRAP = "mx-auto w-full max-w-[1120px] px-4";
 
 function fmtPct(v: number | null | undefined) {
   if (v == null || Number.isNaN(v)) return "—";

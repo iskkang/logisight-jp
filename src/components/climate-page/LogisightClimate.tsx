@@ -9,7 +9,6 @@ import { useSuspenseQuery } from "@tanstack/react-query";
 
 import { HomeNav } from "@/components/home/HomeNav";
 import { HomeFooter } from "@/components/home/HomeFooter";
-import { InsightSubNav } from "@/components/insight/InsightSubNav";
 import { RiskGlobe } from "@/components/climate/RiskGlobe";
 import {
   climateRiskQueryOptions,
@@ -32,7 +31,7 @@ import { GeoArticleSchema } from "@/components/geo/GeoArticleSchema";
 import { gateEvent, type GateVerdict, type GateTier } from "@/lib/climate-gate";
 
 /* ============================ STYLE ============================ */
-const WRAP = "mx-auto w-full max-w-[1240px] px-4 min-[640px]:px-7";
+const WRAP = "mx-auto w-full max-w-[1120px] px-4";
 const CARD = "rounded-[14px] border border-[#d8dfe9] bg-[#f4f7fb] shadow-[0_1px_2px_rgba(16,24,40,0.04)]";
 const CHIP = "rounded-full border border-[#d8dfe9] bg-[#eef1f6] px-[9px] py-[3px] text-[11px] text-[#828d9d]";
 
@@ -735,7 +734,6 @@ export function LogisightClimate() {
       <style>{STYLE}</style>
       <CriticalBanner events={data.events} routes={routesG} nodes={nodes} />
       <HomeNav active="insight" />
-      <InsightSubNav />
       <HeroAndGlobe data={globeData} pills={pills} forecastQuality={forecastQuality} />
 
       <div className="relative z-[2] -mt-7 rounded-t-[28px] bg-[#e6eaf1] pb-2.5" style={{ boxShadow: "0 -24px 60px -34px rgba(0,0,0,.7)" }}>

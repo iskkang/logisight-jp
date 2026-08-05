@@ -1,7 +1,7 @@
 // 철도 허브 지역 탭바 — 미주 · 유라시아. 현재 경로로 active 결정.
 import { Link, useRouterState } from "@tanstack/react-router";
 
-const WRAP = "mx-auto w-full max-w-[1240px] px-4 min-[640px]:px-7";
+const WRAP = "mx-auto w-full max-w-[1120px] px-4";
 
 const TABS = [
   { to: "/rail/americas", label: "北米", ready: true },

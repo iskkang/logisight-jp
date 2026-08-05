@@ -7,7 +7,6 @@ import { CartesianGrid, Line, LineChart, ReferenceLine, ResponsiveContainer, Too
 
 import { HomeNav } from "@/components/home/HomeNav";
 import { HomeFooter } from "@/components/home/HomeFooter";
-import { InsightSubNav } from "@/components/insight/InsightSubNav";
 import { publishedForecastsQueryOptions, forecastSeriesQueryOptions, MODULE_LABEL, type Forecast, type ForecastSeries } from "@/lib/api/forecasts";
 import { eurasiaRailBriefQueryOptions } from "@/lib/api/eurasia-rail-brief";
 import { GeoArticleSchema } from "@/components/geo/GeoArticleSchema";
@@ -26,7 +25,7 @@ import {
   type ForecastFilter,
 } from "@/components/forecasts/forecastUtils";
 
-const WRAP = "mx-auto w-full max-w-[1240px] px-4 min-[640px]:px-7";
+const WRAP = "mx-auto w-full max-w-[1120px] px-4";
 const CARD = "rounded-[14px] border border-[#d8dfe9] bg-[#f4f7fb] shadow-[0_1px_2px_rgba(16,24,40,0.04)]";
 const FONT = "Pretendard, system-ui, sans-serif";
 
@@ -456,7 +455,6 @@ export function LogisightForecast() {
     <div className="lsgf-root min-h-screen bg-[#070b16] text-[#1a2433]">
       <style>{STYLE}</style>
       <HomeNav active="insight" />
-      <InsightSubNav />
       <Hero kpis={kpis} lastUpdated={lastUpdated} modules={modules} activeModule={search.mod ?? null} onModule={setMod} />
 
       <div className="relative z-[2] -mt-7 rounded-t-[28px] bg-[#e6eaf1] pb-2.5" style={{ boxShadow: "0 -24px 60px -34px rgba(0,0,0,.7)" }}>

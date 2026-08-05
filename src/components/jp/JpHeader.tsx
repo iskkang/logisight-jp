@@ -7,15 +7,23 @@ import { signOut, takeOAuthError, useSession } from "@/lib/auth";
 
 // ヘッダー。白地・細い罫線に、現在地を藍の下線で示す。
 // メニューは隠さず一列に並べる — 日本の業界メディアの導線に合わせる。
+//
+// 全ページでこの一列だけを出す。以前は一部のページにだけ濃色の INSIGHT バーが
+// 重なって出ており、ページを移ると導線が入れ替わって見えた。気象・リスク・見通しは
+// そのバーからしか行けず、上の一列には無かった。並びは
+// ニュース → 総合 → 分野4つ → リスク2つ → 分析の道具2つ → レポート。
 const NAV = [
   { to: "/", label: "ホーム" },
   { to: "/news", label: "ニュース" },
   { to: "/dashboard", label: "総合" },
   { to: "/rates", label: "運賃" },
-  { to: "/benchmark", label: "ベンチマーク" },
   { to: "/ports", label: "港湾" },
   { to: "/trade", label: "貿易" },
   { to: "/rail", label: "鉄道" },
+  { to: "/climate", label: "気象" },
+  { to: "/port-risk", label: "リスク" },
+  { to: "/benchmark", label: "ベンチマーク" },
+  { to: "/forecasts", label: "見通し" },
   { to: "/reports", label: "レポート" },
 ] as const;
 
@@ -38,19 +46,16 @@ export function JpHeader({ today }: { today: string }) {
           <span className="text-[22px] font-bold leading-none tracking-[-0.025em] text-[#0d2137]">
             Logi<span className="text-[#1857b8]">sight</span>
           </span>
-          <span className="hidden text-[11px] text-[#8b94a0] min-[600px]:inline">
-            物流インテリジェンス
-          </span>
         </Link>
 
-        <nav className="ml-2 hidden flex-1 items-center gap-0.5 min-[820px]:flex">
+        <nav className="ml-2 hidden flex-1 items-center gap-0.5 min-[1100px]:flex">
           {NAV.slice(1).map((n) => (
             <Link
               key={n.to}
               to={n.to}
-              className={`relative px-3 py-2 text-[13.5px] transition-colors ${
+              className={`relative px-2 py-2 text-[13.5px] transition-colors ${
                 active(n.to)
-                  ? "font-bold text-[#0d2137] after:absolute after:inset-x-3 after:-bottom-[13px] after:h-[2px] after:bg-[#1857b8]"
+                  ? "font-bold text-[#0d2137] after:absolute after:inset-x-2 after:-bottom-[13px] after:h-[2px] after:bg-[#1857b8]"
                   : "text-[#5b6672] hover:text-[#0d2137]"
               }`}
             >
@@ -65,7 +70,7 @@ export function JpHeader({ today }: { today: string }) {
 
         {/* SSR では session を知りようがないので、確定するまでは何も出さない。
             先に「ログイン」を描くと、ログイン済みの利用者に一瞬それが見える。 */}
-        <div className="ml-auto hidden items-center gap-2 min-[820px]:flex min-[1000px]:ml-4">
+        <div className="ml-auto hidden items-center gap-2 min-[1100px]:ml-4 min-[1100px]:flex">
           {loading ? null : session ? (
             <>
               <span className="max-w-[150px] truncate text-[12px] text-[#5b6672]" title={session.user.email ?? ""}>
@@ -103,14 +108,14 @@ export function JpHeader({ today }: { today: string }) {
           type="button"
           onClick={() => setOpen((v) => !v)}
           aria-label="メニューを開く"
-          className="ml-auto inline-flex h-9 w-9 items-center justify-center rounded-[6px] border border-[#e3e7ec] text-[#0d2137] min-[820px]:hidden"
+          className="ml-auto inline-flex h-9 w-9 items-center justify-center rounded-[6px] border border-[#e3e7ec] text-[#0d2137] min-[1100px]:hidden"
         >
           {open ? <X className="h-4.5 w-4.5" /> : <Menu className="h-4.5 w-4.5" />}
         </button>
       </div>
 
       {open && (
-        <nav className="border-t border-[#e3e7ec] min-[820px]:hidden">
+        <nav className="border-t border-[#e3e7ec] min-[1100px]:hidden">
           <div className="mx-auto max-w-[1120px] px-4 py-1.5">
             {NAV.map((n) => (
               <Link

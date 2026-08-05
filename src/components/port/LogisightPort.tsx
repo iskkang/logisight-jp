@@ -6,7 +6,6 @@ import type { ReactNode } from "react";
 
 import { HomeNav } from "@/components/home/HomeNav";
 import { HomeFooter } from "@/components/home/HomeFooter";
-import { InsightSubNav } from "@/components/insight/InsightSubNav";
 import { CargoImpactPanel } from "@/components/port/CargoImpactPanel";
 import { GeoArticleSchema } from "@/components/geo/GeoArticleSchema";
 import { DataMeta } from "@/components/ui/DataMeta";
@@ -19,7 +18,7 @@ import {
   type RiskSnapshot,
 } from "@/lib/api/risk";
 
-const WRAP = "mx-auto w-full max-w-[1240px] px-4 min-[640px]:px-7";
+const WRAP = "mx-auto w-full max-w-[1120px] px-4";
 const CARD = "rounded-[14px] border border-[#d8dfe9] bg-[#f4f7fb] shadow-[0_1px_2px_rgba(16,24,40,0.04)]";
 const CARD_H = "transition-[transform,border-color,box-shadow] duration-200 hover:-translate-y-0.5 hover:border-[#c8d2df] hover:shadow-[0_14px_30px_-20px_rgba(16,24,40,0.26)]";
 const NA = "データ収集中";
@@ -191,7 +190,6 @@ export function LogisightPort() {
     <div className="lsgp-root min-h-screen bg-[#070b16] text-[#1a2433]">
       <style>{STYLE}</style>
       <HomeNav active="insight" />
-      <InsightSubNav />
       <Hero onToggleImpact={() => setImpactOpen((v) => !v)} impactOpen={impactOpen} />
 
       <div className="relative z-[2] -mt-7 rounded-t-[28px] bg-[#e6eaf1] pb-2" style={{ boxShadow: "0 -24px 60px -34px rgba(0,0,0,.7)" }}>

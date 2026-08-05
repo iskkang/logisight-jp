@@ -6,7 +6,7 @@
 // · 보존 모드(집계 遅延 지수 / 수동 이슈 등)는 children으로 시트 아래에 렌더.
 // · 데이터는 operational TCR 레코드(source #1)에서 매핑.
 // · 자체 포함 스타일(.lsg-root). 공통 레이아웃 사용 시 showNav={false} + 푸터 중복 정리.
-//   - 공통 레이아웃에선 외부에서 HomeNav/InsightSubNav/HomeFooter로 감싼다(eurasia.tsx 참고).
+//   - 공통 레이아웃에선 외부에서 헤더/푸터로 감싼다.
 //   - children(보존 모드, Tailwind/proto Kit)이 .slot에 들어가므로 전역 리셋은 box-sizing만,
 //     --card/--ink는 .slot에서 앱 토큰으로 복원해 Kit 스타일 충돌을 막는다.
 //
