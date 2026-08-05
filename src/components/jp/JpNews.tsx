@@ -2,7 +2,7 @@ import { Link, useNavigate } from "@tanstack/react-router";
 import { useSuspenseQuery } from "@tanstack/react-query";
 
 import { JpPage } from "@/components/jp/JpPage";
-import { latestNewsQueryOptions, type NewsItem } from "@/lib/api/news";
+import { isInternalNewsItem, latestNewsQueryOptions, type NewsItem } from "@/lib/api/news";
 
 /** 記事のカテゴリ。DB の値と一致していないと絞り込みが何も返さない。 */
 const CATEGORIES = ["海上", "航空", "港湾", "鉄道", "貿易", "物流"] as const;
@@ -105,19 +105,45 @@ export function JpNews({ category }: { category?: string }) {
           <ul>
             {g.items.map((n) => (
               <li key={n.id} className="border-b border-[#eef0f2]">
-                <Link
-                  to="/article/$slug"
-                  params={{ slug: n.slug || String(n.id) }}
-                  className="flex gap-3 py-2.5 transition-colors hover:bg-[#f7f8f9]"
-                >
-                  <CatTag category={n.category} />
-                  <span className="flex-1 text-[13.5px] leading-[1.65] hover:text-[#0b2d52]">
-                    {n.title}
-                    {n.source && n.source !== "Logisight" && (
-                      <span className="ml-2 text-[11px] text-[#8a929c]">{n.source}</span>
-                    )}
-                  </span>
-                </Link>
+                {/* 外部媒体の記事は本文を持たない。要旨だけを載せ、原文へ送る。 */}
+                {isInternalNewsItem(n) ? (
+                  <Link
+                    to="/article/$slug"
+                    params={{ slug: n.slug || String(n.id) }}
+                    className="flex gap-3 py-2.5 transition-colors hover:bg-[#f7f8f9]"
+                  >
+                    <CatTag category={n.category} />
+                    <span className="flex-1 text-[13.5px] leading-[1.65] hover:text-[#0b2d52]">
+                      {n.title}
+                      {n.source && n.source !== "Logisight" && (
+                        <span className="ml-2 text-[11px] text-[#8a929c]">{n.source}</span>
+                      )}
+                    </span>
+                  </Link>
+                ) : (
+                  <a
+                    href={n.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex gap-3 py-2.5 transition-colors hover:bg-[#f7f8f9]"
+                  >
+                    <CatTag category={n.category} />
+                    <span className="flex-1">
+                      <span className="text-[13.5px] leading-[1.65] hover:text-[#0b2d52]">
+                        {n.title}
+                        <span className="ml-1.5 text-[11px] text-[#8a929c]">↗</span>
+                        {n.source && (
+                          <span className="ml-2 text-[11px] text-[#8a929c]">{n.source}</span>
+                        )}
+                      </span>
+                      {n.summary && (
+                        <span className="mt-1 block text-[12.5px] leading-[1.75] text-[#5b6672]">
+                          {n.summary}
+                        </span>
+                      )}
+                    </span>
+                  </a>
+                )}
               </li>
             ))}
           </ul>
