@@ -39,15 +39,21 @@ export const getLatestNews = createServerFn({ method: "GET" })
     const { data: rows, error } = await q;
     if (error) throw new Error(error.message);
 
-    // Hide bot-blocked sources: external items whose body couldn't be
-    // generated (content empty) — keep internal articles and externals
-    // that do have a body. Strip content from the payload afterwards.
+    // 보여줄 것이 없는 외부 항목을 숨긴다.
+    //
+    // 원래 규칙은 "외부인데 content가 비면 숨긴다"였다 — 봇에 막혀 본문을 못 긁은
+    // 껍데기를 거르려던 것이다. 그런데 일본 매체 수집(collectors/news_jp.ts)은
+    // 본문을 일부러 저장하지 않는다(전재 허락이 없어 요약과 원문 링크만 남긴다).
+    // content만 보면 그 기사들이 통째로 사라진다 — 실제로 29건이 화면에 안 나왔다.
+    //
+    // 기준을 "본문이 있는가"에서 "독자에게 보여줄 것이 있는가"로 바꾼다.
+    // 요약이 있으면 목록에서 읽을 값어치를 판단할 수 있다. 둘 다 비면 껍데기다.
     return ((rows ?? []) as (NewsItem & { content?: string | null })[])
-      .filter(
-        (r) =>
-          r.agent_type !== "external" ||
-          (r.content != null && String(r.content).trim().length > 0),
-      )
+      .filter((r) => {
+        if (r.agent_type !== "external") return true;
+        const has = (v: string | null | undefined) => v != null && String(v).trim().length > 0;
+        return has(r.content) || has(r.summary);
+      })
       .map((r) => {
         // 읽는 시간: 내부 기사(우리 본문을 독자가 실제로 읽음)에만 표기. 외부 링크 기사는
         // 원문 분량과 달라 오해를 주므로 null. content 삭제 전에 계산한다.
