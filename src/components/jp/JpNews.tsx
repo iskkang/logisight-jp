@@ -136,8 +136,9 @@ export function JpNews({ category }: { category?: string }) {
                           <span className="ml-2 text-[11px] text-[#8a929c]">{n.source}</span>
                         )}
                       </span>
+                      {/* 1行で切る。一覧は「原文を開くか」を決める場所であって、読む場所ではない。 */}
                       {n.summary && (
-                        <span className="mt-1 block text-[12.5px] leading-[1.75] text-[#5b6672]">
+                        <span className="mt-1 line-clamp-1 text-[12.5px] leading-[1.75] text-[#5b6672]">
                           {n.summary}
                         </span>
                       )}

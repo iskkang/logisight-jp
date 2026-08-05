@@ -15,6 +15,7 @@ import { Analytics } from "@vercel/analytics/react";
 import appCss from "../styles.css?url";
 import LogisightLoader from "@/components/LogisightLoader";
 import { SITE_URL, SITE_HOST } from "@/lib/seo";
+import { usePageView } from "@/lib/track";
 
 // 日本版の GA4 プロパティ。未作成のため空にしてある —
 // 韓国版(G-8NG0LJGF23)を使い回すと、観測期間の指標(セッション→登録率など)に
@@ -218,6 +219,8 @@ function RootShell({ children }: { children: React.ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+  // 열람 기록. 무료 기간 종료 시 결제 요청 대상을 고르는 근거가 된다.
+  usePageView();
   // 최초 풀 로드(SSR→하이드레이션) 동안만 브랜드 로더 노출. SPA 내비게이션엔 RootComponent가
   // 다시 마운트되지 않으므로 재노출되지 않는다(서브내비 클릭마다 깜빡이는 문제 방지).
   const [loading, setLoading] = useState(true);
