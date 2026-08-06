@@ -25,6 +25,7 @@ export const Route = createFileRoute("/")({
       description:
         "企業向けサービス価格指数(運賃)、主要6港のコンテナ取扱量、財務省貿易統計を、出典と基準月を明示して毎月まとめる物流インテリジェンス媒体。",
       path: "/",
+      koPath: "/",
     }),
   component: JpHome,
 });

@@ -13,6 +13,7 @@ export const Route = createFileRoute("/trade")({
       description:
         "財務省貿易統計にもとづく月次の輸出入額。相手国別の上位10か国と、概況品目の大分類による輸出入構成を掲載。",
       path: "/trade",
+      koPath: "/trade",
     }),
   component: LogisightJpTrade,
 });

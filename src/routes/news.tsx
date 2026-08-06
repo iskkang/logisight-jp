@@ -22,6 +22,7 @@ export const Route = createFileRoute("/news")({
       description:
         "海上・航空・港湾・貿易。世界の運賃とサプライチェーンを動かすニュースを選んでお届けします。",
       path: "/news",
+      koPath: "/news",
     }),
   component: NewsPage,
 });

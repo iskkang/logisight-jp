@@ -13,6 +13,7 @@ export const Route = createFileRoute("/rates")({
       description:
         "外航・国際航空・陸上・港湾運送・倉庫の価格指数を、円ベースと契約通貨ベースに分けて掲載。日本銀行 企業向けサービス価格指数にもとづく月次データ。",
       path: "/rates",
+      koPath: "/rates",
     }),
   component: LogisightJpRates,
 });

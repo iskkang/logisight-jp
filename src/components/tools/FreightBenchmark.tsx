@@ -13,6 +13,7 @@ import {
 } from "recharts";
 
 import { Chip, JpPage, SecTitle } from "@/components/jp/JpPage";
+import { LoginGate } from "@/components/jp/LoginGate";
 import { benchmark, benchmarkQueryOptions, pct, type BenchmarkPoint } from "@/lib/api/benchmark";
 import type { ValuePair } from "@/lib/api/benchmark.functions";
 
@@ -209,12 +210,17 @@ export function FreightBenchmark() {
             下の「対象の系列」で選んだ系列の推移です。{baseYear}年を100とした水準で、
             二本の線の開きがそのまま為替要因にあたります。
           </p>
-          <TrendChart
-            seriesName={seriesName}
-            periods={periods}
-            byPeriod={values[seriesName]}
-            baseYear={baseYear}
-          />
+          <LoginGate
+            title="全期間の推移はログインするとご覧いただけます"
+            note={`登録は無料です。${baseYear}年からの全期間について、円ベースと契約通貨ベースの開きの推移を追えます。`}
+          >
+            <TrendChart
+              seriesName={seriesName}
+              periods={periods}
+              byPeriod={values[seriesName]}
+              baseYear={baseYear}
+            />
+          </LoginGate>
 
           <SecTitle>条件</SecTitle>
           <div className="grid grid-cols-1 gap-3 min-[720px]:grid-cols-3">

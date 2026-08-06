@@ -1,6 +1,7 @@
 import { useSuspenseQuery } from "@tanstack/react-query";
 
 import { Chip, JpPage, SecTitle } from "@/components/jp/JpPage";
+import { LoginGate } from "@/components/jp/LoginGate";
 import { SppiChart } from "@/components/jp/SppiChart";
 import {
   formatIndex,
@@ -43,9 +44,13 @@ function Row({ s, baseYear }: { s: SppiSeries; baseYear: string }) {
         )}
       </td>
       <td className="py-2.5 pr-3 text-right tabular-nums font-medium">{formatIndex(s.yen)}</td>
-      <td className="w-[92px] py-2.5 pr-3 text-right"><Yoy value={s.yoyYenPct} /></td>
+      <td className="w-[92px] py-2.5 pr-3 text-right">
+        <Yoy value={s.yoyYenPct} />
+      </td>
       <td className="py-2.5 pr-3 text-right tabular-nums">{formatIndex(s.contract)}</td>
-      <td className="w-[92px] py-2.5 text-right"><Yoy value={s.yoyContractPct} /></td>
+      <td className="w-[92px] py-2.5 text-right">
+        <Yoy value={s.yoyContractPct} />
+      </td>
     </tr>
   );
 }
@@ -84,7 +89,9 @@ export function LogisightJpRates() {
         <>
           {history.length > 0 && (
             <>
-              <SecTitle note={<span className="text-[11px] text-[#8a929c]">赤の破線 = 基準年(100)</span>}>
+              <SecTitle
+                note={<span className="text-[11px] text-[#8a929c]">赤の破線 = 基準年(100)</span>}
+              >
                 推移
               </SecTitle>
               <div className="grid grid-cols-1 gap-3.5 min-[820px]:grid-cols-3">
@@ -100,44 +107,52 @@ export function LogisightJpRates() {
               <p className="text-[12.5px] leading-[1.8] text-[#6b4d16]">
                 <b>契約通貨ベースが基準年を下回る系列</b>:{" "}
                 {belowBase.map((s) => `${s.name}(${formatIndex(s.contract)})`).join("、")}。
-                円ベースが{baseYear}年を上回っていても、運賃そのものは基準年以下ということになります。差は為替要因です。
+                円ベースが{baseYear}
+                年を上回っていても、運賃そのものは基準年以下ということになります。差は為替要因です。
               </p>
             </div>
           )}
 
           <SecTitle>系列別</SecTitle>
-          <div className="overflow-x-auto">
-            <table className="w-full min-w-[660px] border-collapse text-[13px]">
-              <thead>
-                <tr className="border-b-2 border-[#b9c0c8] text-[11.5px] text-[#6b7683]">
-                  <th className="py-2 pr-3 text-left font-bold">系列</th>
-                  <th className="py-2 pr-3 text-right font-bold">円ベース</th>
-                  <th className="py-2 pr-3 text-right font-bold">前年同月比</th>
-                  <th className="py-2 pr-3 text-right font-bold">契約通貨ベース</th>
-                  <th className="py-2 text-right font-bold">前年同月比</th>
-                </tr>
-              </thead>
-              {groups.map((g) => (
-                <tbody key={g.key}>
-                  <tr>
-                    <td
-                      colSpan={5}
-                      className="border-b border-[#eef0f2] bg-[#f7f8f9] px-0 py-1.5 text-[11px] font-bold tracking-wide text-[#6b7683]"
-                    >
-                      {CATEGORY_LABEL[g.key] ?? g.key}
-                    </td>
+          <LoginGate
+            title="系列別の全13系列はログインするとご覧いただけます"
+            note="登録は無料です。円ベースと契約通貨ベースを並べた全系列と、前年同月比まで表示されます。"
+          >
+            <div className="overflow-x-auto">
+              <table className="w-full min-w-[660px] border-collapse text-[13px]">
+                <thead>
+                  <tr className="border-b-2 border-[#b9c0c8] text-[11.5px] text-[#6b7683]">
+                    <th className="py-2 pr-3 text-left font-bold">系列</th>
+                    <th className="py-2 pr-3 text-right font-bold">円ベース</th>
+                    <th className="py-2 pr-3 text-right font-bold">前年同月比</th>
+                    <th className="py-2 pr-3 text-right font-bold">契約通貨ベース</th>
+                    <th className="py-2 text-right font-bold">前年同月比</th>
                   </tr>
-                  {g.items.map((s) => (
-                    <Row key={s.name} s={s} baseYear={baseYear} />
-                  ))}
-                </tbody>
-              ))}
-            </table>
-          </div>
+                </thead>
+                {groups.map((g) => (
+                  <tbody key={g.key}>
+                    <tr>
+                      <td
+                        colSpan={5}
+                        className="border-b border-[#eef0f2] bg-[#f7f8f9] px-0 py-1.5 text-[11px] font-bold tracking-wide text-[#6b7683]"
+                      >
+                        {CATEGORY_LABEL[g.key] ?? g.key}
+                      </td>
+                    </tr>
+                    {g.items.map((s) => (
+                      <Row key={s.name} s={s} baseYear={baseYear} />
+                    ))}
+                  </tbody>
+                ))}
+              </table>
+            </div>
+          </LoginGate>
 
           <p className="mb-2 mt-4 text-[11.5px] leading-[1.8] text-[#8a929c]">
-            ※ 指数は{baseYear}年=100。円ベースは契約通貨ベースに為替変動を加えたもので、両者の差は定義上すべて為替要因。
-            契約通貨ベースが公表されない系列は「—」。前年同月比のマイナスは「▲」で表す。出典: {SOURCE}。
+            ※ 指数は{baseYear}
+            年=100。円ベースは契約通貨ベースに為替変動を加えたもので、両者の差は定義上すべて為替要因。
+            契約通貨ベースが公表されない系列は「—」。前年同月比のマイナスは「▲」で表す。出典:{" "}
+            {SOURCE}。
           </p>
         </>
       )}

@@ -18,6 +18,9 @@ export function abs(pathOrUrl: string): string {
   return `${SITE_URL}${pathOrUrl.startsWith("/") ? pathOrUrl : `/${pathOrUrl}`}`;
 }
 
+/** 한국판 정본 도메인. hreflang 상호 선언에만 쓴다. */
+const KO_SITE_URL = "https://logisight.net";
+
 export interface SeoInput {
   title: string;
   description: string;
@@ -26,12 +29,34 @@ export interface SeoInput {
   /** og:image. 경로/절대 URL 모두 허용. 생략 시 /og-default.jpg */
   image?: string | null;
   type?: "website" | "article";
+  /**
+   * 한국판에 같은 내용의 페이지가 있으면 그 경로. 있을 때만 hreflang을 낸다.
+   *
+   * 두 사이트는 같은 주제를 다른 언어로 낸다. 대응 페이지가 실제로 있는데
+   * 서로를 가리키지 않으면, 구글이 한쪽만 골라 색인하거나 일본 이용자에게
+   * 한국어 페이지를 보여줄 수 있다. 반대로 대응이 없는데 선언하면 404를
+   * 가리키게 되므로 짝이 확실한 경로에만 붙인다.
+   */
+  koPath?: string;
 }
 
 /** TanStack Router head()가 반환할 { meta, links } 세트. 라우트별 head에서 펼쳐 사용. */
-export function seoHead({ title, description, path, image, type = "website" }: SeoInput) {
+export function seoHead({ title, description, path, image, type = "website", koPath }: SeoInput) {
   const url = abs(path);
   const img = image ? abs(image) : DEFAULT_IMAGE;
+  const links: Array<Record<string, string>> = [{ rel: "canonical", href: url }];
+  if (koPath) {
+    const ko = `${KO_SITE_URL}${koPath.startsWith("/") ? koPath : `/${koPath}`}`;
+    // 키를 그대로 속성으로 내보내므로 소문자 hreflang 으로 쓴다.
+    // hrefLang 이면 HTML에 그대로 나가는데, HTML 파서가 소문자로 접어주긴 해도
+    // 규격대로 내는 편이 검사 도구에서 오해를 사지 않는다.
+    links.push(
+      { rel: "alternate", hreflang: "ja", href: url },
+      { rel: "alternate", hreflang: "ko", href: ko },
+      // 어느 쪽에도 해당하지 않는 이용자에게 보여줄 기본. 이 도메인은 일본판이 정본이다.
+      { rel: "alternate", hreflang: "x-default", href: url },
+    );
+  }
   return {
     meta: [
       { title },
@@ -42,12 +67,14 @@ export function seoHead({ title, description, path, image, type = "website" }: S
       { property: "og:url", content: url },
       { property: "og:site_name", content: SITE_NAME },
       { property: "og:image", content: img },
+      // 일본어권 이용자에게 배분되도록 지역까지 밝힌다.
+      { property: "og:locale", content: "ja_JP" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:title", content: title },
       { name: "twitter:description", content: description },
       { name: "twitter:image", content: img },
     ] as Array<Record<string, string>>,
-    links: [{ rel: "canonical", href: url }] as Array<Record<string, string>>,
+    links,
   };
 }
 
