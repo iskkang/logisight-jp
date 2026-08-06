@@ -1,7 +1,22 @@
 import { Link } from "@tanstack/react-router";
 
 // 日本の業界紙のフッター。会社情報と出典を隠さず並べる — 信頼の手掛かりを前に出す。
-const COLS: { title: string; items: { label: string; to: "/rates" | "/ports" | "/trade" | "/reports" | "/news" | "/about" | "/methodology" | "/faq" | "/privacy" }[] }[] = [
+const COLS: {
+  title: string;
+  items: {
+    label: string;
+    to:
+      | "/rates"
+      | "/ports"
+      | "/trade"
+      | "/reports"
+      | "/news"
+      | "/about"
+      | "/methodology"
+      | "/faq"
+      | "/privacy";
+  }[];
+}[] = [
   {
     title: "データ",
     items: [
@@ -54,13 +69,33 @@ export function JpFooter() {
                   </li>
                 ))}
               </ul>
+              {/* 別サービス。Logisight は読むもの、ConCheck は現場で使う道具で、
+                  買う人も課金の形も違う。同じ列に混ぜず、末尾に一行だけ置く。 */}
+              {c.title === "媒体について" && (
+                <>
+                  <h3 className="mt-5 text-[12px] font-bold text-[#1a1f26]">関連サービス</h3>
+                  <ul className="mt-2.5 space-y-1.5">
+                    <li>
+                      <a
+                        href="https://cargonote.vercel.app/"
+                        target="_blank"
+                        rel="noreferrer"
+                        className="text-[12.5px] text-[#3c4652] transition-colors hover:text-[#0b2d52] hover:underline"
+                      >
+                        ConCheck — コンテナ作業の証跡
+                      </a>
+                    </li>
+                  </ul>
+                </>
+              )}
             </div>
           ))}
         </div>
 
         <div className="mt-8 space-y-1 border-t border-[#dde1e5] pt-5 text-[11.5px] leading-[1.7] text-[#6b7683]">
           <p>
-            主なデータの出典: 日本銀行 企業向けサービス価格指数、国土交通省 港湾統計、財務省貿易統計。
+            主なデータの出典: 日本銀行 企業向けサービス価格指数、国土交通省
+            港湾統計、財務省貿易統計。
           </p>
           <p>
             Logisight は{" "}
@@ -70,7 +105,8 @@ export function JpFooter() {
             が運営しています。日本窓口: MTL JAPAN CO.,LTD.(株式会社脈日通運)
           </p>
           <p>
-            〒102-0073 東京都千代田区九段北1-4-4 九段下ASNビル7F ／ TEL 03-6284-4506 ／ FAX 03-6284-4507
+            〒102-0073 東京都千代田区九段北1-4-4 九段下ASNビル7F ／ TEL 03-6284-4506 ／ FAX
+            03-6284-4507
           </p>
           <p>
             お問い合わせ:{" "}
