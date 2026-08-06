@@ -183,20 +183,31 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
           url: SITE_URL,
         }),
       },
-      // GA4 — 정본 호스트에서만 로드한다. 프리뷰(*.vercel.app)·localhost 트래픽이
-      // 섞이면 유입 분석이 오염되므로, 태그 자체를 심지 않는다.
+      // GA4 — 태그는 구글이 안내하는 그대로 정적으로 심는다.
+      //
+      // 예전에는 스크립트 자체를 JS로 만들어 넣었는데, 구글의 태그 감지 도구는
+      // 정적 HTML만 훑기 때문에 실제로는 동작해도 "설치되지 않음"으로 보고한다.
+      // 감지 도구와 실제 동작이 어긋나면 확인할 방법이 없어진다.
+      //
+      // 대신 config 호출만 정본 호스트로 제한한다. 프리뷰(*.vercel.app)·localhost
+      // 트래픽이 섞이면 유입 분석이 오염된다. config 를 부르지 않으면 gtag.js 가
+      // 실려도 조회는 전송되지 않는다.
+      //
       // SPA 라우트 이동은 GA4 향상된 측정(브라우저 방문 기록 이벤트)이 처리한다.
-      {
-        children: GA_MEASUREMENT_ID === "" ? "" : `if(location.hostname===${JSON.stringify(SITE_HOST)}){
-  var s=document.createElement('script');
-  s.async=true;s.src='https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}';
-  document.head.appendChild(s);
-  window.dataLayer=window.dataLayer||[];
-  window.gtag=function(){window.dataLayer.push(arguments)};
-  window.gtag('js',new Date());
-  window.gtag('config','${GA_MEASUREMENT_ID}');
-}`,
-      },
+      ...(GA_MEASUREMENT_ID === ""
+        ? []
+        : [
+            {
+              async: true,
+              src: `https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`,
+            },
+            {
+              children: `window.dataLayer=window.dataLayer||[];
+window.gtag=function(){window.dataLayer.push(arguments)};
+window.gtag('js',new Date());
+if(location.hostname===${JSON.stringify(SITE_HOST)}){window.gtag('config','${GA_MEASUREMENT_ID}')}`,
+            },
+          ]),
     ],
   }),
   shellComponent: RootShell,
