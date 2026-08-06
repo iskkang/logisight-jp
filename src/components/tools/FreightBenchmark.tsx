@@ -33,39 +33,32 @@ function jaPeriod(p: string): string {
   return m ? `${m[1]}年${Number(m[2])}月` : p;
 }
 
-/**
- * 概観の折れ線に出す系列。13系列すべてを重ねると読めないので、輸送手段ごとの代表に絞る。
- * 円ベースだけを引く — ここは「どの手段がどれだけ上がったか」を掴む図で、
- * 運賃と為替の切り分けは下の条件指定で系列を選んでから見る。
- */
-const TREND_SERIES: { name: string; color: string }[] = [
-  { name: "外航貨物輸送", color: "#0b2d52" },
-  { name: "国際航空貨物輸送", color: "#c0392b" },
-  { name: "道路貨物輸送", color: "#1e88a8" },
-  { name: "港湾運送", color: "#c9922f" },
-  { name: "倉庫", color: "#6b7683" },
-];
-
 /** "2026-06" → "26/06" */
 function shortLabel(p: string): string {
   return p.slice(2).replace("-", "/");
 }
 
+/**
+ * 下の「対象の系列」で選んだ一系列の推移。二つの基準を重ねるのがこの図の目的で、
+ * 開きがそのまま為替要因にあたる — 単月の数値だけでは開きの推移が読めない。
+ */
 function TrendChart({
+  seriesName,
   periods,
-  values,
+  byPeriod,
   baseYear,
 }: {
+  seriesName: string;
   periods: string[];
-  values: Record<string, Record<string, ValuePair>>;
+  byPeriod: Record<string, ValuePair> | undefined;
   baseYear: string;
 }) {
-  const shown = TREND_SERIES.filter((s) => values[s.name]);
-  const data = periods.map((p) => {
-    const row: Record<string, string | number | null> = { label: shortLabel(p) };
-    for (const s of shown) row[s.name] = values[s.name][p]?.[0] ?? null;
-    return row;
-  });
+  const data = periods.map((p) => ({
+    label: shortLabel(p),
+    yen: byPeriod?.[p]?.[0] ?? null,
+    contract: byPeriod?.[p]?.[1] ?? null,
+  }));
+  const hasContract = data.some((d) => d.contract !== null);
 
   return (
     <figure className="border border-[#e2e6ea] bg-white p-3.5">
@@ -104,24 +97,34 @@ function TrendChart({
               iconType="plainline"
               iconSize={14}
             />
-            {shown.map((s) => (
+            <Line
+              isAnimationActive={false}
+              type="monotone"
+              dataKey="yen"
+              name="円ベース"
+              stroke="#0b2d52"
+              strokeWidth={1.8}
+              dot={false}
+              connectNulls
+            />
+            {hasContract && (
               <Line
-                key={s.name}
                 isAnimationActive={false}
                 type="monotone"
-                dataKey={s.name}
-                name={s.name}
-                stroke={s.color}
+                dataKey="contract"
+                name="契約通貨ベース"
+                stroke="#1e88a8"
                 strokeWidth={1.8}
+                strokeDasharray="4 3"
                 dot={false}
                 connectNulls
               />
-            ))}
+            )}
           </LineChart>
         </ResponsiveContainer>
       </div>
       <figcaption className="mt-2 text-[11px] text-[#8a929c]">
-        円ベース · {baseYear}年=100 · 出典: 日本銀行
+        {seriesName} · {baseYear}年=100 · 出典: 日本銀行
       </figcaption>
     </figure>
   );
@@ -203,11 +206,15 @@ export function FreightBenchmark() {
         <>
           <SecTitle>運賃トレンド</SecTitle>
           <p className="mb-3 text-[12.5px] leading-[1.8] text-[#6b7683]">
-            輸送手段ごとの指数の推移です。{baseYear}年を100とした水準なので、 線が上にあるほど
-            {baseYear}年より高いことを示します。
-            どの手段がどれだけ動いたかを掴んでから、下で系列と時点を選んでください。
+            下の「対象の系列」で選んだ系列の推移です。{baseYear}年を100とした水準で、
+            二本の線の開きがそのまま為替要因にあたります。
           </p>
-          <TrendChart periods={periods} values={values} baseYear={baseYear} />
+          <TrendChart
+            seriesName={seriesName}
+            periods={periods}
+            byPeriod={values[seriesName]}
+            baseYear={baseYear}
+          />
 
           <SecTitle>条件</SecTitle>
           <div className="grid grid-cols-1 gap-3 min-[720px]:grid-cols-3">
