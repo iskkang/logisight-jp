@@ -17,10 +17,13 @@ import LogisightLoader from "@/components/LogisightLoader";
 import { SITE_URL, SITE_HOST } from "@/lib/seo";
 import { usePageView } from "@/lib/track";
 
-// 日本版の GA4 プロパティ。未作成のため空にしてある —
-// 韓国版(G-8NG0LJGF23)を使い回すと、観測期間の指標(セッション→登録率など)に
-// 日本の流入が混ざり、計測そのものが壊れる。プロパティ作成後にここへ入れる。
-const GA_MEASUREMENT_ID = "";
+// 日本版の GA4 プロパティ(2026-08 作成)。
+// 韓国版(G-8NG0LJGF23)を使い回してはならない — セッション→登録率などの指標に
+// 日本の流入が混ざり、計測そのものが壊れる。必ず別プロパティを使う。
+// 測定 ID はブラウザに出るもので、秘匿する値ではない。
+// 型を string にしておく。リテラル型に絞られると、下の空文字ガードが
+// 「起こりえない比較」として型エラーになる。ID を外したいときに備えて残す。
+const GA_MEASUREMENT_ID: string = "G-QNC4SY7VP4";
 
 // 404・エラー画面用の最小の枠。QueryClientProvider の外でも使えるよう
 // データ取得を伴う JpPage は使わない。
