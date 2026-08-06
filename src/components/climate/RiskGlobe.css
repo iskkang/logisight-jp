@@ -216,3 +216,17 @@
   .rg-panel { width: auto; border-left: none; border-top: 1px solid var(--line); }
   .rg-hint { display: none; }
 }
+
+/* 描画前の案内。低速な端末では最初の描画まで数秒かかり、それまで
+   真っ暗な箱だけが見えて「地球儀が出ない」と受け取られる。 */
+.rg-loading {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  color: var(--mist);
+  letter-spacing: 0.04em;
+  pointer-events: none;
+}

@@ -321,6 +321,8 @@ export function RiskGlobe({ data, forecastQuality }: { data: ClimateRiskData; fo
   }, []);
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  // 最初の描画が終わるまで true にならない。それまで案内を出す。
+  const [drawn, setDrawn] = useState(false);
   const sceneRef = useRef<Scene>({
     projection: null, path: null, graticule: null,
     W: 0, H: 0, dpr: 1, cx: 0, cy: 0, R: 200, rot: [-60, -12], down: false,
@@ -343,7 +345,12 @@ export function RiskGlobe({ data, forecastQuality }: { data: ClimateRiskData; fo
     sc.rot = [-60, -12];
 
     const label = (t: string, x: number, y: number) => {
-      ctx.fillStyle = "rgba(234,242,251,.92)"; ctx.font = MONO; ctx.textAlign = "center"; ctx.fillText(t, x, y);
+      ctx.fillStyle = "rgba(234,242,251,.92)"; ctx.font = MONO; ctx.textAlign = "center";
+      // 画面幅が狭いと右端の地名が切れる(390pxで「台湾」「マラッカ海峡」が実際に切れた)。
+      // badgeLabel と同じく canvas の内側に収める。
+      const half = ctx.measureText(t).width / 2;
+      const cx = Math.max(half + 3, Math.min(sc.W - half - 3, x));
+      ctx.fillText(t, cx, Math.max(11, Math.min(sc.H - 4, y)));
     };
     const badgeLabel = (t: string, x: number, y: number) => {
       ctx.save();
@@ -609,6 +616,7 @@ export function RiskGlobe({ data, forecastQuality }: { data: ClimateRiskData; fo
     const reduce = prefersReduced();
     if (reduce) setSpinOn(false);
     resize();
+    setDrawn(true);
 
     let last = 0, raf = 0;
     const tick = (t: number) => {
@@ -695,6 +703,9 @@ export function RiskGlobe({ data, forecastQuality }: { data: ClimateRiskData; fo
       <div className="rg-stage">
         <div className="rg-mapwrap">
           <canvas ref={canvasRef} className="rg-canvas" />
+          {/* 描画されるまでの数秒、真っ暗な箱だけが見える。低速な端末では
+              「地球儀が出ない」と受け取られる。実測で3〜6秒かかった。 */}
+          {!drawn && <div className="rg-loading">地球儀を準備しています…</div>}
           <div className="rg-legend">
             <div className="rg-lrow">
               <span className="rg-sw" style={{ background: "var(--g)" }} />正常

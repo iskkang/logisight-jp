@@ -7,7 +7,7 @@ import { formatIndex, formatSppiPeriod, formatYoy, sppiQueryOptions } from "@/li
 import { formatPortPeriod, formatTeu, portThroughputQueryOptions } from "@/lib/api/ports";
 import { formatJpPeriod, formatJpy, jpTradeQueryOptions } from "@/lib/api/jp-trade";
 import { jpReportsQueryOptions, monthLabel, monthParam } from "@/lib/api/jp-reports";
-import { latestNewsQueryOptions } from "@/lib/api/news";
+import { isInternalNewsItem, latestNewsQueryOptions } from "@/lib/api/news";
 
 const WRAP = "mx-auto max-w-[1120px] px-4";
 
@@ -147,13 +147,11 @@ export function JpHome() {
               {news.length === 0 && (
                 <li className="py-3 text-[13px] text-[#6b7683]">記事が集まり次第、掲載します。</li>
               )}
-              {news.map((n) => (
-                <li key={n.id} className="border-b border-[#eef0f2]">
-                  <Link
-                    to="/article/$slug"
-                    params={{ slug: n.slug || String(n.id) }}
-                    className="flex gap-3 py-2.5 hover:bg-[#f7f8f9]"
-                  >
+              {news.map((n) => {
+                // 外部媒体の記事には自前の記事ページが無い。/article/… に飛ばすと 404 になる。
+                // ニュース一覧と同じ判定で、内部は Link、外部は原文へのリンクにする。
+                const inner = (
+                  <>
                     <span className="w-[42px] flex-none pt-[1px] text-[11.5px] tabular-nums text-[#8a929c]">
                       {md(n.published_at)}
                     </span>
@@ -162,10 +160,32 @@ export function JpHome() {
                         {n.category}
                       </span>
                     )}
-                    <span className="text-[13.5px] leading-[1.6] hover:text-[#0b2d52]">{n.title}</span>
-                  </Link>
-                </li>
-              ))}
+                    <span className="text-[13.5px] leading-[1.6] hover:text-[#0b2d52]">
+                      {n.title}
+                      {!isInternalNewsItem(n) && (
+                        <>
+                          <span className="ml-1.5 text-[11px] text-[#8a929c]">↗</span>
+                          {n.source && <span className="ml-2 text-[11px] text-[#8a929c]">{n.source}</span>}
+                        </>
+                      )}
+                    </span>
+                  </>
+                );
+                const cls = "flex gap-3 py-2.5 hover:bg-[#f7f8f9]";
+                return (
+                  <li key={n.id} className="border-b border-[#eef0f2]">
+                    {isInternalNewsItem(n) ? (
+                      <Link to="/article/$slug" params={{ slug: n.slug || String(n.id) }} className={cls}>
+                        {inner}
+                      </Link>
+                    ) : (
+                      <a href={n.url} target="_blank" rel="noopener noreferrer" className={cls}>
+                        {inner}
+                      </a>
+                    )}
+                  </li>
+                );
+              })}
             </ul>
           </section>
 

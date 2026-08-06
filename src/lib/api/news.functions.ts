@@ -30,6 +30,10 @@ export const getLatestNews = createServerFn({ method: "GET" })
       .or("agent_type.is.null,agent_type.neq.daily_card")
       .like("url", "http%")
       .order("published_at", { ascending: false, nullsFirst: false })
+      // 同着を必ず同じ順に並べる。日本海事新聞は一覧に時刻が無く、同じ日の記事が
+      // すべて同一の published_at になる。第二キーが無いと DB が呼び出しごとに
+      // 違う順で返し、トップページ(limit 14)とニュース一覧(limit 50)で並びがずれた。
+      .order("id", { ascending: false })
       .limit(data.limit);
 
     if (data.category) q = q.eq("category", data.category);
