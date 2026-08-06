@@ -46,8 +46,6 @@ export type BenchmarkResult = {
   freightPct: number | null;
   /** 為替要因(%)。円 ÷ 契約通貨 から導く。国内系列では null。 */
   fxPct: number | null;
-  /** 自社単価を市場と同じだけ動かした場合の金額。単価未入力なら null。 */
-  marketAlignedPrice: number | null;
 };
 
 /**
@@ -57,11 +55,7 @@ export type BenchmarkResult = {
  * 単純に引くと動きが大きいときにずれる。
  * 例: 運賃 +60%・為替 +45% のとき 円ベースは +105% ではなく +132% になる。
  */
-export function benchmark(
-  from: BenchmarkPoint,
-  to: BenchmarkPoint,
-  unitPrice: number | null,
-): BenchmarkResult | null {
+export function benchmark(from: BenchmarkPoint, to: BenchmarkPoint): BenchmarkResult | null {
   if (from.yen === null || to.yen === null || from.yen === 0) return null;
 
   const marketRatio = to.yen / from.yen;
@@ -75,30 +69,11 @@ export function benchmark(
     fxPct = (marketRatio / freightRatio - 1) * 100;
   }
 
-  return {
-    marketPct,
-    freightPct,
-    fxPct,
-    marketAlignedPrice:
-      unitPrice !== null && Number.isFinite(unitPrice) ? unitPrice * marketRatio : null,
-  };
-}
-
-/** 実際の提示額が市場並みからどれだけ離れているか(%)。 */
-export function gapVsMarket(offered: number, marketAligned: number): number | null {
-  if (!Number.isFinite(offered) || !Number.isFinite(marketAligned) || marketAligned === 0) {
-    return null;
-  }
-  return (offered / marketAligned - 1) * 100;
+  return { marketPct, freightPct, fxPct };
 }
 
 /** 日本の財務表記。マイナスは ▲。 */
 export function pct(n: number | null | undefined, digits = 1): string {
   if (n == null || !Number.isFinite(n)) return "—";
   return n < 0 ? `▲${Math.abs(n).toFixed(digits)}%` : `+${n.toFixed(digits)}%`;
-}
-
-export function yen(n: number | null | undefined): string {
-  if (n == null || !Number.isFinite(n)) return "—";
-  return Math.round(n).toLocaleString("ja-JP");
 }

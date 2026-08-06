@@ -1,15 +1,20 @@
 import { useMemo, useState } from "react";
 import { useSuspenseQuery } from "@tanstack/react-query";
+import {
+  CartesianGrid,
+  Legend,
+  Line,
+  LineChart,
+  ReferenceLine,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from "recharts";
 
 import { Chip, JpPage, SecTitle } from "@/components/jp/JpPage";
-import {
-  benchmark,
-  benchmarkQueryOptions,
-  gapVsMarket,
-  pct,
-  yen,
-  type BenchmarkPoint,
-} from "@/lib/api/benchmark";
+import { benchmark, benchmarkQueryOptions, pct, type BenchmarkPoint } from "@/lib/api/benchmark";
+import type { ValuePair } from "@/lib/api/benchmark.functions";
 
 const SOURCE = "日本銀行 企業向けサービス価格指数(SPPI)";
 
@@ -28,9 +33,98 @@ function jaPeriod(p: string): string {
   return m ? `${m[1]}年${Number(m[2])}月` : p;
 }
 
-function parseNumber(s: string): number | null {
-  const n = Number(s.replace(/[,\s]/g, ""));
-  return s.trim() !== "" && Number.isFinite(n) && n > 0 ? n : null;
+/**
+ * 概観の折れ線に出す系列。13系列すべてを重ねると読めないので、輸送手段ごとの代表に絞る。
+ * 円ベースだけを引く — ここは「どの手段がどれだけ上がったか」を掴む図で、
+ * 運賃と為替の切り分けは下の条件指定で系列を選んでから見る。
+ */
+const TREND_SERIES: { name: string; color: string }[] = [
+  { name: "外航貨物輸送", color: "#0b2d52" },
+  { name: "国際航空貨物輸送", color: "#c0392b" },
+  { name: "道路貨物輸送", color: "#1e88a8" },
+  { name: "港湾運送", color: "#c9922f" },
+  { name: "倉庫", color: "#6b7683" },
+];
+
+/** "2026-06" → "26/06" */
+function shortLabel(p: string): string {
+  return p.slice(2).replace("-", "/");
+}
+
+function TrendChart({
+  periods,
+  values,
+  baseYear,
+}: {
+  periods: string[];
+  values: Record<string, Record<string, ValuePair>>;
+  baseYear: string;
+}) {
+  const shown = TREND_SERIES.filter((s) => values[s.name]);
+  const data = periods.map((p) => {
+    const row: Record<string, string | number | null> = { label: shortLabel(p) };
+    for (const s of shown) row[s.name] = values[s.name][p]?.[0] ?? null;
+    return row;
+  });
+
+  return (
+    <figure className="border border-[#e2e6ea] bg-white p-3.5">
+      <div className="h-[300px]">
+        <ResponsiveContainer width="100%" height="100%">
+          <LineChart data={data} margin={{ top: 4, right: 6, bottom: 0, left: 0 }}>
+            <CartesianGrid stroke="#eef0f2" vertical={false} />
+            <XAxis
+              dataKey="label"
+              tick={{ fontSize: 10, fill: "#8a929c" }}
+              tickLine={false}
+              axisLine={{ stroke: "#d5d9de" }}
+              interval={11}
+            />
+            <YAxis
+              tick={{ fontSize: 10, fill: "#8a929c" }}
+              tickLine={false}
+              axisLine={false}
+              width={38}
+              domain={["dataMin - 10", "dataMax + 10"]}
+            />
+            {/* 基準年の水準。この線を割る系列は基準年より安い。 */}
+            <ReferenceLine y={100} stroke="#b6bcc4" strokeDasharray="3 3" strokeWidth={1} />
+            <Tooltip
+              contentStyle={{
+                fontSize: 12,
+                border: "1px solid #d5d9de",
+                borderRadius: 0,
+                padding: "6px 9px",
+              }}
+              labelStyle={{ color: "#6b7683", fontSize: 11 }}
+              formatter={(v: number | string) => (typeof v === "number" ? v.toFixed(1) : "—")}
+            />
+            <Legend
+              wrapperStyle={{ fontSize: 11, paddingTop: 4 }}
+              iconType="plainline"
+              iconSize={14}
+            />
+            {shown.map((s) => (
+              <Line
+                key={s.name}
+                isAnimationActive={false}
+                type="monotone"
+                dataKey={s.name}
+                name={s.name}
+                stroke={s.color}
+                strokeWidth={1.8}
+                dot={false}
+                connectNulls
+              />
+            ))}
+          </LineChart>
+        </ResponsiveContainer>
+      </div>
+      <figcaption className="mt-2 text-[11px] text-[#8a929c]">
+        円ベース · {baseYear}年=100 · 出典: 日本銀行
+      </figcaption>
+    </figure>
+  );
 }
 
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
@@ -69,15 +163,14 @@ export function FreightBenchmark() {
 
   const latest = periods[periods.length - 1] ?? "";
   // 既定は外航貨物輸送。円ベースと契約通貨ベースの開きが最も大きく、この道具の主旨が一目で伝わる。
-  const defaultSeries = series.find((s) => s.name === "外航貨物輸送")?.name ?? series[0]?.name ?? "";
+  const defaultSeries =
+    series.find((s) => s.name === "外航貨物輸送")?.name ?? series[0]?.name ?? "";
   // 既定の契約時点は24か月前。年1回改定の契約が2周した頃で、比較の実感に近い。
   const defaultFrom = periods[Math.max(0, periods.length - 25)] ?? periods[0] ?? "";
 
   const [seriesName, setSeriesName] = useState(defaultSeries);
   const [from, setFrom] = useState(defaultFrom);
   const [to, setTo] = useState(latest);
-  const [basePrice, setBasePrice] = useState("");
-  const [offeredPrice, setOfferedPrice] = useState("");
 
   const current = series.find((s) => s.name === seriesName);
 
@@ -88,36 +181,8 @@ export function FreightBenchmark() {
       const v = byPeriod[p] ?? [null, null];
       return { period: p, yen: v[0], contract: v[1] };
     };
-    return benchmark(at(from), at(to), parseNumber(basePrice));
-  }, [values, seriesName, from, to, basePrice]);
-
-  const offered = parseNumber(offeredPrice);
-  const gap =
-    result?.marketAlignedPrice != null && offered != null
-      ? gapVsMarket(offered, result.marketAlignedPrice)
-      : null;
-
-  // 交渉の場にそのまま持って行ける一文。数値と出典を必ず添える。
-  const sentence = useMemo(() => {
-    if (!result) return "";
-    const head = `日本銀行の企業向けサービス価格指数によると、${seriesName}は${jaPeriod(from)}から${jaPeriod(to)}にかけて円ベースで${pct(result.marketPct)}変動した。`;
-    const split =
-      result.freightPct != null && result.fxPct != null
-        ? `ただし契約通貨ベースでは${pct(result.freightPct)}であり、差の${pct(result.fxPct)}は為替要因にあたる。`
-        : `この系列は契約通貨ベースを公表しないため、運賃要因と為替要因は分けられない。`;
-    return head + split;
-  }, [result, seriesName, from, to]);
-
-  const [copied, setCopied] = useState(false);
-  const copy = async () => {
-    try {
-      await navigator.clipboard.writeText(sentence);
-      setCopied(true);
-      window.setTimeout(() => setCopied(false), 1800);
-    } catch {
-      // クリップボードが使えない環境。文面は画面に出ているので手で写せる。
-    }
-  };
+    return benchmark(at(from), at(to));
+  }, [values, seriesName, from, to]);
 
   return (
     <JpPage
@@ -136,6 +201,14 @@ export function FreightBenchmark() {
         <p className="py-10 text-[13px] text-[#6b7683]">公表済みのデータがありません。</p>
       ) : (
         <>
+          <SecTitle>運賃トレンド</SecTitle>
+          <p className="mb-3 text-[12.5px] leading-[1.8] text-[#6b7683]">
+            輸送手段ごとの指数の推移です。{baseYear}年を100とした水準なので、 線が上にあるほど
+            {baseYear}年より高いことを示します。
+            どの手段がどれだけ動いたかを掴んでから、下で系列と時点を選んでください。
+          </p>
+          <TrendChart periods={periods} values={values} baseYear={baseYear} />
+
           <SecTitle>条件</SecTitle>
           <div className="grid grid-cols-1 gap-3 min-[720px]:grid-cols-3">
             <Field label="対象の系列">
@@ -152,7 +225,11 @@ export function FreightBenchmark() {
               </select>
             </Field>
             <Field label="契約した時点">
-              <select className={INPUT_CLASS} value={from} onChange={(e) => setFrom(e.target.value)}>
+              <select
+                className={INPUT_CLASS}
+                value={from}
+                onChange={(e) => setFrom(e.target.value)}
+              >
                 {periods.map((p) => (
                   <option key={p} value={p}>
                     {jaPeriod(p)}
@@ -186,92 +263,28 @@ export function FreightBenchmark() {
               選んだ月に公表値がありません。指数の公表は約1か月遅れます。
             </p>
           ) : (
-            <>
-              <div className="grid grid-cols-1 gap-3 min-[720px]:grid-cols-3">
-                <Metric
-                  label="市場の変動(円ベース)"
-                  value={result.marketPct}
-                  note="運賃の動きと為替の動きが両方入った数値"
-                />
-                <Metric
-                  label="うち運賃要因"
-                  value={result.freightPct}
-                  note="契約通貨ベースの変動。運賃そのものの動き"
-                />
-                <Metric
-                  label="うち為替要因"
-                  value={result.fxPct}
-                  note="円ベース ÷ 契約通貨ベース。相手の原価ではない"
-                />
-              </div>
-
-              <SecTitle>自社の単価と比べる</SecTitle>
-              <p className="mb-3 text-[12.5px] leading-[1.8] text-[#6b7683]">
-                単価を入れると、市場と同じだけ動いた場合の金額を出します。
-                <b>入力した金額はブラウザの外に出ません</b> — 送信も保存もしません。
-              </p>
-              <div className="grid grid-cols-1 gap-3 min-[720px]:grid-cols-2">
-                <Field label={`${jaPeriod(from)}の単価(円)`}>
-                  <input
-                    className={INPUT_CLASS}
-                    inputMode="numeric"
-                    placeholder="例: 180000"
-                    value={basePrice}
-                    onChange={(e) => setBasePrice(e.target.value)}
-                  />
-                </Field>
-                <Field label="提示された単価(円)">
-                  <input
-                    className={INPUT_CLASS}
-                    inputMode="numeric"
-                    placeholder="例: 230000"
-                    value={offeredPrice}
-                    onChange={(e) => setOfferedPrice(e.target.value)}
-                  />
-                </Field>
-              </div>
-
-              {result.marketAlignedPrice != null && (
-                <div className="mt-3 border border-[#e4e8ec]">
-                  <div className="flex flex-wrap items-baseline gap-x-6 gap-y-2 border-b border-[#eef0f2] px-4 py-3">
-                    <span className="text-[12px] font-bold text-[#6b7683]">市場と同じだけ動いた場合</span>
-                    <span className="text-[22px] font-bold tabular-nums text-[#0b2d52]">
-                      {yen(result.marketAlignedPrice)}
-                      <span className="ml-1 text-[13px] font-normal">円</span>
-                    </span>
-                  </div>
-                  {gap != null && (
-                    <div className="flex flex-wrap items-baseline gap-x-6 gap-y-2 px-4 py-3">
-                      <span className="text-[12px] font-bold text-[#6b7683]">提示額との差</span>
-                      <span className={`text-[22px] font-bold tabular-nums ${toneOf(gap)}`}>
-                        {pct(gap)}
-                      </span>
-                      <span className="text-[12px] leading-[1.7] text-[#6b7683]">
-                        {gap > 0
-                          ? "提示額は市場の動きより大きい。上回るぶんの根拠を確かめる余地があります。"
-                          : "提示額は市場の動きに収まっています。"}
-                      </span>
-                    </div>
-                  )}
-                </div>
-              )}
-
-              <SecTitle>交渉に使う一文</SecTitle>
-              <div className="border border-[#e4e8ec] bg-[#f7f8f9] px-4 py-3.5">
-                <p className="text-[13px] leading-[1.9] text-[#2c3540]">{sentence}</p>
-                <button
-                  type="button"
-                  onClick={copy}
-                  className="mt-3 border border-[#0b2d52] px-3 py-1.5 text-[12px] font-bold text-[#0b2d52] transition-colors hover:bg-[#0b2d52] hover:text-white"
-                >
-                  {copied ? "コピーしました" : "文面をコピー"}
-                </button>
-              </div>
-            </>
+            <div className="grid grid-cols-1 gap-3 min-[720px]:grid-cols-3">
+              <Metric
+                label="市場の変動(円ベース)"
+                value={result.marketPct}
+                note="運賃の動きと為替の動きが両方入った数値"
+              />
+              <Metric
+                label="うち運賃要因"
+                value={result.freightPct}
+                note="契約通貨ベースの変動。運賃そのものの動き"
+              />
+              <Metric
+                label="うち為替要因"
+                value={result.fxPct}
+                note="円ベース ÷ 契約通貨ベース。相手の原価ではない"
+              />
+            </div>
           )}
 
           <p className="mb-2 mt-6 text-[11.5px] leading-[1.8] text-[#8a929c]">
-            ※ 指数は{baseYear}年=100。円ベースは契約通貨ベースに為替変動を加えたもので、両者の差は定義上すべて為替要因。
+            ※ 指数は{baseYear}
+            年=100。円ベースは契約通貨ベースに為替変動を加えたもので、両者の差は定義上すべて為替要因。
             為替要因は円ベース÷契約通貨ベースで求める(積の関係のため引き算では合わない)。
             契約通貨ベースを公表しない系列では分解できない。マイナスは「▲」で表す。出典: {SOURCE}。
             <br />

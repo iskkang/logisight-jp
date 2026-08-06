@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { benchmark, gapVsMarket, pct } from "../benchmark";
+import { benchmark, pct } from "../benchmark";
 
 describe("benchmark", () => {
   // 外航貨物輸送の実データ。2020年基準(=100)からの現在値。
@@ -10,7 +10,6 @@ describe("benchmark", () => {
     const r = benchmark(
       { period: "2020-01", yen: 100, contract: 100 },
       { period: "2026-06", yen: 233.8, contract: 160.8 },
-      null,
     );
     expect(r!.marketPct).toBeCloseTo(133.8, 1);
     expect(r!.freightPct).toBeCloseTo(60.8, 1);
@@ -22,7 +21,6 @@ describe("benchmark", () => {
     const r = benchmark(
       { period: "2020-01", yen: 100, contract: 100 },
       { period: "2026-06", yen: 232, contract: 160 }, // 運賃+60%, 為替+45% → 円 +132%
-      null,
     );
     expect(r!.marketPct).toBeCloseTo(132, 1);
     expect(r!.fxPct).toBeCloseTo(45, 1);
@@ -36,38 +34,25 @@ describe("benchmark", () => {
     const r = benchmark(
       { period: "2024-04", yen: 105.0, contract: null },
       { period: "2026-06", yen: 111.6, contract: null },
-      null,
     );
     expect(r!.marketPct).toBeCloseTo(6.29, 1);
     expect(r!.freightPct).toBeNull();
     expect(r!.fxPct).toBeNull();
   });
 
-  it("自社単価を市場と同じだけ動かす", () => {
-    const r = benchmark(
-      { period: "2024-04", yen: 200, contract: 150 },
-      { period: "2026-06", yen: 233.8, contract: 160.8 },
-      180_000,
-    );
-    expect(r!.marketAlignedPrice).toBeCloseTo(180_000 * (233.8 / 200), 0);
-  });
-
-  it("単価未入力なら金額は出さない", () => {
-    const r = benchmark(
-      { period: "2024-04", yen: 200, contract: null },
-      { period: "2026-06", yen: 233.8, contract: null },
-      null,
-    );
-    expect(r!.marketAlignedPrice).toBeNull();
-  });
-
   // 公表が1か月遅れるので、利用者が最新月を選んでも値がまだ無いことがある。
   it("片方の月に値がなければ計算しない", () => {
     expect(
-      benchmark({ period: "2026-07", yen: null, contract: null }, { period: "2026-06", yen: 233.8, contract: 160.8 }, null),
+      benchmark(
+        { period: "2026-07", yen: null, contract: null },
+        { period: "2026-06", yen: 233.8, contract: 160.8 },
+      ),
     ).toBeNull();
     expect(
-      benchmark({ period: "2024-04", yen: 200, contract: 150 }, { period: "2026-07", yen: null, contract: null }, null),
+      benchmark(
+        { period: "2024-04", yen: 200, contract: 150 },
+        { period: "2026-07", yen: null, contract: null },
+      ),
     ).toBeNull();
   });
 
@@ -75,21 +60,9 @@ describe("benchmark", () => {
     const r = benchmark(
       { period: "2022-09", yen: 300, contract: 250 },
       { period: "2026-06", yen: 233.8, contract: 160.8 },
-      null,
     );
     expect(r!.marketPct).toBeLessThan(0);
     expect(r!.freightPct).toBeLessThan(0);
-  });
-});
-
-describe("gapVsMarket", () => {
-  it("提示額が市場並みからどれだけ離れているか", () => {
-    expect(gapVsMarket(230_000, 210_420)!).toBeCloseTo(9.3, 1);
-    expect(gapVsMarket(200_000, 210_420)!).toBeCloseTo(-4.95, 1);
-  });
-
-  it("市場並みが0なら出さない", () => {
-    expect(gapVsMarket(230_000, 0)).toBeNull();
   });
 });
 
