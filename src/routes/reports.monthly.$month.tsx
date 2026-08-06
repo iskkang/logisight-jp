@@ -4,6 +4,7 @@ import { useSuspenseQuery } from "@tanstack/react-query";
 import { monthlyReportQueryOptions } from "@/lib/api/reports";
 import { formatPublishedAt } from "@/lib/api/news";
 import { Chip, JpPage } from "@/components/jp/JpPage";
+import { LoginGate } from "@/components/jp/LoginGate";
 import { seoHead } from "@/lib/seo";
 
 export const Route = createFileRoute("/reports/monthly/$month")({
@@ -55,22 +56,29 @@ function MonthlyReportPage() {
           />
         )}
 
-        <a
-          href={r.pdf_url}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="mt-7 inline-flex items-center gap-2 bg-[#0b2d52] px-5 py-3 text-[14px] font-bold text-white transition-colors hover:bg-[#123f70]"
+        {/* 表紙・タイトル・要旨までは誰でも見える。本体の PDF から先が登録の対象。
+            クローラーには要旨まで読ませたいので、ここより上はゲートに入れない。 */}
+        <LoginGate
+          title="レポート本体はログインするとお読みいただけます"
+          note="登録は無料です。運賃・貿易・港湾・航路の月次データをまとめた PDF をそのままダウンロードできます。"
         >
-          PDF をダウンロード →
-        </a>
+          <a
+            href={r.pdf_url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-7 inline-flex items-center gap-2 bg-[#0b2d52] px-5 py-3 text-[14px] font-bold text-white transition-colors hover:bg-[#123f70]"
+          >
+            PDF をダウンロード →
+          </a>
 
-        <p className="mt-3 text-[12px] text-[#8a929c]">
-          レポートは PDF でご覧いただけます。一覧は{" "}
-          <Link to="/reports" className="text-[#0b2d52] underline hover:no-underline">
-            レポート一覧
-          </Link>
-          からご確認いただけます。
-        </p>
+          <p className="mt-3 text-[12px] text-[#8a929c]">
+            レポートは PDF でご覧いただけます。一覧は{" "}
+            <Link to="/reports" className="text-[#0b2d52] underline hover:no-underline">
+              レポート一覧
+            </Link>
+            からご確認いただけます。
+          </p>
+        </LoginGate>
       </div>
     </JpPage>
   );
