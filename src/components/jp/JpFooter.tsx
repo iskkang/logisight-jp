@@ -51,7 +51,7 @@ export function JpFooter() {
       <div className="mx-auto max-w-[1120px] px-4 py-9">
         <div className="grid grid-cols-2 gap-7 min-[760px]:grid-cols-4">
           <div className="col-span-2 min-[760px]:col-span-1">
-            <Logo size={30} />
+            <Logo height={30} />
             <p className="mt-2 max-w-[260px] text-[12px] leading-[1.7] text-[#5a636e]">
               日本の荷主・フォワーダーに向けて、運賃・港湾・貿易の公的統計を毎月まとめています。
             </p>

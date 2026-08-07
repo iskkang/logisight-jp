@@ -44,7 +44,7 @@ export function JpHeader({ today }: { today: string }) {
     <header className="sticky top-0 z-50 border-b border-[#e3e7ec] bg-white/95 backdrop-blur-[6px]">
       <div className="mx-auto flex max-w-[1120px] items-center gap-6 px-4 py-3">
         <Link to="/" className="flex items-center" aria-label="Logisight ホーム">
-          <Logo size={26} />
+          <Logo height={26} />
         </Link>
 
         <nav className="ml-2 hidden flex-1 items-center gap-0.5 min-[1100px]:flex">
