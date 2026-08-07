@@ -34,7 +34,10 @@ export function LoginGate({
   if (loading || session) return <>{children}</>;
 
   return (
-    <div className="relative">
+    // 案内の高さぶんは必ず確保する。以前は bottom-0 に置いただけだったので、
+    // 包んだ中身が案内より低いと上へはみ出して隠れた。ベンチマークの図(300px)は
+    // 出るのにレポートの PDF ボタン(約110px)は出ない、という食い違いになっていた。
+    <div className="relative min-h-[240px]">
       <div aria-hidden className="pointer-events-none select-none blur-[5px]">
         {children}
       </div>
@@ -42,7 +45,9 @@ export function LoginGate({
       {/* 下ほど濃く。上端は読めるので「何の表なのか」は伝わる。 */}
       <div className="absolute inset-0 bg-gradient-to-b from-white/10 via-white/70 to-white" />
 
-      <div className="absolute inset-x-0 bottom-0 flex flex-col items-center gap-3 px-4 pb-8 text-center">
+      {/* inset-0 + justify-end。中身が低いときは枠の高さ(min-h)の中に収まり、
+          高いときは従来どおり下端に寄る。 */}
+      <div className="absolute inset-0 flex flex-col items-center justify-end gap-3 px-4 pb-8 text-center">
         <p className="text-[15px] font-bold text-[#0b2d52]">{title}</p>
         {note && <p className="max-w-[30rem] text-[12.5px] leading-[1.8] text-[#6b7683]">{note}</p>}
         <div className="flex flex-wrap items-center justify-center gap-2">
