@@ -1,6 +1,7 @@
 import { useSuspenseQuery } from "@tanstack/react-query";
 
 import { Chip, JpPage, SecTitle } from "@/components/jp/JpPage";
+import { LoginGate } from "@/components/jp/LoginGate";
 import { PortTotalChart, PortYoyChart } from "@/components/jp/PortChart";
 import {
   formatPortPeriod,
@@ -22,9 +23,15 @@ function Row({ port, emphasis }: { port: PortLatest; emphasis?: boolean }) {
     <tr className={`border-b border-[#eef0f2] ${emphasis ? "bg-[#f7f8f9] font-bold" : ""}`}>
       <td className="py-2.5 pr-3 text-left whitespace-nowrap">{port.name}</td>
       <td className="py-2.5 pr-3 text-right tabular-nums font-medium">{formatTeu(port.teu)}</td>
-      <td className="py-2.5 pr-3 text-right tabular-nums text-[#4a5462]">{formatTeu(port.exportTeu)}</td>
-      <td className="py-2.5 pr-3 text-right tabular-nums text-[#4a5462]">{formatTeu(port.importTeu)}</td>
-      <td className="w-[92px] py-2.5 text-right"><Yoy value={port.yoyPct} /></td>
+      <td className="py-2.5 pr-3 text-right tabular-nums text-[#4a5462]">
+        {formatTeu(port.exportTeu)}
+      </td>
+      <td className="py-2.5 pr-3 text-right tabular-nums text-[#4a5462]">
+        {formatTeu(port.importTeu)}
+      </td>
+      <td className="w-[92px] py-2.5 text-right">
+        <Yoy value={port.yoyPct} />
+      </td>
     </tr>
   );
 }
@@ -66,28 +73,35 @@ export function LogisightPorts() {
           </div>
 
           <SecTitle>港別</SecTitle>
-          <div className="overflow-x-auto">
-            <table className="w-full min-w-[560px] border-collapse text-[13px]">
-              <thead>
-                <tr className="border-b-2 border-[#b9c0c8] text-[11.5px] text-[#6b7683]">
-                  <th className="py-2 pr-3 text-left font-bold">港湾</th>
-                  <th className="py-2 pr-3 text-right font-bold">合計 (TEU)</th>
-                  <th className="py-2 pr-3 text-right font-bold">輸出</th>
-                  <th className="py-2 pr-3 text-right font-bold">輸入</th>
-                  <th className="py-2 text-right font-bold">前年同月比</th>
-                </tr>
-              </thead>
-              <tbody>
-                {total && <Row port={total} emphasis />}
-                {latest.map((p) => (
-                  <Row key={p.code} port={p} />
-                ))}
-              </tbody>
-            </table>
-          </div>
+          <LoginGate
+            title="港別の内訳はログインするとご覧いただけます"
+            note="登録は無料です。主要6港の輸出入内訳と前年同月比を港ごとに確認できます。"
+          >
+            <div className="overflow-x-auto">
+              <table className="w-full min-w-[560px] border-collapse text-[13px]">
+                <thead>
+                  <tr className="border-b-2 border-[#b9c0c8] text-[11.5px] text-[#6b7683]">
+                    <th className="py-2 pr-3 text-left font-bold">港湾</th>
+                    <th className="py-2 pr-3 text-right font-bold">合計 (TEU)</th>
+                    <th className="py-2 pr-3 text-right font-bold">輸出</th>
+                    <th className="py-2 pr-3 text-right font-bold">輸入</th>
+                    <th className="py-2 text-right font-bold">前年同月比</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {total && <Row port={total} emphasis />}
+                  {latest.map((p) => (
+                    <Row key={p.code} port={p} />
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </LoginGate>
 
           <p className="mb-2 mt-4 text-[11.5px] leading-[1.8] text-[#8a929c]">
-            ※ 外国貿易コンテナ。合計は主要6港の合計であり全国計ではない。前年同月比のマイナスは「▲」で表す。出典: {SOURCE}。
+            ※
+            外国貿易コンテナ。合計は主要6港の合計であり全国計ではない。前年同月比のマイナスは「▲」で表す。出典:{" "}
+            {SOURCE}。
           </p>
         </>
       )}

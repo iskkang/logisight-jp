@@ -1,6 +1,7 @@
 import { useSuspenseQuery } from "@tanstack/react-query";
 
 import { Chip, JpPage, SecTitle } from "@/components/jp/JpPage";
+import { LoginGate } from "@/components/jp/LoginGate";
 import { TradeCountryChart, TradeItemChart } from "@/components/jp/TradeChart";
 import {
   formatJpPeriod,
@@ -23,9 +24,13 @@ function CountryRow({ c, emphasis }: { c: JpTradeCountry; emphasis?: boolean }) 
     <tr className={emphasis ? "bg-[#f7f8f9] font-semibold" : ""}>
       <td className="px-3 py-2.5 text-left whitespace-nowrap ">{c.name}</td>
       <td className="px-3 py-2.5 text-right tabular-nums ">{formatJpy(c.exportJpy)}</td>
-      <td className="px-3 py-2.5 text-right"><Yoy value={c.yoyExportPct} /></td>
+      <td className="px-3 py-2.5 text-right">
+        <Yoy value={c.yoyExportPct} />
+      </td>
       <td className="px-3 py-2.5 text-right tabular-nums ">{formatJpy(c.importJpy)}</td>
-      <td className="px-3 py-2.5 text-right"><Yoy value={c.yoyImportPct} /></td>
+      <td className="px-3 py-2.5 text-right">
+        <Yoy value={c.yoyImportPct} />
+      </td>
       <td
         className={`px-3 py-2.5 text-right tabular-nums ${
           (c.balanceJpy ?? 0) < 0 ? "text-[#c0392b]" : ""
@@ -102,28 +107,34 @@ export function LogisightJpTrade() {
           </div>
 
           <SecTitle>相手国別</SecTitle>
-          <div className="overflow-x-auto">
-            <table className="w-full min-w-[720px] border-collapse text-[13px]">
-              <thead>
-                <tr className="border-b-2 border-[#b9c0c8] text-[11.5px] text-[#6b7683]">
-                  <th className="px-3 py-2 text-left font-bold">相手国</th>
-                  <th className="px-3 py-2 text-right font-bold">輸出</th>
-                  <th className="px-3 py-2 text-right font-bold">前年同月比</th>
-                  <th className="px-3 py-2 text-right font-bold">輸入</th>
-                  <th className="px-3 py-2 text-right font-bold">前年同月比</th>
-                  <th className="px-3 py-2 text-right font-bold">収支</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-[#eef0f2]">
-                {total && <CountryRow c={{ ...total, name: "総額" }} emphasis />}
-                {countries.map((c) => (
-                  <CountryRow key={c.name} c={c} />
-                ))}
-              </tbody>
-            </table>
-          </div>
+          <LoginGate
+            title="相手国別の全10か国はログインするとご覧いただけます"
+            note="登録は無料です。輸出入額・前年同月比・収支を国別に一覧できます。"
+          >
+            <div className="overflow-x-auto">
+              <table className="w-full min-w-[720px] border-collapse text-[13px]">
+                <thead>
+                  <tr className="border-b-2 border-[#b9c0c8] text-[11.5px] text-[#6b7683]">
+                    <th className="px-3 py-2 text-left font-bold">相手国</th>
+                    <th className="px-3 py-2 text-right font-bold">輸出</th>
+                    <th className="px-3 py-2 text-right font-bold">前年同月比</th>
+                    <th className="px-3 py-2 text-right font-bold">輸入</th>
+                    <th className="px-3 py-2 text-right font-bold">前年同月比</th>
+                    <th className="px-3 py-2 text-right font-bold">収支</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-[#eef0f2]">
+                  {total && <CountryRow c={{ ...total, name: "総額" }} emphasis />}
+                  {countries.map((c) => (
+                    <CountryRow key={c.name} c={c} />
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </LoginGate>
           <p className="mt-3 text-[11.5px] leading-[1.8] text-[#8a929c]">
-            ※ 輸出額の上位10か国。地域集計(ASIA・EU など)は除く。マイナスは「▲」で表す。出典: {SOURCE}。
+            ※ 輸出額の上位10か国。地域集計(ASIA・EU など)は除く。マイナスは「▲」で表す。出典:{" "}
+            {SOURCE}。
           </p>
 
           <SecTitle>品目別</SecTitle>
@@ -132,7 +143,8 @@ export function LogisightJpTrade() {
             <ItemTable title="輸入" items={importItems} />
           </div>
           <p className="mb-2 mt-3 text-[11.5px] leading-[1.8] text-[#8a929c]">
-            ※ 概況品目の大分類。構成比はその月・その方向の合計に対する比率。出典: {SOURCE} 概況品別国別表。
+            ※ 概況品目の大分類。構成比はその月・その方向の合計に対する比率。出典: {SOURCE}{" "}
+            概況品別国別表。
           </p>
         </>
       )}
