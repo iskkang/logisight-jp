@@ -1,5 +1,7 @@
 import { Link } from "@tanstack/react-router";
 
+import { Logo } from "./Logo";
+
 // 日本の業界紙のフッター。会社情報と出典を隠さず並べる — 信頼の手掛かりを前に出す。
 const COLS: {
   title: string;
@@ -49,7 +51,7 @@ export function JpFooter() {
       <div className="mx-auto max-w-[1120px] px-4 py-9">
         <div className="grid grid-cols-2 gap-7 min-[760px]:grid-cols-4">
           <div className="col-span-2 min-[760px]:col-span-1">
-            <div className="text-[19px] font-bold tracking-[-0.02em] text-[#0b2d52]">Logisight</div>
+            <Logo size={30} />
             <p className="mt-2 max-w-[260px] text-[12px] leading-[1.7] text-[#5a636e]">
               日本の荷主・フォワーダーに向けて、運賃・港湾・貿易の公的統計を毎月まとめています。
             </p>

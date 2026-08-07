@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { Menu, X } from "lucide-react";
 
 import { AuthModal, type AuthMode } from "./AuthModal";
+import { Logo } from "./Logo";
 import { signOut, takeOAuthError, useSession } from "@/lib/auth";
 
 // ヘッダー。白地・細い罫線に、現在地を藍の下線で示す。
@@ -42,10 +43,8 @@ export function JpHeader({ today }: { today: string }) {
   return (
     <header className="sticky top-0 z-50 border-b border-[#e3e7ec] bg-white/95 backdrop-blur-[6px]">
       <div className="mx-auto flex max-w-[1120px] items-center gap-6 px-4 py-3">
-        <Link to="/" className="flex items-baseline gap-2.5">
-          <span className="text-[22px] font-bold leading-none tracking-[-0.025em] text-[#0d2137]">
-            Logi<span className="text-[#1857b8]">sight</span>
-          </span>
+        <Link to="/" className="flex items-center" aria-label="Logisight ホーム">
+          <Logo size={26} />
         </Link>
 
         <nav className="ml-2 hidden flex-1 items-center gap-0.5 min-[1100px]:flex">
@@ -73,7 +72,10 @@ export function JpHeader({ today }: { today: string }) {
         <div className="ml-auto hidden items-center gap-2 min-[1100px]:ml-4 min-[1100px]:flex">
           {loading ? null : session ? (
             <>
-              <span className="max-w-[150px] truncate text-[12px] text-[#5b6672]" title={session.user.email ?? ""}>
+              <span
+                className="max-w-[150px] truncate text-[12px] text-[#5b6672]"
+                title={session.user.email ?? ""}
+              >
                 {session.user.email}
               </span>
               <button
@@ -134,7 +136,10 @@ export function JpHeader({ today }: { today: string }) {
               {loading ? null : session ? (
                 <button
                   type="button"
-                  onClick={() => { setOpen(false); void signOut(); }}
+                  onClick={() => {
+                    setOpen(false);
+                    void signOut();
+                  }}
                   className="flex-1 rounded-[6px] border border-[#e3e7ec] px-3 py-2 text-[13.5px] font-semibold text-[#16202c]"
                 >
                   ログアウト
@@ -143,14 +148,20 @@ export function JpHeader({ today }: { today: string }) {
                 <>
                   <button
                     type="button"
-                    onClick={() => { setOpen(false); setAuth("login"); }}
+                    onClick={() => {
+                      setOpen(false);
+                      setAuth("login");
+                    }}
                     className="flex-1 rounded-[6px] border border-[#e3e7ec] px-3 py-2 text-[13.5px] font-semibold text-[#16202c]"
                   >
                     ログイン
                   </button>
                   <button
                     type="button"
-                    onClick={() => { setOpen(false); setAuth("signup"); }}
+                    onClick={() => {
+                      setOpen(false);
+                      setAuth("signup");
+                    }}
                     className="flex-1 rounded-[6px] bg-[#0d2137] px-3 py-2 text-[13.5px] font-bold text-white"
                   >
                     新規登録
@@ -166,7 +177,13 @@ export function JpHeader({ today }: { today: string }) {
         <div className="border-t border-[#f3c9c4] bg-[#fdecea] px-4 py-2.5 text-[12.5px] leading-[1.55] text-[#c0392b]">
           <div className="mx-auto flex max-w-[1120px] items-start gap-3">
             <span className="flex-1">ソーシャルログインに失敗しました: {oauthError}</span>
-            <button type="button" onClick={() => setOauthError(null)} className="flex-none font-bold">閉じる</button>
+            <button
+              type="button"
+              onClick={() => setOauthError(null)}
+              className="flex-none font-bold"
+            >
+              閉じる
+            </button>
           </div>
         </div>
       )}

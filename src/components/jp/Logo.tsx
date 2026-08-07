@@ -35,20 +35,37 @@ export function LogoMark({ size = 26 }: { size?: number }) {
   );
 }
 
-/** ワードマーク。ヘッダー・フッターで共有する。 */
+/**
+ * ワードマーク。ヘッダー・フッターで共有する。
+ *
+ * カタカナを上、英字を下に積む — 日本の業界ブランドで見慣れた形にする。
+ * 英字は字間を広げてカタカナの幅に合わせる。幅が揃わないと積んだ意味がなく、
+ * 上下がばらけて見える。
+ *
+ * 英字側だけ二色を残す。ロゴを縦組みにしても Logi / sight の切れ目が
+ * 分かるようにしておきたい。
+ */
 export function Logo({ size = 26, sub }: { size?: number; sub?: string }) {
   return (
     <span className="inline-flex items-center gap-2.5">
       <LogoMark size={size} />
-      <span className="inline-flex items-baseline gap-2">
+      <span className="inline-flex flex-col justify-center leading-none">
         <span
-          className="font-bold leading-none tracking-[-0.025em] text-[#0d2137]"
-          style={{ fontSize: size * 0.85 }}
+          className="font-bold tracking-[-0.03em] text-[#0d2137]"
+          style={{ fontSize: size * 0.62 }}
         >
-          Logi<span className="text-[#1857b8]">sight</span>
+          ロジサイト
         </span>
-        {sub && <span className="text-[11px] text-[#8b94a0]">{sub}</span>}
+        {/* letter-spacing は最後の一文字の後ろにも入る。そのぶんを負のマージンで
+            戻さないと、英字の塊が右にずれてカタカナと頭が揃わない。 */}
+        <span
+          className="mt-[0.18em] font-bold text-[#0d2137]"
+          style={{ fontSize: size * 0.33, letterSpacing: "0.30em", marginRight: "-0.30em" }}
+        >
+          LOGI<span className="text-[#1857b8]">SIGHT</span>
+        </span>
       </span>
+      {sub && <span className="self-end text-[11px] text-[#8b94a0]">{sub}</span>}
     </span>
   );
 }
