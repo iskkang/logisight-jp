@@ -49,16 +49,14 @@ export const HS_TERMS: HsTerm[] = [
 ];
 
 /**
- * 完全一致 → 前方一致 → 部分一致 の順に引く。
- * 順に落としていくので、結果は入力に対して一意に決まる。
+ * 完全一致のみ。前方一致・部分一致は採らない —— 「自動車」で「自動車部品」
+ * (HS 8708.29、部品の税率)に化けると、違う品目の正しい税率を見せることになる。
+ * それは何も出ないより悪い(§9.5)。入力はチップ経由が主(§3)で、タイピングの
+ * 途中経過を拾う必要は無いので、前方一致を残す理由も無い。当たらなければ
+ * unknown に落として、呼び出し側(classifyInput)がチップ一覧を出す。
  */
 export function lookupHs(input: string): HsTerm | null {
   const q = input.trim();
   if (!q) return null;
-  return (
-    HS_TERMS.find((t) => t.ja === q) ??
-    HS_TERMS.find((t) => t.ja.startsWith(q)) ??
-    HS_TERMS.find((t) => t.ja.includes(q)) ??
-    null
-  );
+  return HS_TERMS.find((t) => t.ja === q) ?? null;
 }
