@@ -35,25 +35,35 @@ export function AdSlot({
   /** 表示幅の上限(px)。縦長の素材が画面を占めるのを防ぐ。 */
   maxWidth?: number;
 }) {
+  // 遷移先が自サイト内かどうかで扱いを変える。内部の問い合わせページに
+  // target="_blank" を付けると別タブが増えるだけだし、rel="sponsored" は
+  // 「外部の広告リンク」を検索エンジンに伝える印なので自分のページには付けない。
+  const external = /^https?:\/\//.test(href);
+  const cls = "block border border-[#e2e6ea] transition-opacity hover:opacity-90";
+  const img = (
+    <img
+      src={src}
+      alt={alt}
+      className="block w-full"
+      style={{ aspectRatio: String(ratio) }}
+      loading="lazy"
+      decoding="async"
+    />
+  );
+
   return (
     <aside className="mt-8" aria-label="広告">
       <div className="mx-auto" style={maxWidth ? { maxWidth } : undefined}>
         <div className="mb-1.5 text-[11px] font-bold tracking-wide text-[#8a929c]">広告</div>
-        <a
-          href={href}
-          target="_blank"
-          rel="noopener noreferrer sponsored"
-          className="block border border-[#e2e6ea] transition-opacity hover:opacity-90"
-        >
-          <img
-            src={src}
-            alt={alt}
-            className="block w-full"
-            style={{ aspectRatio: String(ratio) }}
-            loading="lazy"
-            decoding="async"
-          />
-        </a>
+        {external ? (
+          <a href={href} target="_blank" rel="noopener noreferrer sponsored" className={cls}>
+            {img}
+          </a>
+        ) : (
+          <a href={href} className={cls}>
+            {img}
+          </a>
+        )}
       </div>
     </aside>
   );

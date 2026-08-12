@@ -26,6 +26,7 @@ import { Route as ForecastsRouteImport } from './routes/forecasts'
 import { Route as FaqRouteImport } from './routes/faq'
 import { Route as EurasiaRouteImport } from './routes/eurasia'
 import { Route as DashboardRouteImport } from './routes/dashboard'
+import { Route as ContactRouteImport } from './routes/contact'
 import { Route as ClimateRouteImport } from './routes/climate'
 import { Route as BenchmarkRouteImport } from './routes/benchmark'
 import { Route as AboutRouteImport } from './routes/about'
@@ -126,6 +127,11 @@ const DashboardRoute = DashboardRouteImport.update({
   path: '/dashboard',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ContactRoute = ContactRouteImport.update({
+  id: '/contact',
+  path: '/contact',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ClimateRoute = ClimateRouteImport.update({
   id: '/climate',
   path: '/climate',
@@ -202,6 +208,7 @@ export interface FileRoutesByFullPath {
   '/about': typeof AboutRoute
   '/benchmark': typeof BenchmarkRoute
   '/climate': typeof ClimateRoute
+  '/contact': typeof ContactRoute
   '/dashboard': typeof DashboardRoute
   '/eurasia': typeof EurasiaRoute
   '/faq': typeof FaqRoute
@@ -235,6 +242,7 @@ export interface FileRoutesByTo {
   '/about': typeof AboutRoute
   '/benchmark': typeof BenchmarkRoute
   '/climate': typeof ClimateRoute
+  '/contact': typeof ContactRoute
   '/dashboard': typeof DashboardRoute
   '/eurasia': typeof EurasiaRoute
   '/faq': typeof FaqRoute
@@ -267,6 +275,7 @@ export interface FileRoutesById {
   '/about': typeof AboutRoute
   '/benchmark': typeof BenchmarkRoute
   '/climate': typeof ClimateRoute
+  '/contact': typeof ContactRoute
   '/dashboard': typeof DashboardRoute
   '/eurasia': typeof EurasiaRoute
   '/faq': typeof FaqRoute
@@ -302,6 +311,7 @@ export interface FileRouteTypes {
     | '/about'
     | '/benchmark'
     | '/climate'
+    | '/contact'
     | '/dashboard'
     | '/eurasia'
     | '/faq'
@@ -335,6 +345,7 @@ export interface FileRouteTypes {
     | '/about'
     | '/benchmark'
     | '/climate'
+    | '/contact'
     | '/dashboard'
     | '/eurasia'
     | '/faq'
@@ -366,6 +377,7 @@ export interface FileRouteTypes {
     | '/about'
     | '/benchmark'
     | '/climate'
+    | '/contact'
     | '/dashboard'
     | '/eurasia'
     | '/faq'
@@ -400,6 +412,7 @@ export interface RootRouteChildren {
   AboutRoute: typeof AboutRoute
   BenchmarkRoute: typeof BenchmarkRoute
   ClimateRoute: typeof ClimateRoute
+  ContactRoute: typeof ContactRoute
   DashboardRoute: typeof DashboardRoute
   EurasiaRoute: typeof EurasiaRoute
   FaqRoute: typeof FaqRoute
@@ -544,6 +557,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/contact': {
+      id: '/contact'
+      path: '/contact'
+      fullPath: '/contact'
+      preLoaderRoute: typeof ContactRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/climate': {
       id: '/climate'
       path: '/climate'
@@ -679,6 +699,7 @@ const rootRouteChildren: RootRouteChildren = {
   AboutRoute: AboutRoute,
   BenchmarkRoute: BenchmarkRoute,
   ClimateRoute: ClimateRoute,
+  ContactRoute: ContactRoute,
   DashboardRoute: DashboardRoute,
   EurasiaRoute: EurasiaRoute,
   FaqRoute: FaqRoute,

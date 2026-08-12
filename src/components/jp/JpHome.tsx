@@ -247,7 +247,7 @@ export function JpHome() {
             </div>
 
             <AdSlot
-              href="https://www.mtlship.com"
+              href="/contact?from=ad-mtl-ca"
               src="/ad-mtl-central-asia.jpg"
               alt="MTL — 日本から中央アジアへ。カザフスタン・ウズベキスタン・ロシア向け輸送"
               ratio={1400 / 615}
