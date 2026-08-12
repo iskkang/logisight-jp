@@ -51,12 +51,16 @@ describe.skipIf(!URL || !KEY)("LandedIQ との契約", () => {
   //
   // 逐次で 5 回呼ぶので、既定の 5 秒では回線状況によって間に合わないことがある。
   it("税率が動いていない(動いていたら記事になる)", async () => {
+    // 画面が実際に出す6か国(DEFAULT_ORIGINS)に合わせる。旧スナップショットは
+    // KR/DE/CN/MX に加え画面に出ない DE を含み、画面に出る VN・タイは
+    // 監視していなかった —— この2つが Section 301 の動きに一番さらされている。
     const SNAPSHOT: Record<string, number> = {
       JP: 0.125,
-      KR: 0.125,
-      DE: 0.1,
       CN: 0.4,
+      VN: 0.15,
+      TH: 0.025,
       MX: 0.025,
+      KR: 0.125,
     };
     for (const [origin, expected] of Object.entries(SNAPSHOT)) {
       const j = await look("8703230110", origin);
