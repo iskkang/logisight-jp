@@ -13,7 +13,7 @@ import { signOut, takeOAuthError, useSession } from "@/lib/auth";
 // 全ページでこの一列だけを出す。以前は一部のページにだけ濃色の INSIGHT バーが
 // 重なって出ており、ページを移ると導線が入れ替わって見えた。気象・リスク・見通しは
 // そのバーからしか行けず、上の一列には無かった。並びは
-// ニュース → 総合 → 分野4つ → リスク2つ → 分析の道具2つ → レポート。
+// ニュース → 総合 → 分野4つ → リスク2つ → 分析の道具3つ → レポート。
 const NAV = [
   { to: "/", label: "ホーム" },
   { to: "/news", label: "ニュース" },
@@ -26,6 +26,7 @@ const NAV = [
   { to: "/port-risk", label: "リスク" },
   { to: "/benchmark", label: "ベンチマーク" },
   { to: "/forecasts", label: "見通し" },
+  { to: "/tariff", label: "関税" },
   { to: "/reports", label: "レポート" },
 ] as const;
 
