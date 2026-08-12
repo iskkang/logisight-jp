@@ -7,10 +7,10 @@ import { supabaseAdmin } from "@/integrations/supabase/client.server";
 import { PUBLIC_SWR_CACHE } from "@/lib/cache-control";
 import {
   DEFAULT_ORIGINS,
-  MAX_ORIGINS,
   classifyInput,
   decideCacheFreshness,
   normalizeQuery,
+  resolveAsOf,
   toOriginRow,
   type LandedIqLine,
   type LandedIqResponse,
@@ -18,9 +18,24 @@ import {
 } from "./tariff";
 
 // jp_tariff_cache は生成済み Database 型にまだ無い → レポ慣例どおりキャストする。
+// テーブルの DDL は本リポジトリには無い —— logisight(姉妹リポジトリ)の
+// supabase/migrations/20260812000004_jp_tariff_cache.sql が定義側。jp_* テーブルは
+// 全て向こうに集約する慣例どおりで、これはその慣例に従っているだけである。
+// ただし忘れやすいので明記しておく: 向こうで migration を適用しない限り永続キャッシュは
+// 効かず、§4 のとおり原産地6か国×比較5件で毎分30回の枠を使い切る。
 const sb = supabaseAdmin as unknown as SupabaseClient;
 
 const today = () => new Date().toISOString().slice(0, 10);
+
+/**
+ * この 2 つの関数はレポ慣例([error] なら throw する)とあえて違え、相手が
+ * 落ちても投げない —— 理由は lookup() の JSDoc のとおり。ただし成功と失敗を
+ * 同じ 200 で返す以上、CDN のキャッシュヘッダーまで PUBLIC_SWR_CACHE 固定に
+ * すると、30 秒の不通が「取得できず」を CDN に 1 時間・stale-while-revalidate
+ * で 1 日、生かし続けてしまう。DB 側キャッシュ(jp_tariff_cache)には正しく
+ * 届かない層で埋まるので、失敗・欠測の応答だけ短い TTL に落とす。
+ */
+const DEGRADED_SWR_CACHE = "public, max-age=0, s-maxage=30, stale-while-revalidate=60";
 
 /**
  * 相手を 1 回だけ呼ぶ。落ちても投げない —— 1 か国が取れなくても、
@@ -51,7 +66,8 @@ async function callLandedIq(
 /**
  * キャッシュ → 無ければ相手。当日分の行が無くても、この (q_norm, origin) で
  * 一番新しい行を「相手が止まったときの代替」として使う。戻り値の fetchedAt は
- * 画面の時点表示に使う。
+ * 画面の時点表示に使う。stale は「今回相手が落ちて、古い行で代替した」経路を
+ * 通ったときだけ true になる —— フレッシュなキャッシュ命中はここに含めない。
  *
  * select・upsert は失敗しても投げない。ここは高速化のための層であって
  * 正の情報源ではない(sppi.functions.ts / ports.functions.ts が `if (error)
@@ -64,7 +80,7 @@ async function lookup(
   q: string,
   origin: string,
   asOf: string,
-): Promise<{ res: LandedIqResponse | null; fetchedAt: string | null }> {
+): Promise<{ res: LandedIqResponse | null; fetchedAt: string | null; stale: boolean }> {
   let hit: { payload: LandedIqResponse; fetched_at: string } | null = null;
   try {
     // as_of では絞らない —— 今日の行が無くても、この (q_norm, origin) の
@@ -85,14 +101,15 @@ async function lookup(
   }
 
   if (decideCacheFreshness(hit?.fetched_at ?? null, Date.now()) === "fresh") {
-    return { res: hit!.payload, fetchedAt: hit!.fetched_at };
+    return { res: hit!.payload, fetchedAt: hit!.fetched_at, stale: false };
   }
 
   const res = await callLandedIq(q, origin, asOf);
   if (!res) {
-    // 相手が駄目でも、古い値があるなら見せる。時点は正直に出す。
-    if (hit) return { res: hit.payload, fetchedAt: hit.fetched_at };
-    return { res: null, fetchedAt: null };
+    // 相手が駄目でも、古い値があるなら見せる。時点は正直に出す。この経路を
+    // 通ったことを stale で呼び出し側(画面)に伝え、「以前の値」と明示させる。
+    if (hit) return { res: hit.payload, fetchedAt: hit.fetched_at, stale: true };
+    return { res: null, fetchedAt: null, stale: false };
   }
 
   const now = new Date().toISOString();
@@ -107,7 +124,7 @@ async function lookup(
   } catch (e) {
     console.error(`[tariff] cache upsert threw (${origin}):`, e);
   }
-  return { res, fetchedAt: now };
+  return { res, fetchedAt: now, stale: false };
 }
 
 /**
@@ -126,20 +143,29 @@ export const getTariffCandidates = createServerFn({ method: "GET" })
       /** 相手に届かなかった(0件と別)。TariffSearch はここを見てメッセージを分ける。 */
       upstreamFailed?: boolean;
     }> => {
-      setResponseHeader("cache-control", PUBLIC_SWR_CACHE);
-
       const kind = classifyInput(data.q);
-      if (kind.kind === "unknown") return { asOf: today(), lines: [] };
+      if (kind.kind === "unknown") {
+        // 相手を呼んですらいない、辞書と正規表現だけで決まる確定的な答え。
+        // 長く CDN に置いて構わない。
+        setResponseHeader("cache-control", PUBLIC_SWR_CACHE);
+        return { asOf: today(), lines: [] };
+      }
 
       // 辞書に当たったら、その HS の頭で照会する。
       const q = kind.kind === "term" ? kind.term!.hs : kind.q;
-      const asOf = today();
+      const asOfParam = today();
       // 候補を出すだけなので、代表として 1 か国(日本)だけ引く。
-      const { res } = await lookup(normalizeQuery(q), q, "JP", asOf);
-      if (!res) return { asOf, lines: [], upstreamFailed: true };
+      const { res, fetchedAt } = await lookup(normalizeQuery(q), q, "JP", asOfParam);
+      if (!res) {
+        // 相手に届かなかった。長く CDN に固定すると、一時的な不通が
+        // 1 時間ぶん「取得できませんでした」に化けたままになる。
+        setResponseHeader("cache-control", DEGRADED_SWR_CACHE);
+        return { asOf: asOfParam, lines: [], upstreamFailed: true };
+      }
 
+      setResponseHeader("cache-control", PUBLIC_SWR_CACHE);
       return {
-        asOf: res.as_of ?? asOf,
+        asOf: resolveAsOf(res, fetchedAt) ?? asOfParam,
         lines: res.results.map((l) => ({
           code: l.code,
           leaf: l.leaf ?? "",
@@ -151,31 +177,48 @@ export const getTariffCandidates = createServerFn({ method: "GET" })
 
 /** 10 桁のコード 1 つを、原産地ごとに引き比べる。 */
 export const getOriginComparison = createServerFn({ method: "GET" })
-  .inputValidator(
-    z.object({
-      code: z.string().regex(/^\d{10}$/),
-      origins: z.array(z.string().length(2)).max(MAX_ORIGINS).optional(),
-    }),
-  )
+  .inputValidator(z.object({ code: z.string().regex(/^\d{10}$/) }))
   .handler(
     async ({
       data,
-    }): Promise<{ asOf: string; code: string; description: string; rows: OriginRow[] }> => {
-      setResponseHeader("cache-control", PUBLIC_SWR_CACHE);
-
-      const asOf = today();
+    }): Promise<{
+      asOf: string;
+      code: string;
+      description: string;
+      rows: OriginRow[];
+      /** 表示中の値のうち少なくとも1つが「相手が落ちたので古い値で代替した」経路を通った。 */
+      stale: boolean;
+      /** 相手には届いたが、このコードに該当する行が無い。取得失敗とは別に扱う。 */
+      notFound: boolean;
+    }> => {
+      const asOfParam = today();
       const qNorm = normalizeQuery(data.code);
-      const wanted = data.origins?.length
-        ? DEFAULT_ORIGINS.filter((o) => data.origins!.includes(o.code))
-        : DEFAULT_ORIGINS;
 
       const settled = await Promise.all(
-        wanted.map(async (o) => {
-          const { res } = await lookup(qNorm, data.code, o.code, asOf);
+        DEFAULT_ORIGINS.map(async (o) => {
+          const { res, fetchedAt, stale } = await lookup(qNorm, data.code, o.code, asOfParam);
           const line: LandedIqLine | null = res?.results?.[0] ?? null;
-          return { o, line };
+          // 相手には届いたが results が 0 件 = そのコードは存在しない。
+          // 相手に届かなかった(res === null)とは違う話なので別に持つ。
+          const notFound = res != null && res.results.length === 0;
+          return { o, line, date: line ? resolveAsOf(res, fetchedAt) : null, stale, notFound };
         }),
       );
+
+      if (settled.some((s) => s.notFound)) {
+        // 存在しないコードは「もう一度試せば出る」障害ではない。表も
+        // 時点footnoteも出さない —— 空の表に時点だけ付くと、何かは
+        // 取れたかのように見えてしまう。
+        setResponseHeader("cache-control", PUBLIC_SWR_CACHE);
+        return {
+          asOf: asOfParam,
+          code: data.code,
+          description: "",
+          rows: [],
+          stale: false,
+          notFound: true,
+        };
+      }
 
       const first = settled.find((s) => s.line)?.line ?? null;
       const rows = settled
@@ -186,6 +229,26 @@ export const getOriginComparison = createServerFn({ method: "GET" })
             (a.totalPct ?? Number.POSITIVE_INFINITY) - (b.totalPct ?? Number.POSITIVE_INFINITY),
         );
 
-      return { asOf, code: data.code, description: first?.description ?? "", rows };
+      // 表示する時点は一番古いものを採る —— 原産地ごとに取得時刻がずれるので、
+      // 一番慎重な(=一番古い)主張にする。
+      const dates = settled
+        .map((s) => s.date)
+        .filter((d): d is string => d != null)
+        .sort();
+      const asOf = dates[0] ?? asOfParam;
+      const stale = settled.some((s) => s.stale);
+      const degraded = stale || rows.some((r) => r.status === "unavailable");
+
+      // 失敗・欠測を成功と同じ長さ CDN に固定しない。理由は DEGRADED_SWR_CACHE の定義を参照。
+      setResponseHeader("cache-control", degraded ? DEGRADED_SWR_CACHE : PUBLIC_SWR_CACHE);
+
+      return {
+        asOf,
+        code: data.code,
+        description: first?.description ?? "",
+        rows,
+        stale,
+        notFound: false,
+      };
     },
   );

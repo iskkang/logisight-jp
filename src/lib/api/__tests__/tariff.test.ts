@@ -5,9 +5,11 @@ import {
   classifyInput,
   decideCacheFreshness,
   normalizeQuery,
+  resolveAsOf,
   toOriginRow,
   totalMatchesPrograms,
   type LandedIqLine,
+  type LandedIqResponse,
 } from "../tariff";
 
 /** 実測値そのまま。8703.23 / origin=JP の応答。 */
@@ -165,5 +167,24 @@ describe("decideCacheFreshness", () => {
   it("TTL の1ミリ秒手前は fresh", () => {
     const fetchedAt = new Date(NOW - TARIFF_CACHE_TTL_MS + 1).toISOString();
     expect(decideCacheFreshness(fetchedAt, NOW)).toBe("fresh");
+  });
+});
+
+describe("resolveAsOf", () => {
+  const RES = { as_of: "2026-07-29", query: "q", results: [] } as LandedIqResponse;
+
+  // 原簿自身の申告を最優先する。相手のズレも込みで正直に映すため。
+  it("res.as_of があればそれを使う", () => {
+    expect(resolveAsOf(RES, "2026-08-12T03:00:00.000Z")).toBe("2026-07-29");
+  });
+
+  // res.as_of が無い異常系だけ、こちらの取得時刻の日付部分で補う。
+  it("res.as_of が無ければ fetchedAt の日付部分を使う", () => {
+    expect(resolveAsOf({ ...RES, as_of: "" }, "2026-08-12T03:00:00.000Z")).toBe("2026-08-12");
+  });
+
+  // 今日の日付にフォールバックしない。呼び出し側が最後の保険として today を充てる。
+  it("どちらも無ければ null", () => {
+    expect(resolveAsOf(null, null)).toBeNull();
   });
 });

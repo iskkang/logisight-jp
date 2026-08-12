@@ -71,12 +71,6 @@ export const DEFAULT_ORIGINS = [
   { code: "KR", ja: "韓国" },
 ];
 
-/**
- * 原産地 1 つが LandedIQ 呼び出し 1 回になる。相手は IP 当たり毎分 30 回
- * なので、上限が無いと一人で使い切ってしまう。
- */
-export const MAX_ORIGINS = 8;
-
 // ── 入力の判別 ─────────────────────────────────────────────────
 
 export type InputKind = {
@@ -183,6 +177,20 @@ export function decideCacheFreshness(fetchedAt: string | null, now: number): Cac
   return age < TARIFF_CACHE_TTL_MS ? "fresh" : "stale";
 }
 
+/**
+ * 画面に出す「時点」を選ぶ。3つは別物である —— 原簿自身が答えた as_of、
+ * こちらが取得した時刻 fetched_at、そして今日。古いキャッシュ値に今日の
+ * 日付を付けると、相手が落ちて代替を出している瞬間に一番の嘘になる(§9.2)。
+ * 原簿の as_of を最優先し(相手のズレも込みで正直に映す)、無ければ
+ * fetched_at の日付部分で補う。today はここでは使わない —— 呼び出し側が
+ * 最後の保険としてのみ充てる。
+ */
+export function resolveAsOf(res: LandedIqResponse | null, fetchedAt: string | null): string | null {
+  if (res?.as_of) return res.as_of;
+  if (fetchedAt) return fetchedAt.slice(0, 10);
+  return null;
+}
+
 // ── React Query の入口 ────────────────────────────────────────
 
 export const tariffCandidatesQueryOptions = (q: string) =>
@@ -193,10 +201,10 @@ export const tariffCandidatesQueryOptions = (q: string) =>
     enabled: q.trim().length > 0,
   });
 
-export const originComparisonQueryOptions = (code: string, origins?: string[]) =>
+export const originComparisonQueryOptions = (code: string) =>
   queryOptions({
-    queryKey: ["tariff", "compare", code, origins ?? []],
-    queryFn: () => getOriginComparison({ data: { code, origins } }),
+    queryKey: ["tariff", "compare", code],
+    queryFn: () => getOriginComparison({ data: { code } }),
     staleTime: 60 * 60 * 1000,
     enabled: /^\d{10}$/.test(code),
   });
