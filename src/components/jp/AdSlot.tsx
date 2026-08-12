@@ -14,40 +14,48 @@
  * 読者が見に来た数字を先に見せ、節の変わり目に置く。
  *
  * ■ 大きさ
- * 3.9:1 を前提にしている(1600x410 の素材で 1088x279 で出る)。
- * 幅は本文と揃える。高さを比率で先に確保するので、読み込み中に下の記事が
- * 飛び跳ねない。
+ * 本文幅(1088px)いっぱいに広げない。今の素材は 2.28:1 で、そのまま出すと
+ * 高さ 477px — ノートPCの画面の半分を占め、主要指標の表より大きくなる。
+ * 上限幅を置いて 860x377 に収める。3.9:1 の素材に差し替えたら上限は外してよい。
+ *
+ * 高さを比率で先に確保するので、読み込み中に下の記事が飛び跳ねない。
+ * 画面が狭いときは上限に届かないので、そのまま横いっぱいに出る。
  */
 export function AdSlot({
   href,
   src,
   alt,
   ratio = 1600 / 410,
+  maxWidth,
 }: {
   href: string;
   src: string;
   alt: string;
   /** 素材の縦横比。差し替えで比率が変わったらここを直す。 */
   ratio?: number;
+  /** 表示幅の上限(px)。縦長の素材が画面を占めるのを防ぐ。 */
+  maxWidth?: number;
 }) {
   return (
     <aside className="mt-8" aria-label="広告">
-      <div className="mb-1.5 text-[11px] font-bold tracking-wide text-[#8a929c]">広告</div>
-      <a
-        href={href}
-        target="_blank"
-        rel="noopener noreferrer sponsored"
-        className="block border border-[#e2e6ea] transition-opacity hover:opacity-92"
-      >
-        <img
-          src={src}
-          alt={alt}
-          className="block w-full"
-          style={{ aspectRatio: String(ratio) }}
-          loading="lazy"
-          decoding="async"
-        />
-      </a>
+      <div className="mx-auto" style={maxWidth ? { maxWidth } : undefined}>
+        <div className="mb-1.5 text-[11px] font-bold tracking-wide text-[#8a929c]">広告</div>
+        <a
+          href={href}
+          target="_blank"
+          rel="noopener noreferrer sponsored"
+          className="block border border-[#e2e6ea] transition-opacity hover:opacity-90"
+        >
+          <img
+            src={src}
+            alt={alt}
+            className="block w-full"
+            style={{ aspectRatio: String(ratio) }}
+            loading="lazy"
+            decoding="async"
+          />
+        </a>
+      </div>
     </aside>
   );
 }

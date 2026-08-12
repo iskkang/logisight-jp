@@ -2,6 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { useSuspenseQuery } from "@tanstack/react-query";
 
 import { JpHeader } from "./JpHeader";
+import { AdSlot } from "./AdSlot";
 import { JpFooter } from "./JpFooter";
 import { formatIndex, formatSppiPeriod, formatYoy, sppiQueryOptions } from "@/lib/api/sppi";
 import { formatPortPeriod, formatTeu, portThroughputQueryOptions } from "@/lib/api/ports";
@@ -107,7 +108,9 @@ export function JpHome() {
                       <Link to={r.to} className="font-medium hover:text-[#0b2d52] hover:underline">
                         {r.name}
                       </Link>
-                      {r.note && <div className="mt-0.5 text-[11.5px] text-[#6b7683]">{r.note}</div>}
+                      {r.note && (
+                        <div className="mt-0.5 text-[11.5px] text-[#6b7683]">{r.note}</div>
+                      )}
                     </td>
                     <td className="py-2.5 pr-3 text-right align-top">
                       <span className="text-[16px] font-bold tabular-nums">{r.value}</span>
@@ -127,9 +130,18 @@ export function JpHome() {
             </table>
           </div>
           <p className="mt-2 text-[11px] text-[#8a929c]">
-            ※ 軸ごとに公表タイミングが異なります。異なる月の数値を同一時点として比較しないでください。
+            ※
+            軸ごとに公表タイミングが異なります。異なる月の数値を同一時点として比較しないでください。
           </p>
         </section>
+
+        <AdSlot
+          href="https://www.mtlship.com"
+          src="/ad-mtl-central-asia.jpg"
+          alt="MTL — 日本から中央アジアへ。カザフスタン・ウズベキスタン・ロシア向け輸送"
+          ratio={1400 / 615}
+          maxWidth={860}
+        />
 
         <div className="mt-9 grid grid-cols-1 gap-9 min-[860px]:grid-cols-[1fr_300px]">
           {/* ニュース */}
@@ -165,7 +177,9 @@ export function JpHome() {
                       {!isInternalNewsItem(n) && (
                         <>
                           <span className="ml-1.5 text-[11px] text-[#8a929c]">↗</span>
-                          {n.source && <span className="ml-2 text-[11px] text-[#8a929c]">{n.source}</span>}
+                          {n.source && (
+                            <span className="ml-2 text-[11px] text-[#8a929c]">{n.source}</span>
+                          )}
                         </>
                       )}
                     </span>
@@ -175,7 +189,11 @@ export function JpHome() {
                 return (
                   <li key={n.id} className="border-b border-[#eef0f2]">
                     {isInternalNewsItem(n) ? (
-                      <Link to="/article/$slug" params={{ slug: n.slug || String(n.id) }} className={cls}>
+                      <Link
+                        to="/article/$slug"
+                        params={{ slug: n.slug || String(n.id) }}
+                        className={cls}
+                      >
                         {inner}
                       </Link>
                     ) : (
