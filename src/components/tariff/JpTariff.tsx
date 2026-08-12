@@ -7,7 +7,7 @@ import { originComparisonQueryOptions } from "@/lib/api/tariff";
 
 export function JpTariff({ code }: { code: string }) {
   const navigate = useNavigate();
-  const { data } = useQuery(originComparisonQueryOptions(code));
+  const { data, isPending, isFetching } = useQuery(originComparisonQueryOptions(code));
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-8">
@@ -17,6 +17,12 @@ export function JpTariff({ code }: { code: string }) {
       <div className="mt-6">
         <TariffSearch onPick={(picked) => navigate({ to: "/tariff", search: { code: picked } })} />
       </div>
+
+      {isPending && isFetching && (
+        <p className="mt-8 text-sm text-slate-600">
+          関税情報を取得しています…(初回は数秒かかることがあります)
+        </p>
+      )}
 
       {data && data.rows.length > 0 && (
         <section className="mt-8">

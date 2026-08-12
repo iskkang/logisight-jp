@@ -31,7 +31,7 @@ export function OriginTable({ rows, asOf }: { rows: OriginRow[]; asOf: string })
                 <Cell row={r} />
               </td>
               <td className="py-2.5 text-xs text-slate-600">
-                {r.breakdown.map((b) => `${b.label} ${b.pct}`).join(" + ")}
+                {r.breakdown.map((b) => `${b.label} ${b.pct}%`).join(" + ")}
                 {r.warnings.map((w) => (
                   <div key={w} className="mt-1 text-amber-700">
                     ⚠ {w}

@@ -14,6 +14,7 @@ export function TariffSearch({ onPick }: { onPick: (code: string) => void }) {
   const { data, isFetching } = useQuery(tariffCandidatesQueryOptions(submitted));
 
   const lines = data?.lines ?? [];
+  const upstreamFailed = data?.upstreamFailed ?? false;
   const searched = submitted.length > 0 && !isFetching;
 
   return (
@@ -55,7 +56,17 @@ export function TariffSearch({ onPick }: { onPick: (code: string) => void }) {
         ))}
       </div>
 
-      {searched && lines.length === 0 && (
+      {submitted.length > 0 && isFetching && (
+        <p className="mt-4 text-sm text-slate-600">検索しています…</p>
+      )}
+
+      {searched && lines.length === 0 && upstreamFailed && (
+        <p className="mt-4 text-sm text-slate-600">
+          データを取得できませんでした。しばらくしてからもう一度お試しください。
+        </p>
+      )}
+
+      {searched && lines.length === 0 && !upstreamFailed && (
         <p className="mt-4 text-sm text-slate-600">
           該当する品目が見つかりません。上の品目名から選ぶか、HTS コードを入力してください。
         </p>

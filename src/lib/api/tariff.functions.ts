@@ -120,7 +120,12 @@ export const getTariffCandidates = createServerFn({ method: "GET" })
   .handler(
     async ({
       data,
-    }): Promise<{ asOf: string; lines: { code: string; leaf: string; description: string }[] }> => {
+    }): Promise<{
+      asOf: string;
+      lines: { code: string; leaf: string; description: string }[];
+      /** 相手に届かなかった(0件と別)。TariffSearch はここを見てメッセージを分ける。 */
+      upstreamFailed?: boolean;
+    }> => {
       setResponseHeader("cache-control", PUBLIC_SWR_CACHE);
 
       const kind = classifyInput(data.q);
@@ -131,7 +136,7 @@ export const getTariffCandidates = createServerFn({ method: "GET" })
       const asOf = today();
       // 候補を出すだけなので、代表として 1 か国(日本)だけ引く。
       const { res } = await lookup(normalizeQuery(q), q, "JP", asOf);
-      if (!res) return { asOf, lines: [] };
+      if (!res) return { asOf, lines: [], upstreamFailed: true };
 
       return {
         asOf: res.as_of ?? asOf,
