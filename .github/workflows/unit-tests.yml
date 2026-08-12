@@ -1,0 +1,27 @@
+name: ユニットテスト
+
+# push・PR のたびに vitest 一式を走らせる。tariff.test.ts・hs-dictionary.test.ts は
+# これまでどの workflow にも載っておらず、壊れても誰にも気づかれなかった。
+#
+# tariff.contract.test.ts は describe.skipIf(!URL || !KEY) で、資格情報が無い
+# 環境では自動的に飛ばされる(ローカルではこれで正しい)。ここに Secrets は
+# 積まない —— 資格情報ありの契約テストは週次の対米関税スナップショット
+# (tariff-snapshot.yml)が別途担当し、そちらは資格情報の欠落自体を失敗にする。
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+      - run: npm ci
+      - run: npm test

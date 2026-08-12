@@ -21,6 +21,17 @@ jobs:
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
+      - name: 資格情報の確認
+        # Secrets が未設定だと describe.skipIf が全テストを飛ばし、何も確認せずに
+        # 緑になる。それは §7 が拒んだ「静かな通知」そのものなので、ここで先に落とす。
+        env:
+          LANDEDIQ_SUPABASE_URL: ${{ secrets.LANDEDIQ_SUPABASE_URL }}
+          LANDEDIQ_ANON_KEY: ${{ secrets.LANDEDIQ_ANON_KEY }}
+        run: |
+          if [ -z "$LANDEDIQ_SUPABASE_URL" ] || [ -z "$LANDEDIQ_ANON_KEY" ]; then
+            echo "::error::LANDEDIQ_SUPABASE_URL / LANDEDIQ_ANON_KEY が Secrets に設定されていない。契約テストが何も確認しないまま緑になるので、ここで落とす。"
+            exit 1
+          fi
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
