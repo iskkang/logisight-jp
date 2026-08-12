@@ -35,12 +35,21 @@ async function serviceClient(): Promise<SupabaseClient> {
   }) as unknown as SupabaseClient;
 }
 
+/**
+ * 通知の宛先。
+ *
+ * 環境変数が無いときに黙って送らないと、問い合わせが来ていることに誰も気づかない。
+ * 相談窓口は決まっているので、既定値をコードに持つ。INQUIRY_EMAIL で上書きできる。
+ * (INTERNAL_EMAIL は他の用途で個人宛になっているので、ここでは使わない。)
+ */
+const INQUIRY_TO = "info@mtlb.co.kr";
+
 /** 通知メール。失敗しても受付そのものは止めない。 */
 async function notify(row: z.infer<typeof InquirySchema>, id: number): Promise<void> {
   const key = process.env["RESEND_API_KEY"];
-  const to = process.env["INTERNAL_EMAIL"];
-  if (!key || !to) {
-    console.warn("[inquiry] RESEND_API_KEY / INTERNAL_EMAIL 未設定 — 通知を送らない");
+  const to = process.env["INQUIRY_EMAIL"] || INQUIRY_TO;
+  if (!key) {
+    console.warn("[inquiry] RESEND_API_KEY 未設定 — 通知を送らない");
     return;
   }
   const lines = [
@@ -60,7 +69,10 @@ async function notify(row: z.infer<typeof InquirySchema>, id: number): Promise<v
     method: "POST",
     headers: { Authorization: `Bearer ${key}`, "Content-Type": "application/json" },
     body: JSON.stringify({
-      from: "Logisight <newsletter@logisight.net>",
+      // 送信ドメインは Resend で検証済みのものしか使えない。検証されているのは
+      // mtlb.co.kr で、logisight.net は入っていない — ここを logisight.net に
+      // すると Resend が送信を拒否し、通知だけが静かに落ちる。
+      from: "Logisight <noreply@mtlb.co.kr>",
       to: [to],
       // 返信でそのまま相手に返せるようにする。
       reply_to: row.email,
