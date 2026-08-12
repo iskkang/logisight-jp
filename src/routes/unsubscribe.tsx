@@ -8,6 +8,8 @@ import { supabase } from "@/integrations/supabase/client";
 export const Route = createFileRoute("/unsubscribe")({
   validateSearch: (s: Record<string, unknown>) => ({
     id: typeof s.id === "string" ? s.id : "",
+    // u は会員(jp_profiles)の配信停止。id は旧・購読者テーブル用。
+    u: typeof s.u === "string" ? s.u : "",
   }),
   head: () => ({
     meta: [
@@ -24,23 +26,33 @@ const MESSAGES: Record<State, { title: string; body: string }> = {
   loading: { title: "処理中…", body: "配信停止の手続きを行っています。" },
   done: { title: "配信を停止しました", body: "これまでご購読いただきありがとうございました。" },
   already: { title: "すでに停止済みです", body: "このメールアドレスは配信が停止されています。" },
-  invalid: { title: "リンクが正しくありません", body: "登録情報を確認できませんでした。メール内の配信停止リンクをもう一度お試しください。" },
-  error: { title: "処理中にエラーが発生しました", body: "しばらくしてから再度お試しください。解決しない場合はご返信ください。" },
+  invalid: {
+    title: "リンクが正しくありません",
+    body: "登録情報を確認できませんでした。メール内の配信停止リンクをもう一度お試しください。",
+  },
+  error: {
+    title: "処理中にエラーが発生しました",
+    body: "しばらくしてから再度お試しください。解決しない場合はご返信ください。",
+  },
 };
 
 function UnsubscribePage() {
-  const { id } = Route.useSearch();
-  const [state, setState] = useState<State>(id ? "loading" : "invalid");
+  const { id, u } = Route.useSearch();
+  const [state, setState] = useState<State>(id || u ? "loading" : "invalid");
 
   useEffect(() => {
-    if (!id) return;
+    if (!id && !u) return;
     let active = true;
     (async () => {
       const rpc = supabase.rpc as unknown as (
         fn: string,
         args: Record<string, unknown>,
       ) => Promise<{ data: boolean | null; error: { message: string } | null }>;
-      const { data, error } = await rpc("newsletter_unsubscribe", { p_id: id });
+      // 会員は jp_profiles、旧・購読者は newsletter_subscribers。
+      // 呼ぶ関数が違うだけで、利用者から見た結果は同じにする。
+      const { data, error } = u
+        ? await rpc("jp_newsletter_unsubscribe", { p_user_id: u })
+        : await rpc("newsletter_unsubscribe", { p_id: id });
       if (!active) return;
       if (error) setState("error");
       else setState(data ? "done" : "already");
@@ -48,7 +60,7 @@ function UnsubscribePage() {
     return () => {
       active = false;
     };
-  }, [id]);
+  }, [id, u]);
 
   const m = MESSAGES[state];
 
