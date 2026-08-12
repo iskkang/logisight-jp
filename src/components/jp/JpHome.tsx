@@ -135,14 +135,6 @@ export function JpHome() {
           </p>
         </section>
 
-        <AdSlot
-          href="https://www.mtlship.com"
-          src="/ad-mtl-central-asia.jpg"
-          alt="MTL — 日本から中央アジアへ。カザフスタン・ウズベキスタン・ロシア向け輸送"
-          ratio={1400 / 615}
-          maxWidth={860}
-        />
-
         <div className="mt-9 grid grid-cols-1 gap-9 min-[860px]:grid-cols-[1fr_300px]">
           {/* ニュース */}
           <section>
@@ -253,6 +245,13 @@ export function JpHome() {
                 データの方法論 ›
               </Link>
             </div>
+
+            <AdSlot
+              href="https://www.mtlship.com"
+              src="/ad-mtl-central-asia.jpg"
+              alt="MTL — 日本から中央アジアへ。カザフスタン・ウズベキスタン・ロシア向け輸送"
+              ratio={1400 / 615}
+            />
           </aside>
         </div>
       </main>
