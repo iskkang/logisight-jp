@@ -4,6 +4,7 @@ import { Menu, X } from "lucide-react";
 
 import { AuthModal, type AuthMode } from "./AuthModal";
 import { Logo } from "./Logo";
+import { ProfileModal } from "./ProfileModal";
 import { signOut, takeOAuthError, useSession } from "@/lib/auth";
 
 // ヘッダー。白地・細い罫線に、現在地を藍の下線で示す。
@@ -189,6 +190,8 @@ export function JpHeader({ today }: { today: string }) {
       )}
 
       <AuthModal open={auth !== null} mode={auth ?? "login"} onClose={() => setAuth(null)} />
+      {/* 登録直後に一度だけ出る。ヘッダーは全ページに居るので、どこで登録しても通る。 */}
+      <ProfileModal />
     </header>
   );
 }
