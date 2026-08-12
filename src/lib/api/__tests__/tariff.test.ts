@@ -1,7 +1,9 @@
 import { describe, expect, it } from "vitest";
 
 import {
+  TARIFF_CACHE_TTL_MS,
   classifyInput,
+  decideCacheFreshness,
   normalizeQuery,
   toOriginRow,
   totalMatchesPrograms,
@@ -132,5 +134,36 @@ describe("totalMatchesPrograms", () => {
 
   it("合わなければ false", () => {
     expect(totalMatchesPrograms({ ...JP_CAR, duty_rate_total: 0.2 })).toBe(false);
+  });
+});
+
+describe("decideCacheFreshness", () => {
+  const NOW = Date.parse("2026-08-12T12:00:00Z");
+
+  // 行が無ければ相手を呼ぶしかない。
+  it("行が無ければ miss", () => {
+    expect(decideCacheFreshness(null, NOW)).toBe("miss");
+  });
+
+  it("数分前に取れていれば fresh", () => {
+    const fetchedAt = new Date(NOW - 5 * 60 * 1000).toISOString();
+    expect(decideCacheFreshness(fetchedAt, NOW)).toBe("fresh");
+  });
+
+  // 相手が止まっている間の代替表示に使う行。消さずに stale として使う。
+  it("30時間前なら stale", () => {
+    const fetchedAt = new Date(NOW - 30 * 60 * 60 * 1000).toISOString();
+    expect(decideCacheFreshness(fetchedAt, NOW)).toBe("stale");
+  });
+
+  // 境界は `<` で切っている。ちょうど TTL は stale 側。
+  it("TTL ちょうどは stale", () => {
+    const fetchedAt = new Date(NOW - TARIFF_CACHE_TTL_MS).toISOString();
+    expect(decideCacheFreshness(fetchedAt, NOW)).toBe("stale");
+  });
+
+  it("TTL の1ミリ秒手前は fresh", () => {
+    const fetchedAt = new Date(NOW - TARIFF_CACHE_TTL_MS + 1).toISOString();
+    expect(decideCacheFreshness(fetchedAt, NOW)).toBe("fresh");
   });
 });

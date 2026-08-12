@@ -9,6 +9,7 @@ import {
   DEFAULT_ORIGINS,
   MAX_ORIGINS,
   classifyInput,
+  decideCacheFreshness,
   normalizeQuery,
   toOriginRow,
   type LandedIqLine,
@@ -18,8 +19,6 @@ import {
 
 // jp_tariff_cache は生成済み Database 型にまだ無い → レポ慣例どおりキャストする。
 const sb = supabaseAdmin as unknown as SupabaseClient;
-
-const TTL_MS = 24 * 60 * 60 * 1000;
 
 const today = () => new Date().toISOString().slice(0, 10);
 
@@ -50,8 +49,15 @@ async function callLandedIq(
 }
 
 /**
- * キャッシュ → 無ければ相手。期限切れでも、相手が取れなければそれを使う。
- * 戻り値の stale は画面の時点表示に使う。
+ * キャッシュ → 無ければ相手。当日分の行が無くても、この (q_norm, origin) で
+ * 一番新しい行を「相手が止まったときの代替」として使う。戻り値の fetchedAt は
+ * 画面の時点表示に使う。
+ *
+ * select・upsert は失敗しても投げない。ここは高速化のための層であって
+ * 正の情報源ではない(sppi.functions.ts / ports.functions.ts が `if (error)
+ * throw` するのとはあえて違えてある)。1 か国のキャッシュ障害で
+ * Promise.all(getOriginComparison)全体を落とすと、6 か国の比較が丸ごと
+ * 失敗する ── キャッシュ層はミス扱いにして相手を呼びにいけば十分。
  */
 async function lookup(
   qNorm: string,
@@ -59,31 +65,48 @@ async function lookup(
   origin: string,
   asOf: string,
 ): Promise<{ res: LandedIqResponse | null; fetchedAt: string | null }> {
-  const { data: hit } = await sb
-    .from("jp_tariff_cache")
-    .select("payload,fetched_at")
-    .eq("q_norm", qNorm)
-    .eq("origin", origin)
-    .eq("as_of", asOf)
-    .maybeSingle();
+  let hit: { payload: LandedIqResponse; fetched_at: string } | null = null;
+  try {
+    // as_of では絞らない —— 今日の行が無くても、この (q_norm, origin) の
+    // 中で一番新しい行を拾う。ここを as_of = 今日 に絞ると、今日まだ
+    // 1 回も取れていない日は必ず miss になり、過去の行に永遠に届かない。
+    const { data, error } = await sb
+      .from("jp_tariff_cache")
+      .select("payload,fetched_at")
+      .eq("q_norm", qNorm)
+      .eq("origin", origin)
+      .order("fetched_at", { ascending: false })
+      .limit(1)
+      .maybeSingle();
+    if (error) console.error(`[tariff] cache select failed (${origin}):`, error.message);
+    else if (data) hit = data as { payload: LandedIqResponse; fetched_at: string };
+  } catch (e) {
+    console.error(`[tariff] cache select threw (${origin}):`, e);
+  }
 
-  const fresh = hit && Date.now() - new Date(hit.fetched_at as string).getTime() < TTL_MS;
-  if (fresh) return { res: hit!.payload as LandedIqResponse, fetchedAt: hit!.fetched_at as string };
+  if (decideCacheFreshness(hit?.fetched_at ?? null, Date.now()) === "fresh") {
+    return { res: hit!.payload, fetchedAt: hit!.fetched_at };
+  }
 
   const res = await callLandedIq(q, origin, asOf);
   if (!res) {
     // 相手が駄目でも、古い値があるなら見せる。時点は正直に出す。
-    if (hit) return { res: hit.payload as LandedIqResponse, fetchedAt: hit.fetched_at as string };
+    if (hit) return { res: hit.payload, fetchedAt: hit.fetched_at };
     return { res: null, fetchedAt: null };
   }
 
   const now = new Date().toISOString();
-  await sb
-    .from("jp_tariff_cache")
-    .upsert(
-      { q_norm: qNorm, origin, as_of: asOf, payload: res, fetched_at: now },
-      { onConflict: "q_norm,origin,as_of" },
-    );
+  try {
+    const { error } = await sb
+      .from("jp_tariff_cache")
+      .upsert(
+        { q_norm: qNorm, origin, as_of: asOf, payload: res, fetched_at: now },
+        { onConflict: "q_norm,origin,as_of" },
+      );
+    if (error) console.error(`[tariff] cache upsert failed (${origin}):`, error.message);
+  } catch (e) {
+    console.error(`[tariff] cache upsert threw (${origin}):`, e);
+  }
   return { res, fetchedAt: now };
 }
 

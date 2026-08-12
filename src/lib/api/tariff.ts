@@ -165,6 +165,24 @@ export function totalMatchesPrograms(line: LandedIqLine): boolean {
   return Math.abs(sum - line.duty_rate_total) < 1e-6;
 }
 
+// ── キャッシュの新鮮さ ────────────────────────────────────────
+
+/** 相手は IP 当たり毎分 30 回。この TTL の間はキャッシュだけで答える。 */
+export const TARIFF_CACHE_TTL_MS = 24 * 60 * 60 * 1000;
+
+export type CacheFreshness = "fresh" | "stale" | "miss";
+
+/**
+ * キャッシュ行の新鮮さを判定する。lookup()(tariff.functions.ts)の中に
+ * 直書きすると、Supabase をモックしないと境界値(TTL ちょうど・行が無い)を
+ * 試せない。ここへ切り出して、素の値だけでテストできるようにする。
+ */
+export function decideCacheFreshness(fetchedAt: string | null, now: number): CacheFreshness {
+  if (fetchedAt == null) return "miss";
+  const age = now - new Date(fetchedAt).getTime();
+  return age < TARIFF_CACHE_TTL_MS ? "fresh" : "stale";
+}
+
 // ── React Query の入口 ────────────────────────────────────────
 
 export const tariffCandidatesQueryOptions = (q: string) =>
