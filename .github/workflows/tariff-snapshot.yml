@@ -1,0 +1,33 @@
+name: 対米関税スナップショット
+
+# 米国の関税が動いたかを週 1 回だけ見る。
+#
+# 落ちたら壊れたのではなく、税率が動いたということである。人が確かめに
+# 来るように、わざと失敗にしてある。確かめたらスナップショットを書き換え、
+# その変化を月次レポートに書く。CI の赤は「記事の種が出た」の合図である。
+
+on:
+  schedule:
+    - cron: '0 0 * * 1' # 毎週月曜 09:00 JST
+  workflow_dispatch:
+
+concurrency:
+  group: tariff-snapshot
+  cancel-in-progress: false
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+      - run: npm ci
+      - name: 契約とスナップショット
+        env:
+          LANDEDIQ_SUPABASE_URL: ${{ secrets.LANDEDIQ_SUPABASE_URL }}
+          LANDEDIQ_ANON_KEY: ${{ secrets.LANDEDIQ_ANON_KEY }}
+        run: npm test -- tariff.contract
