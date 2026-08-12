@@ -5,7 +5,10 @@
  * ファイルだけである。相手の API が変わったときに直す場所を 1 か所に
  * 保つため、ここから外へ生の形を漏らさない。
  */
+import { queryOptions } from "@tanstack/react-query";
+
 import { lookupHs, type HsTerm } from "./hs-dictionary";
+import { getOriginComparison, getTariffCandidates } from "./tariff.functions";
 
 // ── LandedIQ の応答 ────────────────────────────────────────────
 
@@ -161,3 +164,21 @@ export function totalMatchesPrograms(line: LandedIqLine): boolean {
   const sum = line.programs.reduce((s, p) => s + p.rate, 0);
   return Math.abs(sum - line.duty_rate_total) < 1e-6;
 }
+
+// ── React Query の入口 ────────────────────────────────────────
+
+export const tariffCandidatesQueryOptions = (q: string) =>
+  queryOptions({
+    queryKey: ["tariff", "candidates", q],
+    queryFn: () => getTariffCandidates({ data: { q } }),
+    staleTime: 60 * 60 * 1000,
+    enabled: q.trim().length > 0,
+  });
+
+export const originComparisonQueryOptions = (code: string, origins?: string[]) =>
+  queryOptions({
+    queryKey: ["tariff", "compare", code, origins ?? []],
+    queryFn: () => getOriginComparison({ data: { code, origins } }),
+    staleTime: 60 * 60 * 1000,
+    enabled: /^\d{10}$/.test(code),
+  });
