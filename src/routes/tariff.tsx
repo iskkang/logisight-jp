@@ -21,7 +21,6 @@ export const Route = createFileRoute("/tariff")({
       description:
         "同じ品目を日本・中国・ベトナム・タイ・メキシコ・韓国から米国に出したとき、関税がどれだけ違うかを並べて比べます。MFN・Section 301・上限補正の内訳つき。",
       path: "/tariff",
-      koPath: "/tariff",
     }),
   component: TariffPage,
 });
