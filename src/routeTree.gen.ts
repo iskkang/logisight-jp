@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as UnsubscribeRouteImport } from './routes/unsubscribe'
 import { Route as TradeRouteImport } from './routes/trade'
+import { Route as TariffRouteImport } from './routes/tariff'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as ReportsRouteImport } from './routes/reports'
 import { Route as RatesRouteImport } from './routes/rates'
@@ -50,6 +51,11 @@ const UnsubscribeRoute = UnsubscribeRouteImport.update({
 const TradeRoute = TradeRouteImport.update({
   id: '/trade',
   path: '/trade',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TariffRoute = TariffRouteImport.update({
+  id: '/tariff',
+  path: '/tariff',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
@@ -224,6 +230,7 @@ export interface FileRoutesByFullPath {
   '/rates': typeof RatesRoute
   '/reports': typeof ReportsRouteWithChildren
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/tariff': typeof TariffRoute
   '/trade': typeof TradeRoute
   '/unsubscribe': typeof UnsubscribeRoute
   '/article/$slug': typeof ArticleSlugRoute
@@ -256,6 +263,7 @@ export interface FileRoutesByTo {
   '/rail-map': typeof RailMapRoute
   '/rates': typeof RatesRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/tariff': typeof TariffRoute
   '/trade': typeof TradeRoute
   '/unsubscribe': typeof UnsubscribeRoute
   '/article/$slug': typeof ArticleSlugRoute
@@ -291,6 +299,7 @@ export interface FileRoutesById {
   '/rates': typeof RatesRoute
   '/reports': typeof ReportsRouteWithChildren
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/tariff': typeof TariffRoute
   '/trade': typeof TradeRoute
   '/unsubscribe': typeof UnsubscribeRoute
   '/article/$slug': typeof ArticleSlugRoute
@@ -327,6 +336,7 @@ export interface FileRouteTypes {
     | '/rates'
     | '/reports'
     | '/sitemap.xml'
+    | '/tariff'
     | '/trade'
     | '/unsubscribe'
     | '/article/$slug'
@@ -359,6 +369,7 @@ export interface FileRouteTypes {
     | '/rail-map'
     | '/rates'
     | '/sitemap.xml'
+    | '/tariff'
     | '/trade'
     | '/unsubscribe'
     | '/article/$slug'
@@ -393,6 +404,7 @@ export interface FileRouteTypes {
     | '/rates'
     | '/reports'
     | '/sitemap.xml'
+    | '/tariff'
     | '/trade'
     | '/unsubscribe'
     | '/article/$slug'
@@ -428,6 +440,7 @@ export interface RootRouteChildren {
   RatesRoute: typeof RatesRoute
   ReportsRoute: typeof ReportsRouteWithChildren
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
+  TariffRoute: typeof TariffRoute
   TradeRoute: typeof TradeRoute
   UnsubscribeRoute: typeof UnsubscribeRoute
   ArticleSlugRoute: typeof ArticleSlugRoute
@@ -450,6 +463,13 @@ declare module '@tanstack/react-router' {
       path: '/trade'
       fullPath: '/trade'
       preLoaderRoute: typeof TradeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/tariff': {
+      id: '/tariff'
+      path: '/tariff'
+      fullPath: '/tariff'
+      preLoaderRoute: typeof TariffRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/sitemap.xml': {
@@ -715,6 +735,7 @@ const rootRouteChildren: RootRouteChildren = {
   RatesRoute: RatesRoute,
   ReportsRoute: ReportsRouteWithChildren,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
+  TariffRoute: TariffRoute,
   TradeRoute: TradeRoute,
   UnsubscribeRoute: UnsubscribeRoute,
   ArticleSlugRoute: ArticleSlugRoute,
