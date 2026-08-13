@@ -109,6 +109,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
           "日本の荷主・フォワーダーのための物流インテリジェンス。企業向けサービス価格指数(運賃)、主要6港のコンテナ取扱量、財務省貿易統計を毎月ひとつのレポートにまとめます。",
       },
       { name: "author", content: "Logisight" },
+      // Bing Webmaster Tools の所有者確認。認証が通ったあとも外さない —— 外すと
+      // 次の巡回で確認が落ちて、登録し直しになる。全ページの <head> に入るが、
+      // Bing が見るのはトップだけなので害はない。
+      { name: "msvalidate.01", content: "0873F6EDC9F6D274E04600FB3682626F" },
       { property: "og:title", content: "Logisight — 物流を読む、新しい視点" },
       {
         property: "og:description",
@@ -254,7 +258,6 @@ function RootComponent() {
     </QueryClientProvider>
   );
 }
-
 
 /**
  * 全ページが JpPage(ヘッダー・パンくず・フッター)を自前で持つ。
