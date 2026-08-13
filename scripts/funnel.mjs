@@ -97,4 +97,5 @@ for (const [p, n] of [...paths.entries()].sort((a, b) => b[1] - a[1]).slice(0, 8
   console.log(`  ${String(p).padEnd(30)}${n}`);
 }
 
-console.log("\n基準(2026-08-13): 313人 / 1.0〜1.4ページ / 登録 0人");
+console.log("\n基準(2026-08-13): 324人 / 1.82ページ / 登録 0人");
+console.log("※ 8/08〜8/10 は巡回(Bing)。人の数として読まないこと。");
