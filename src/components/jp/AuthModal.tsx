@@ -57,10 +57,16 @@ export function AuthModal({
   open,
   mode: initialMode,
   onClose,
+  reason,
 }: {
   open: boolean;
   mode: AuthMode;
   onClose: () => void;
+  /**
+   * ぼかしから来たときの、その場の文言。「港別の内訳はログインするとご覧いただけます」など。
+   * ヘッダーの登録ボタンから来たときは無い。
+   */
+  reason?: string;
 }) {
   const [mode, setMode] = useState<AuthMode>(initialMode);
   const [email, setEmail] = useState("");
@@ -195,9 +201,28 @@ export function AuthModal({
             <h2 className="text-[21px] font-bold tracking-[-0.01em]" style={{ color: C.navy }}>
               {isSignup ? "新規登録" : "ログイン"}
             </h2>
+            {/*
+              押した理由と、ここで返す約束を揃える。
+
+              以前は「月次レポートと気象リスクの更新を受け取れます」とだけ書いていた。
+              つまりメールの話をしていた。ところが実際に鍵が掛かっているのは
+              港別の内訳・系列別13系列・本文とPDF・全期間の推移で、利用者は
+              「今それを見たい」から押している。返事が別の話をしていた。
+
+              ぼかしから来たときは、そのぼかしの文言(reason)をそのまま出す。
+              どれを見ようとして止められたかは、本人がいちばん覚えている。
+            */}
+            {isSignup && reason && (
+              <p
+                className="mt-2 border-l-2 pl-2.5 text-[12.5px] font-bold leading-[1.6]"
+                style={{ color: C.navy, borderColor: C.accent }}
+              >
+                {reason}
+              </p>
+            )}
             <p className="mt-1.5 text-[12.5px] leading-[1.6]" style={{ color: C.sub }}>
               {isSignup
-                ? "アカウントを作成すると、月次レポートと気象リスクの更新を受け取れます。"
+                ? "無料の登録で、港別の内訳・系列別の全13系列・月次レポートの本文とPDF・全期間の推移が見られます。メールでのお知らせは任意です。"
                 : "登録済みのアカウントでログインしてください。"}
             </p>
 

@@ -68,7 +68,13 @@ export function LoginGate({
         </div>
       </div>
 
-      <AuthModal open={auth !== null} mode={auth ?? "login"} onClose={() => setAuth(null)} />
+      {/* 何を見ようとして止められたかを、そのまま登録画面へ渡す。 */}
+      <AuthModal
+        open={auth !== null}
+        mode={auth ?? "login"}
+        reason={title}
+        onClose={() => setAuth(null)}
+      />
     </div>
   );
 }
