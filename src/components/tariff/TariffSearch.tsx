@@ -5,6 +5,27 @@ import { HS_TERMS } from "@/lib/api/hs-dictionary";
 import { tariffCandidatesQueryOptions } from "@/lib/api/tariff";
 
 /**
+ * 候補行を見分けるための、すぐ上の階層だけを取り出す。
+ *
+ * 原簿の説明文は「大分類 > 中分類 > 小分類 > 末端」と入れ子になっていて長い。
+ * 以前は末尾 90 文字で切っていたが、語の途中から始まって読めなかった
+ * (「ines: > Of a cylinder…」「aving engines with…」)。
+ *
+ * かといって末端だけでは足りない。8703.23 では「Other」が 3 行あり、
+ * 何が違うのかは一つ上の階層(「Station wagons and passenger vans」なのか
+ * 「Having engines with not more than 4 cylinders」なのか)で決まる。
+ * だから末端の直前を返す。切らないので語の途中から始まることはない。
+ */
+function parentOf(description: string, leaf: string): string {
+  const parts = description
+    .split(">")
+    .map((s) => s.trim())
+    .filter(Boolean);
+  const last = parts[parts.length - 1] === leaf ? parts.length - 1 : parts.length;
+  return parts[last - 1] ?? "";
+}
+
+/**
  * チップは予備ではなく主な入り口である。原簿の説明文は英語なので
  * 「乗用車」と打っても当たらない。多くの利用者は打たずに押す。
  */
@@ -79,17 +100,21 @@ export function TariffSearch({ onPick }: { onPick: (code: string) => void }) {
       )}
 
       {lines.length > 0 && (
-        <ul className="mt-4 divide-y divide-slate-100 border-y border-slate-200">
+        <ul className="mt-4 divide-y divide-[#eef0f2] border-y border-[#d5d9de]">
           {lines.map((l) => (
             <li key={l.code}>
               <button
                 type="button"
                 onClick={() => onPick(l.code)}
-                className="w-full py-2.5 text-left text-sm hover:bg-slate-50"
+                className="w-full px-1 py-3 text-left hover:bg-[#f7f8f9]"
               >
-                <span className="font-mono text-xs text-slate-500">{l.code}</span>{" "}
-                <span className="font-semibold">{l.leaf}</span>
-                <span className="ml-1 text-xs text-slate-500">{l.description.slice(-90)}</span>
+                <div className="flex flex-wrap items-baseline gap-x-2">
+                  <span className="font-mono text-[11.5px] text-[#8a929c]">{l.code}</span>
+                  <span className="text-[13px] font-bold text-[#1a1f26]">{l.leaf}</span>
+                </div>
+                <div className="mt-0.5 text-[11.5px] leading-[1.6] text-[#6b7683]">
+                  {parentOf(l.description, l.leaf)}
+                </div>
               </button>
             </li>
           ))}

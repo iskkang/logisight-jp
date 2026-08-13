@@ -38,9 +38,9 @@ export const Route = createFileRoute("/tariff")({
   validateSearch: validateTariffSearch,
   head: () =>
     seoHead({
-      title: "原産地別 対米関税比較 — Logisight",
+      title: "米国輸入関税 原産地別比較 — Logisight",
       description:
-        "同じ品目を日本・中国・ベトナム・タイ・メキシコ・韓国から米国に出したとき、関税がどれだけ違うかを並べて比べます。MFN・Section 301・上限補正の内訳つき。",
+        "日本から米国へ出したときの輸入関税を基準に、中国・ベトナム・タイ・メキシコ・韓国と並べて比べます。MFN・Section 301・上限補正の内訳つき。米国の輸入関税のみを扱います。",
       path: "/tariff",
     }),
   component: TariffPage,

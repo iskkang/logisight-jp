@@ -26,7 +26,8 @@ const NAV = [
   { to: "/port-risk", label: "リスク" },
   { to: "/benchmark", label: "ベンチマーク" },
   { to: "/forecasts", label: "見通し" },
-  { to: "/tariff", label: "関税" },
+  // 「関税」だけだと、どの国が課す税なのか分からない。扱うのは米国の輸入関税だけである。
+  { to: "/tariff", label: "米関税" },
   { to: "/reports", label: "レポート" },
 ] as const;
 

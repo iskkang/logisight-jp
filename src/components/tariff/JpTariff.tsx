@@ -17,9 +17,9 @@ export function JpTariff({ code }: { code: string }) {
 
   return (
     <JpPage
-      crumbs={[{ label: "ホーム", to: "/" }, { label: "関税" }]}
-      title="原産地別 対米関税比較"
-      lead="同じ品目を、どこから出すか。日本・中国・ベトナム・タイ・メキシコ・韓国から米国に入れたときの関税を、内訳つきで並べます。"
+      crumbs={[{ label: "ホーム", to: "/" }, { label: "米関税" }]}
+      title="米国輸入関税 — 原産地別の比較"
+      lead="日本から出したときの関税を基準に、中国・ベトナム・タイ・メキシコ・韓国から出した場合と並べます。扱うのは米国が課す輸入関税だけで、他国の関税は含みません。"
       meta={table ? <Chip label="原簿" value={`${table.asOf} 時点`} /> : undefined}
     >
       <div className="py-6">
