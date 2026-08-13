@@ -25,6 +25,7 @@ const NAV = [
   { to: "/climate", label: "気象" },
   { to: "/port-risk", label: "リスク" },
   { to: "/benchmark", label: "ベンチマーク" },
+  { to: "/hs", label: "HSコード" },
   { to: "/forecasts", label: "見通し" },
   { to: "/reports", label: "レポート" },
 ] as const;

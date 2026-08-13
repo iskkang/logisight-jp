@@ -37,6 +37,7 @@ export const Route = createFileRoute("/sitemap.xml")({
           { path: "/rates", changefreq: "monthly", priority: "0.9" },
           { path: "/ports", changefreq: "monthly", priority: "0.9" },
           { path: "/trade", changefreq: "monthly", priority: "0.9" },
+          { path: "/hs", changefreq: "monthly", priority: "0.9" },
           // /climate・/forecasts・/port-risk は各ルートで noindex を指定している。
           // sitemap に載せると「索引するな」と「索引せよ」を同時に出すことになる。
           // noindex を外すときは、ここへ追加するのも忘れないこと。
