@@ -54,7 +54,10 @@ export function JpHeader({ today }: { today: string }) {
             <Link
               key={n.to}
               to={n.to}
-              className={`relative px-2 py-2 text-[13.5px] transition-colors ${
+              // 折り返さない。項目が増えると「関税」が「関」「税」に割れて二行になり、
+              // ヘッダーの高さごと変わる。項目名の途中で切れるくらいなら、
+              // 詰まって見えるほうがまだ読める。
+              className={`relative px-2 py-2 text-[13.5px] whitespace-nowrap transition-colors ${
                 active(n.to)
                   ? "font-bold text-[#0d2137] after:absolute after:inset-x-2 after:-bottom-[13px] after:h-[2px] after:bg-[#1857b8]"
                   : "text-[#5b6672] hover:text-[#0d2137]"
