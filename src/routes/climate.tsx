@@ -11,15 +11,14 @@ export const Route = createFileRoute("/climate")({
   loader: ({ context }) => {
     context.queryClient.ensureQueryData(climateRiskQueryOptions());
   },
-  // 本文が韓国語のままのため、日本語コンテンツが用意できるまで非公開扱いにする。
-  // メニューとサイトマップから外すだけでは、クローラが URL を辿って索引しうる。
-  head: () => {
-    const base = seoHead({
+  // noindex を外した(2026-08-13)。付けた理由は「本文が韓国語のままだから」で、
+  // その理由はもう無い —— 画面の文言・地名・凡例・読み方まで日本語で、韓国語は 0 文字。
+  // 理由が消えた印は、理由と一緒に消す。残しておくと次の人が根拠を探して迷う。
+  head: () =>
+    seoHead({
       title: "世界の気象リスク — Logisight",
       description: SUBTITLE,
       path: "/climate",
-    });
-    return { ...base, meta: [...base.meta, { name: "robots", content: "noindex,nofollow" }] };
-  },
+    }),
   component: LogisightClimate,
 });

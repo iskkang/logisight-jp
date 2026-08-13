@@ -38,9 +38,11 @@ export const Route = createFileRoute("/sitemap.xml")({
           { path: "/ports", changefreq: "monthly", priority: "0.9" },
           { path: "/trade", changefreq: "monthly", priority: "0.9" },
           { path: "/hs", changefreq: "monthly", priority: "0.9" },
-          // /climate・/forecasts・/port-risk は各ルートで noindex を指定している。
+          { path: "/climate", changefreq: "daily", priority: "0.8" },
+          // /forecasts・/port-risk はまだ各ルートで noindex を指定している。
           // sitemap に載せると「索引するな」と「索引せよ」を同時に出すことになる。
           // noindex を外すときは、ここへ追加するのも忘れないこと。
+          // (/climate は 2026-08-13 に日本語化を確認して外した。)
           { path: "/policy", changefreq: "weekly", priority: "0.7" },
           // /rail は /rail/americas へのリダイレクトなので載せない。
           { path: "/rail/americas", changefreq: "weekly", priority: "0.7" },
@@ -82,9 +84,14 @@ export const Route = createFileRoute("/sitemap.xml")({
           const { data } = await supabasePublicServer
             .from("maritime_news")
             .select("id,slug,published_at")
-            // 본문 없는 외부 기사는 우리 페이지가 아니다 — 원문으로 리다이렉트되거나
-            // 원문 URL이 깨져 있어 크롤러가 리다이렉트·빈 페이지를 받는다. sitemap에서 제외.
-            // (agent_type NULL 행은 neq가 걸러내므로 is.null 절을 따로 둔다)
+            // 日本語の記事だけ。この一行が抜けていて、韓国語スラッグの記事 500 件が
+            // 日本版の sitemap に載っていた。日本側にその記事は無いので全て 404 になり、
+            // クローラは「無いページ」を 500 件教えられていたことになる。
+            // reports 側には最初から入っている条件で、ここだけ落ちていた。
+            .eq("lang", "ja")
+            // 本文の無い外部記事はうちのページではない —— 原文へ転送されるか、原文 URL が
+            // 壊れていてクローラが空ページを受け取る。sitemap から外す。
+            // (agent_type が NULL の行は neq が落とすので is.null を別に置く)
             .or("agent_type.is.null,agent_type.neq.external,content.not.is.null")
             .order("published_at", { ascending: false, nullsFirst: false })
             .limit(500);
