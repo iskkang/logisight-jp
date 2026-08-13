@@ -41,20 +41,32 @@ const DEGRADED_SWR_CACHE = "public, max-age=0, s-maxage=30, stale-while-revalida
  * 相手を 1 回だけ呼ぶ。落ちても投げない —— 1 か国が取れなくても、
  * 残りの国は見せたい。呼び出し側が null を「取れなかった」として扱う。
  */
+/**
+ * LandedIQ の所在。既定値を持たせる。
+ *
+ * この URL は秘密ではない —— LandedIQ 自身の /hts が同じものをブラウザに出している。
+ * 秘密でない値を設定必須にしたせいで、鍵だけ入って URL が入らず、本番が静かに
+ * 動かないという状態を作ってしまった(ログには url=無 key=有 と出た)。
+ * 設定が要るのは鍵だけにして、間違えられる箇所を半分に減らす。
+ *
+ * 移設したときだけ LANDEDIQ_SUPABASE_URL で上書きする。
+ */
+const LANDEDIQ_URL =
+  process.env.LANDEDIQ_SUPABASE_URL || "https://hwcfjxwdmmlydnrfyjqk.supabase.co";
+
 async function callLandedIq(
   q: string,
   origin: string,
   asOf: string,
 ): Promise<LandedIqResponse | null> {
-  const url = process.env.LANDEDIQ_SUPABASE_URL;
+  const url = LANDEDIQ_URL;
   const key = process.env.LANDEDIQ_ANON_KEY;
-  if (!url || !key) {
+  if (!key) {
     // 黙って null を返すと「相手が落ちている」と区別が付かない。実際にそうなった —
     // 設定漏れのまま本番が動き、たまたまキャッシュに残っていた行だけが表示されて
     // 正常に見えていた。設定漏れは相手の障害ではなくこちらの落ち度なので記録に残す。
     console.error(
-      `[tariff] 環境変数が実行環境に無い: url=${url ? "有" : "無"} key=${key ? "有" : "無"}` +
-        " — LANDEDIQ_SUPABASE_URL / LANDEDIQ_ANON_KEY を Production に入れて再デプロイする。",
+      "[tariff] LANDEDIQ_ANON_KEY が実行環境に無い。Production に入れて再デプロイする。",
     );
     return null;
   }
