@@ -48,7 +48,17 @@ async function callLandedIq(
 ): Promise<LandedIqResponse | null> {
   const url = process.env.LANDEDIQ_SUPABASE_URL;
   const key = process.env.LANDEDIQ_ANON_KEY;
-  if (!url || !key) return null;
+  if (!url || !key) {
+    // 黙って null を返すと「相手が落ちている」と区別が付かない。実際にそうなった —
+    // 設定漏れのまま本番が動き、たまたまキャッシュに残っていた行だけが表示されて
+    // 正常に見えていた。設定漏れは相手の障害ではなくこちらの落ち度なので記録に残す。
+    console.error(
+      `[tariff] 環境変数が実行環境に無い: url=${url ? "有" : "無"} key=${key ? "有" : "無"}` +
+        " — LANDEDIQ_SUPABASE_URL / LANDEDIQ_ANON_KEY を Production に入れて再デプロイする。",
+    );
+    return null;
+  }
+  const t0 = Date.now();
   try {
     const r = await fetch(`${url}/functions/v1/hts-lookup`, {
       method: "POST",
@@ -56,9 +66,18 @@ async function callLandedIq(
       body: JSON.stringify({ q, origin, asOf }),
       signal: AbortSignal.timeout(8000),
     });
-    if (!r.ok) return null; // 429 もここに落ちる。古いキャッシュで凌ぐ。
+    // 429 もここに落ちる。古いキャッシュで凌ぐが、なぜ凌いだかは残す。
+    if (!r.ok) {
+      console.error(`[tariff] hts-lookup HTTP ${r.status} (${origin} ${q}) ${Date.now() - t0}ms`);
+      return null;
+    }
     return (await r.json()) as LandedIqResponse;
-  } catch {
+  } catch (e) {
+    // 8 秒の打ち切りもここに来る。時間を出しておかないと、切れたのか
+    // 届かなかったのかが後から分からない。
+    console.error(
+      `[tariff] hts-lookup 失敗 (${origin} ${q}) ${Date.now() - t0}ms: ${(e as Error).message}`,
+    );
     return null;
   }
 }
