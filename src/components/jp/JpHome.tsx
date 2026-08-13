@@ -4,13 +4,81 @@ import { useSuspenseQuery } from "@tanstack/react-query";
 import { JpHeader } from "./JpHeader";
 import { AdSlot } from "./AdSlot";
 import { JpFooter } from "./JpFooter";
-import { formatIndex, formatSppiPeriod, formatYoy, sppiQueryOptions } from "@/lib/api/sppi";
+import {
+  formatIndex,
+  formatSppiPeriod,
+  formatYoy,
+  splitYoy,
+  sppiQueryOptions,
+} from "@/lib/api/sppi";
 import { formatPortPeriod, formatTeu, portThroughputQueryOptions } from "@/lib/api/ports";
 import { formatJpPeriod, formatJpy, jpTradeSummaryQueryOptions } from "@/lib/api/jp-trade";
 import { jpReportsQueryOptions, monthLabel, monthParam } from "@/lib/api/jp-reports";
 import { isInternalNewsItem, latestNewsQueryOptions } from "@/lib/api/news";
 
 const WRAP = "mx-auto max-w-[1120px] px-4";
+
+/**
+ * 最初の画面の一段目。「上がったのは運賃か、円か」だけを言う。
+ *
+ * 契約通貨ベースを公表しない系列では分けられないので、split が null なら何も出さない。
+ * 出せないときに何かを出すと、そこだけ推計が混ざる。
+ */
+function TopLede({
+  split,
+  period,
+}: {
+  split: { yenPct: number; contractPct: number; gapPt: number } | null;
+  period: string | null;
+}) {
+  if (!split) return null;
+  const { yenPct, contractPct, gapPt } = split;
+  // 為替が押し上げているときだけ言い方を変える。円高局面で同じ文にすると逆さまになる。
+  const fxLifted = gapPt > 0;
+  return (
+    <section className="mb-7 border border-[#d5d9de] bg-[#f7f8f9] px-5 py-4">
+      <h2 className="text-[15px] font-bold text-[#0b2d52]">上がったのは運賃か、円か。</h2>
+      <p className="mt-1 text-[12px] text-[#6b7683]">
+        外航貨物輸送 · {formatSppiPeriod(period)} · 前年同月比 · 日本銀行
+      </p>
+
+      <div className="mt-3 flex flex-wrap items-baseline gap-x-8 gap-y-2">
+        <div>
+          <div className="text-[11.5px] text-[#6b7683]">円ベース(支払う側)</div>
+          <div className="text-[26px] font-bold tabular-nums leading-tight text-[#0b2d52]">
+            {formatYoy(yenPct)}
+          </div>
+        </div>
+        <div>
+          <div className="text-[11.5px] text-[#6b7683]">契約通貨ベース(運賃そのもの)</div>
+          <div className="text-[26px] font-bold tabular-nums leading-tight text-[#1a1f26]">
+            {formatYoy(contractPct)}
+          </div>
+        </div>
+        <div>
+          <div className="text-[11.5px] text-[#6b7683]">差 = 為替</div>
+          <div className="text-[26px] font-bold tabular-nums leading-tight text-[#8a5a00]">
+            {gapPt > 0 ? "+" : ""}
+            {gapPt.toFixed(1)}pt
+          </div>
+        </div>
+      </div>
+
+      <p className="mt-3 text-[12.5px] leading-[1.85] text-[#3c4652]">
+        {fxLifted
+          ? "日本銀行は同じ系列を二つの基準で公表している。円ベースには為替が乗り、契約通貨ベースには乗らない。差はそのまま為替の分で、円で支払う側だけが負っている。"
+          : "円ベースのほうが低い。為替は今のところ負担を軽くする側に働いている。"}
+      </p>
+
+      <Link
+        to="/benchmark"
+        className="mt-3 inline-block border border-[#0b2d52] px-4 py-2 text-[12.5px] font-bold text-[#0b2d52] hover:bg-[#0b2d52] hover:text-white"
+      >
+        自社の航路で運賃と為替を分けて見る →
+      </Link>
+    </section>
+  );
+}
 
 /** "2026-08-04T…" → "08/04"。業界紙の一覧は日付が先頭に来る。 */
 function md(iso: string | null): string {
@@ -91,6 +159,21 @@ export function JpHome() {
       <JpHeader today={todayJa()} />
 
       <main className={`${WRAP} pt-6`}>
+        {/*
+          最初の画面で、ここでしか読めないことを一つだけ言う。
+
+          直近8日で 313 人が来て、1人あたり 1.0〜1.4 ページで帰っていた。二度目の
+          クリックが起きていない。上から順に「日本銀行の指数」「国土交通省の TEU」
+          「財務省の輸出額」と並べても、どれも他所で見られるので留まる理由にならない。
+
+          運賃指数はどこにでもある。無いのは「上がったのは運賃か、円か」の切り分けで、
+          これは日銀が同じ系列を二つの基準で出しているから引き算で出せる —— 外部データも
+          推計も要らない。円で払う荷主には、この差がそのまま負担である。
+
+          断定は足さない。二つの公表値と、その差だけを置く。
+        */}
+        <TopLede split={splitYoy(ocean?.yoyYenPct, ocean?.yoyContractPct)} period={sppi.period} />
+
         {/* 指標 */}
         <section>
           <SecTitle>主要指標</SecTitle>
