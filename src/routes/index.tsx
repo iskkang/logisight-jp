@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 
 import { sppiQueryOptions } from "@/lib/api/sppi";
 import { portThroughputQueryOptions } from "@/lib/api/ports";
-import { jpTradeQueryOptions } from "@/lib/api/jp-trade";
+import { jpTradeSummaryQueryOptions } from "@/lib/api/jp-trade";
 import { jpReportsQueryOptions } from "@/lib/api/jp-reports";
 import { latestNewsQueryOptions } from "@/lib/api/news";
 import { JpHome } from "@/components/jp/JpHome";
@@ -14,7 +14,7 @@ export const Route = createFileRoute("/")({
     return Promise.all([
       qc.ensureQueryData(sppiQueryOptions()),
       qc.ensureQueryData(portThroughputQueryOptions()),
-      qc.ensureQueryData(jpTradeQueryOptions()),
+      qc.ensureQueryData(jpTradeSummaryQueryOptions()),
       qc.ensureQueryData(jpReportsQueryOptions()),
       qc.ensureQueryData(latestNewsQueryOptions({ lang: "ja", limit: 14 })),
     ]);

@@ -6,7 +6,7 @@ import { AdSlot } from "./AdSlot";
 import { JpFooter } from "./JpFooter";
 import { formatIndex, formatSppiPeriod, formatYoy, sppiQueryOptions } from "@/lib/api/sppi";
 import { formatPortPeriod, formatTeu, portThroughputQueryOptions } from "@/lib/api/ports";
-import { formatJpPeriod, formatJpy, jpTradeQueryOptions } from "@/lib/api/jp-trade";
+import { formatJpPeriod, formatJpy, jpTradeSummaryQueryOptions } from "@/lib/api/jp-trade";
 import { jpReportsQueryOptions, monthLabel, monthParam } from "@/lib/api/jp-reports";
 import { isInternalNewsItem, latestNewsQueryOptions } from "@/lib/api/news";
 
@@ -42,7 +42,7 @@ function Delta({ v }: { v: number | null }) {
 export function JpHome() {
   const { data: sppi } = useSuspenseQuery(sppiQueryOptions());
   const { data: ports } = useSuspenseQuery(portThroughputQueryOptions());
-  const { data: trade } = useSuspenseQuery(jpTradeQueryOptions());
+  const { data: trade } = useSuspenseQuery(jpTradeSummaryQueryOptions());
   const { data: reports } = useSuspenseQuery(jpReportsQueryOptions());
   const { data: news } = useSuspenseQuery(latestNewsQueryOptions({ lang: "ja", limit: 14 }));
 

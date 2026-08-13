@@ -1,6 +1,6 @@
 import { queryOptions } from "@tanstack/react-query";
 
-import { getJpTrade } from "./jp-trade.functions";
+import { getJpTrade, getJpTradeSummary } from "./jp-trade.functions";
 
 /**
  * 財務省貿易統計の国名は英字略号("HG KONG" "SNGAPOR")。
@@ -65,10 +65,7 @@ export type CommodityRow = {
  * 集計せずに行をそのまま並べると、同じ品目が何十回も出て、しかも1国あたりの
  * 金額は小さいため表示が「0億円 / 0.0%」で埋まる。実際にそうなっていた。
  */
-export function aggregateCommodities(
-  rows: CommodityRow[],
-  direction: string,
-): JpTradeCommodity[] {
+export function aggregateCommodities(rows: CommodityRow[], direction: string): JpTradeCommodity[] {
   const sum = new Map<string, number>();
   for (const r of rows) {
     if (r.direction !== direction) continue;
@@ -95,6 +92,19 @@ export const jpTradeQueryOptions = () =>
   queryOptions({
     queryKey: ["jp_trade", "latest"],
     queryFn: () => getJpTrade(),
+    staleTime: 30 * 60 * 1000,
+  });
+
+/**
+ * トップ画面用。品目の内訳を取らないぶん、待ち時間が 2 秒ほど短い。
+ *
+ * キーを分けておく。同じキーにすると、先に開いたトップが「内訳が空」の状態で
+ * キャッシュを埋め、あとから /trade を開いた人に品目が出なくなる。
+ */
+export const jpTradeSummaryQueryOptions = () =>
+  queryOptions({
+    queryKey: ["jp_trade", "latest", "summary"],
+    queryFn: () => getJpTradeSummary(),
     staleTime: 30 * 60 * 1000,
   });
 

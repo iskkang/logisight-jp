@@ -41,14 +41,28 @@ function toCountry(r: CountryRow): JpTradeCountry {
   };
 }
 
+/**
+ * 品目の内訳まで取るかどうかを分ける。
+ *
+ * 品目表は「品目 × 相手国」の粒度で、1か月でも約 2,900 行ある。PostgREST は
+ * 1回 1,000 行までなので全部取るのに 3〜4 往復し、1往復 ≈ 0.6 秒なので
+ * ここだけで 2 秒強かかっていた。
+ *
+ * ところがトップ画面が使うのは総額と対象月だけで、品目の内訳は一行も描かない
+ * (描いているのは /trade だけ)。描かないものを取るために、最初の 1 バイトが
+ * 2 秒遅れていた —— TTFB 2.7 秒のほとんどがこれだった。
+ *
+ * 待たされる時間はそのまま読者の損なので、取る量を画面に合わせる。
+ */
+async function loadJpTrade(withItems: boolean): Promise<JpTradeData> {
+  setResponseHeader("cache-control", PUBLIC_SWR_CACHE);
 
-export const getJpTrade = createServerFn({ method: "GET" }).handler(
-  async (): Promise<JpTradeData> => {
-    setResponseHeader("cache-control", PUBLIC_SWR_CACHE);
-
+  {
     const { data: cData, error: cErr } = await sb
       .from("jp_trade_stats")
-      .select("country_name,is_aggregate,year,month,export_jpy,import_jpy,yoy_export_pct,yoy_import_pct")
+      .select(
+        "country_name,is_aggregate,year,month,export_jpy,import_jpy,yoy_export_pct,yoy_import_pct",
+      )
       .order("year", { ascending: false })
       .order("month", { ascending: false })
       .order("export_jpy", { ascending: false })
@@ -72,6 +86,16 @@ export const getJpTrade = createServerFn({ method: "GET" }).handler(
       .map(toCountry)
       .sort((a, b) => (b.exportJpy ?? 0) - (a.exportJpy ?? 0))
       .slice(0, 10);
+
+    if (!withItems) {
+      return {
+        period,
+        total: totalRow ? toCountry(totalRow) : null,
+        countries,
+        exportItems: [],
+        importItems: [],
+      };
+    }
 
     // 品目 × 相手国の粒度なので1か月でも数千行になる。PostgREST の既定上限(1000)で
     // 黙って切れると合計が過少になるため、必ずページングして全件取る。
@@ -97,5 +121,13 @@ export const getJpTrade = createServerFn({ method: "GET" }).handler(
       exportItems: aggregateCommodities(items, "export"),
       importItems: aggregateCommodities(items, "import"),
     };
-  },
+  }
+}
+
+/** /trade 用。品目の内訳まで取る。 */
+export const getJpTrade = createServerFn({ method: "GET" }).handler(() => loadJpTrade(true));
+
+/** トップ画面用。総額と対象月しか描かないので、品目の内訳は取らない。 */
+export const getJpTradeSummary = createServerFn({ method: "GET" }).handler(() =>
+  loadJpTrade(false),
 );
