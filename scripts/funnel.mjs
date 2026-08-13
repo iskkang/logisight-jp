@@ -85,7 +85,9 @@ console.log("\n日別  表示 / 人 / 1人あたり");
 for (const d of [...byDay.keys()].sort().reverse()) {
   const e = byDay.get(d);
   const per = (e.views / e.people.size).toFixed(2);
-  console.log(`  ${d}  ${String(e.views).padStart(4)} / ${String(e.people.size).padStart(3)}人 / ${per}`);
+  console.log(
+    `  ${d}  ${String(e.views).padStart(4)} / ${String(e.people.size).padStart(3)}人 / ${per}`,
+  );
 }
 
 const paths = new Map();
