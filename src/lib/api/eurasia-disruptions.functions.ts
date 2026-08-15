@@ -3,6 +3,7 @@ import { z } from "zod";
 import ws from "ws";
 import { supabasePublicServer } from "@/integrations/supabase/public.server";
 import type { EurasiaDisruptionRow } from "./eurasia-disruptions";
+import { requireAdmin } from "./require-admin";
 
 export const getEurasiaDisruptionsActive = createServerFn({ method: "GET" }).handler(
   async (): Promise<EurasiaDisruptionRow[]> => {
@@ -20,6 +21,7 @@ export const getEurasiaDisruptionsActive = createServerFn({ method: "GET" }).han
 );
 
 const DisruptionSchema = z.object({
+  token: z.string(),
   id: z.string().optional(),
   lane_id: z.string().min(1).max(120).nullable().optional(),
   segment: z.string().min(1).max(200),
@@ -34,6 +36,7 @@ const DisruptionSchema = z.object({
 export const upsertEurasiaDisruption = createServerFn({ method: "POST" })
   .inputValidator(DisruptionSchema)
   .handler(async ({ data }) => {
+    await requireAdmin(data.token);
     const { createClient } = await import("@supabase/supabase-js");
     const supabase = createClient(
       process.env["SUPABASE_URL"]!,
@@ -45,14 +48,15 @@ export const upsertEurasiaDisruption = createServerFn({ method: "POST" })
     );
     const { error } = await supabase
       .from("eurasia_disruptions")
-      .upsert({ ...data, status: "active" });
+      .upsert({ ...(({ token: _t, ...f }) => f)(data), status: "active" });
     if (error) throw new Error(error.message);
     return { ok: true };
   });
 
 export const resolveEurasiaDisruption = createServerFn({ method: "POST" })
-  .inputValidator(z.object({ id: z.string().uuid(), resolved_at: z.string() }))
+  .inputValidator(z.object({ token: z.string(), id: z.string().uuid(), resolved_at: z.string() }))
   .handler(async ({ data }) => {
+    await requireAdmin(data.token);
     const { createClient } = await import("@supabase/supabase-js");
     const supabase = createClient(
       process.env["SUPABASE_URL"]!,
