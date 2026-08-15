@@ -214,7 +214,7 @@ export function LogisightPort() {
           <div className="mb-1.5 mt-4 flex flex-wrap gap-2.5">
             <Pill c="bg-[#ef4444]">港湾遅延 70%+ <b className="lsg-mono font-semibold text-[#dc2626]">{delayedPorts === 0 ? "なし" : `${delayedPorts}港`}</b></Pill>
             <Pill c="bg-[#ef4444]">主要海峡の変動 <b className="lsg-mono font-semibold text-[#dc2626]">{topChoke ? `${topChoke.name} ${fmtPct(topChoke.wowPct)}` : NA}</b></Pill>
-            <Pill c="bg-[#16a34a]">ホルムズ通航 <b className="lsg-mono font-semibold text-[#1a2433]">{hormuz.crossingCount}隻</b></Pill>
+            <Pill c="bg-[#16a34a]">ホルムズ通航 <b className="lsg-mono font-semibold text-[#1a2433]">{hormuz.crossingCount == null ? NA : `${hormuz.crossingCount}隻`}</b></Pill>
             <Pill c="bg-[#16a34a]">DB イベント <b className="lsg-mono font-semibold text-[#1a2433]">{policies.length}件 · 予定 {upcoming30}件</b></Pill>
           </div>
 
@@ -247,8 +247,8 @@ export function LogisightPort() {
               />
               <KpiCard
                 lab="ホルムズ海峡の日次通航"
-                val={`${hormuz.crossingCount}隻`}
-                sub={`${hormuz.crossingDate} · タンカー ${hormuz.tankerCount} · バルク ${hormuz.bulkCount}`}
+                val={hormuz.crossingCount == null ? NA : `${hormuz.crossingCount}隻`}
+                sub={`${hormuz.crossingDate} · タンカー ${fmtNum(hormuz.tankerCount)} · バルク ${fmtNum(hormuz.bulkCount)}`}
               />
             </div>
             <DataMeta className="mt-3" source={`${DATASET_SOURCE.portcast}(港湾混雑) · ${DATASET_SOURCE.econdb}(海峡 TEU) · ${DATASET_SOURCE.shipfinder}(ホルムズ)`} cadence="週次・日次" method="港湾の median 待機日数 · 海峡の通過 TEU · 通航マクロ" />
@@ -296,9 +296,9 @@ export function LogisightPort() {
                 <DataMeta className="mt-2" source={DATASET_SOURCE.shipfinder} cadence="日次" unit="隻" method="Persian Gulf の船舶数 · Strait of Hormuz の通航" />
                 <div className="my-[18px] grid grid-cols-1 gap-x-[18px] gap-y-3.5 min-[640px]:grid-cols-2">
                   <div><div className="text-[11px] text-[#828d9d]">Gulf の船舶数</div><div className="mt-[3px] lsg-mono text-[19px] font-bold text-[#0d9488]">{fmtNum(hormuz.gulfShipCount)}</div><div className="mt-0.5 lsg-mono text-[11px] text-[#828d9d]">7日変化 {fmtPct(hormuz.gulfShipWowPct)}</div></div>
-                  <div><div className="text-[11px] text-[#828d9d]">通航の基準日</div><div className="mt-[3px] lsg-mono text-[19px] font-bold text-[#1a2433]">{hormuz.crossingDate}</div><div className="mt-0.5 lsg-mono text-[11px] text-[#828d9d]">{hormuz.crossingCount}隻 · DWT {fmtNum(hormuz.totalDwt)}</div></div>
-                  <div><div className="text-[11px] text-[#828d9d]">方向(in / out)</div><div className="mt-[3px] lsg-mono text-[19px] font-bold text-[#1a2433]">{hormuz.eastbound} / {hormuz.westbound}隻</div></div>
-                  <div><div className="text-[11px] text-[#828d9d]">タンカー / バルク</div><div className="mt-[3px] lsg-mono text-[19px] font-bold text-[#1a2433]">{hormuz.tankerCount} / {hormuz.bulkCount}隻</div></div>
+                  <div><div className="text-[11px] text-[#828d9d]">通航の基準日</div><div className="mt-[3px] lsg-mono text-[19px] font-bold text-[#1a2433]">{hormuz.crossingDate}</div><div className="mt-0.5 lsg-mono text-[11px] text-[#828d9d]">{fmtNum(hormuz.crossingCount)}隻 · DWT {fmtNum(hormuz.totalDwt)}</div></div>
+                  <div><div className="text-[11px] text-[#828d9d]">方向(in / out)</div><div className="mt-[3px] lsg-mono text-[19px] font-bold text-[#1a2433]">{fmtNum(hormuz.eastbound)} / {fmtNum(hormuz.westbound)}隻</div></div>
+                  <div><div className="text-[11px] text-[#828d9d]">タンカー / バルク</div><div className="mt-[3px] lsg-mono text-[19px] font-bold text-[#1a2433]">{fmtNum(hormuz.tankerCount)} / {fmtNum(hormuz.bulkCount)}隻</div></div>
                 </div>
                 {hormuz.macro.length > 0 && (
                   <div className="grid grid-cols-1 gap-2.5 min-[640px]:grid-cols-2">
