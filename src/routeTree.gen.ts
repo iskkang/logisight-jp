@@ -11,7 +11,6 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as UnsubscribeRouteImport } from './routes/unsubscribe'
 import { Route as TradeRouteImport } from './routes/trade'
-import { Route as TariffRouteImport } from './routes/tariff'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as ReportsRouteImport } from './routes/reports'
 import { Route as RatesRouteImport } from './routes/rates'
@@ -21,8 +20,10 @@ import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as PortsRouteImport } from './routes/ports'
 import { Route as PortRiskRouteImport } from './routes/port-risk'
 import { Route as PolicyRouteImport } from './routes/policy'
+import { Route as NewsSitemapDotxmlRouteImport } from './routes/news-sitemap[.]xml'
 import { Route as NewsRouteImport } from './routes/news'
 import { Route as MethodologyRouteImport } from './routes/methodology'
+import { Route as HsRouteImport } from './routes/hs'
 import { Route as ForecastsRouteImport } from './routes/forecasts'
 import { Route as FaqRouteImport } from './routes/faq'
 import { Route as EurasiaRouteImport } from './routes/eurasia'
@@ -51,11 +52,6 @@ const UnsubscribeRoute = UnsubscribeRouteImport.update({
 const TradeRoute = TradeRouteImport.update({
   id: '/trade',
   path: '/trade',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const TariffRoute = TariffRouteImport.update({
-  id: '/tariff',
-  path: '/tariff',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
@@ -103,6 +99,11 @@ const PolicyRoute = PolicyRouteImport.update({
   path: '/policy',
   getParentRoute: () => rootRouteImport,
 } as any)
+const NewsSitemapDotxmlRoute = NewsSitemapDotxmlRouteImport.update({
+  id: '/news-sitemap.xml',
+  path: '/news-sitemap.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const NewsRoute = NewsRouteImport.update({
   id: '/news',
   path: '/news',
@@ -111,6 +112,11 @@ const NewsRoute = NewsRouteImport.update({
 const MethodologyRoute = MethodologyRouteImport.update({
   id: '/methodology',
   path: '/methodology',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HsRoute = HsRouteImport.update({
+  id: '/hs',
+  path: '/hs',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ForecastsRoute = ForecastsRouteImport.update({
@@ -219,8 +225,10 @@ export interface FileRoutesByFullPath {
   '/eurasia': typeof EurasiaRoute
   '/faq': typeof FaqRoute
   '/forecasts': typeof ForecastsRoute
+  '/hs': typeof HsRoute
   '/methodology': typeof MethodologyRoute
   '/news': typeof NewsRoute
+  '/news-sitemap.xml': typeof NewsSitemapDotxmlRoute
   '/policy': typeof PolicyRoute
   '/port-risk': typeof PortRiskRoute
   '/ports': typeof PortsRoute
@@ -230,7 +238,6 @@ export interface FileRoutesByFullPath {
   '/rates': typeof RatesRoute
   '/reports': typeof ReportsRouteWithChildren
   '/sitemap.xml': typeof SitemapDotxmlRoute
-  '/tariff': typeof TariffRoute
   '/trade': typeof TradeRoute
   '/unsubscribe': typeof UnsubscribeRoute
   '/article/$slug': typeof ArticleSlugRoute
@@ -254,8 +261,10 @@ export interface FileRoutesByTo {
   '/eurasia': typeof EurasiaRoute
   '/faq': typeof FaqRoute
   '/forecasts': typeof ForecastsRoute
+  '/hs': typeof HsRoute
   '/methodology': typeof MethodologyRoute
   '/news': typeof NewsRoute
+  '/news-sitemap.xml': typeof NewsSitemapDotxmlRoute
   '/policy': typeof PolicyRoute
   '/port-risk': typeof PortRiskRoute
   '/ports': typeof PortsRoute
@@ -263,7 +272,6 @@ export interface FileRoutesByTo {
   '/rail-map': typeof RailMapRoute
   '/rates': typeof RatesRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
-  '/tariff': typeof TariffRoute
   '/trade': typeof TradeRoute
   '/unsubscribe': typeof UnsubscribeRoute
   '/article/$slug': typeof ArticleSlugRoute
@@ -288,8 +296,10 @@ export interface FileRoutesById {
   '/eurasia': typeof EurasiaRoute
   '/faq': typeof FaqRoute
   '/forecasts': typeof ForecastsRoute
+  '/hs': typeof HsRoute
   '/methodology': typeof MethodologyRoute
   '/news': typeof NewsRoute
+  '/news-sitemap.xml': typeof NewsSitemapDotxmlRoute
   '/policy': typeof PolicyRoute
   '/port-risk': typeof PortRiskRoute
   '/ports': typeof PortsRoute
@@ -299,7 +309,6 @@ export interface FileRoutesById {
   '/rates': typeof RatesRoute
   '/reports': typeof ReportsRouteWithChildren
   '/sitemap.xml': typeof SitemapDotxmlRoute
-  '/tariff': typeof TariffRoute
   '/trade': typeof TradeRoute
   '/unsubscribe': typeof UnsubscribeRoute
   '/article/$slug': typeof ArticleSlugRoute
@@ -325,8 +334,10 @@ export interface FileRouteTypes {
     | '/eurasia'
     | '/faq'
     | '/forecasts'
+    | '/hs'
     | '/methodology'
     | '/news'
+    | '/news-sitemap.xml'
     | '/policy'
     | '/port-risk'
     | '/ports'
@@ -336,7 +347,6 @@ export interface FileRouteTypes {
     | '/rates'
     | '/reports'
     | '/sitemap.xml'
-    | '/tariff'
     | '/trade'
     | '/unsubscribe'
     | '/article/$slug'
@@ -360,8 +370,10 @@ export interface FileRouteTypes {
     | '/eurasia'
     | '/faq'
     | '/forecasts'
+    | '/hs'
     | '/methodology'
     | '/news'
+    | '/news-sitemap.xml'
     | '/policy'
     | '/port-risk'
     | '/ports'
@@ -369,7 +381,6 @@ export interface FileRouteTypes {
     | '/rail-map'
     | '/rates'
     | '/sitemap.xml'
-    | '/tariff'
     | '/trade'
     | '/unsubscribe'
     | '/article/$slug'
@@ -393,8 +404,10 @@ export interface FileRouteTypes {
     | '/eurasia'
     | '/faq'
     | '/forecasts'
+    | '/hs'
     | '/methodology'
     | '/news'
+    | '/news-sitemap.xml'
     | '/policy'
     | '/port-risk'
     | '/ports'
@@ -404,7 +417,6 @@ export interface FileRouteTypes {
     | '/rates'
     | '/reports'
     | '/sitemap.xml'
-    | '/tariff'
     | '/trade'
     | '/unsubscribe'
     | '/article/$slug'
@@ -429,8 +441,10 @@ export interface RootRouteChildren {
   EurasiaRoute: typeof EurasiaRoute
   FaqRoute: typeof FaqRoute
   ForecastsRoute: typeof ForecastsRoute
+  HsRoute: typeof HsRoute
   MethodologyRoute: typeof MethodologyRoute
   NewsRoute: typeof NewsRoute
+  NewsSitemapDotxmlRoute: typeof NewsSitemapDotxmlRoute
   PolicyRoute: typeof PolicyRoute
   PortRiskRoute: typeof PortRiskRoute
   PortsRoute: typeof PortsRoute
@@ -440,7 +454,6 @@ export interface RootRouteChildren {
   RatesRoute: typeof RatesRoute
   ReportsRoute: typeof ReportsRouteWithChildren
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
-  TariffRoute: typeof TariffRoute
   TradeRoute: typeof TradeRoute
   UnsubscribeRoute: typeof UnsubscribeRoute
   ArticleSlugRoute: typeof ArticleSlugRoute
@@ -463,13 +476,6 @@ declare module '@tanstack/react-router' {
       path: '/trade'
       fullPath: '/trade'
       preLoaderRoute: typeof TradeRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/tariff': {
-      id: '/tariff'
-      path: '/tariff'
-      fullPath: '/tariff'
-      preLoaderRoute: typeof TariffRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/sitemap.xml': {
@@ -535,6 +541,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PolicyRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/news-sitemap.xml': {
+      id: '/news-sitemap.xml'
+      path: '/news-sitemap.xml'
+      fullPath: '/news-sitemap.xml'
+      preLoaderRoute: typeof NewsSitemapDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/news': {
       id: '/news'
       path: '/news'
@@ -547,6 +560,13 @@ declare module '@tanstack/react-router' {
       path: '/methodology'
       fullPath: '/methodology'
       preLoaderRoute: typeof MethodologyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/hs': {
+      id: '/hs'
+      path: '/hs'
+      fullPath: '/hs'
+      preLoaderRoute: typeof HsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/forecasts': {
@@ -724,8 +744,10 @@ const rootRouteChildren: RootRouteChildren = {
   EurasiaRoute: EurasiaRoute,
   FaqRoute: FaqRoute,
   ForecastsRoute: ForecastsRoute,
+  HsRoute: HsRoute,
   MethodologyRoute: MethodologyRoute,
   NewsRoute: NewsRoute,
+  NewsSitemapDotxmlRoute: NewsSitemapDotxmlRoute,
   PolicyRoute: PolicyRoute,
   PortRiskRoute: PortRiskRoute,
   PortsRoute: PortsRoute,
@@ -735,7 +757,6 @@ const rootRouteChildren: RootRouteChildren = {
   RatesRoute: RatesRoute,
   ReportsRoute: ReportsRouteWithChildren,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
-  TariffRoute: TariffRoute,
   TradeRoute: TradeRoute,
   UnsubscribeRoute: UnsubscribeRoute,
   ArticleSlugRoute: ArticleSlugRoute,
