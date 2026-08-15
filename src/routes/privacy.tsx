@@ -13,6 +13,7 @@ export const Route = createFileRoute("/privacy")({
       description:
         "Logisight のニュースレター登録時に取得・利用する個人情報の取り扱いについて定めた方針です。",
       path: "/privacy",
+      koPath: "/privacy",
     }),
   component: PrivacyPage,
 });

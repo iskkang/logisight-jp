@@ -98,6 +98,7 @@ export const Route = createFileRoute("/faq")({
       description:
         "企業向けサービス価格指数(運賃)、主要6港のコンテナ取扱量、財務省貿易統計、月次レポートの読み方についてのよくある質問。",
       path: "/faq",
+      koPath: "/faq",
     }),
   component: FaqPage,
 });

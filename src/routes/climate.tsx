@@ -19,6 +19,7 @@ export const Route = createFileRoute("/climate")({
       title: "世界の気象リスク — Logisight",
       description: SUBTITLE,
       path: "/climate",
+      koPath: "/climate",
     }),
   component: LogisightClimate,
 });

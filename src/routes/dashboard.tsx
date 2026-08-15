@@ -23,6 +23,7 @@ export const Route = createFileRoute("/dashboard")({
       description:
         "SCFI・CCFI・WCI・FBX・BDI など世界の運賃指数と、日本の企業向けサービス価格指数・主要6港のコンテナ取扱量・財務省貿易統計を一画面で対比します。",
       path: "/dashboard",
+      koPath: "/dashboard",
     }),
   component: JpDashboard,
 });

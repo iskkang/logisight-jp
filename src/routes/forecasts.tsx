@@ -28,6 +28,7 @@ export const Route = createFileRoute("/forecasts")({
       description:
         "海上運賃指数・航路の今後2〜4週の方向を定量モデルで採点し、編集を経て発行する AI 見通し。判定日の実測で事後の的中を評価する。",
       path: "/forecasts",
+      koPath: "/forecasts",
     });
     return { ...base, meta: [...base.meta, { name: "robots", content: "noindex,nofollow" }] };
   },

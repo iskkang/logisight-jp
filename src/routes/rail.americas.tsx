@@ -14,6 +14,7 @@ export const Route = createFileRoute("/rail/americas")({
       title: "北米鉄道コリドー — Logisight",
       description: "北米インターモーダル鉄道コリドーの状態マップ(Watch/Delayed/Normal)。",
       path: "/rail/americas",
+      koPath: "/rail/americas",
     }),
   component: RailAmericasMap,
 });

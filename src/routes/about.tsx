@@ -12,6 +12,7 @@ export const Route = createFileRoute("/about")({
       description:
         "Logisight は、運賃・港湾・貿易の公的統計を毎月ひとつのレポートにまとめる物流インテリジェンス媒体です。",
       path: "/about",
+      koPath: "/about",
     }),
   component: AboutPage,
 });

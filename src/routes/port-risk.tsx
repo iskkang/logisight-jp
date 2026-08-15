@@ -17,6 +17,7 @@ export const Route = createFileRoute("/port-risk")({
       title: "港湾リスク — Logisight",
       description: "港湾の混雑、海上のボトルネック、チョークポイントと規制イベントのリスク監視。",
       path: "/port-risk",
+      koPath: "/port-risk",
     });
     return { ...base, meta: [...base.meta, { name: "robots", content: "noindex,nofollow" }] };
   },

@@ -19,6 +19,7 @@ export const Route = createFileRoute("/rail/eurasia")({
       description:
         "ERAI(Eurasian Rail Alliance Index)にもとづくユーラシア鉄道の運賃・輸送日数・地域別輸送量を地図とチャートで。",
       path: "/rail/eurasia",
+      koPath: "/rail/eurasia",
     }),
   component: RailEurasiaContent,
 });

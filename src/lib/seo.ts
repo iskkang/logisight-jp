@@ -53,8 +53,12 @@ export function seoHead({ title, description, path, image, type = "website", koP
     links.push(
       { rel: "alternate", hreflang: "ja", href: url },
       { rel: "alternate", hreflang: "ko", href: ko },
-      // 어느 쪽에도 해당하지 않는 이용자에게 보여줄 기본. 이 도메인은 일본판이 정본이다.
-      { rel: "alternate", hreflang: "x-default", href: url },
+      // ★ x-default 는 한국판이다.
+      // 예전에는 이 도메인(일본판)을 가리켰는데, 한국판이 hreflang 을 한 줄도 내지 않아
+      // 상호 선언이 성립하지 않았고 이 선언 전체가 무시되고 있었다. 한국판에 짝을 붙이면서
+      // 양쪽 x-default 를 한국판으로 통일한다 —— 서로 다른 x-default 를 내면 그 모순 때문에
+      // 다시 무시된다.
+      { rel: "alternate", hreflang: "x-default", href: ko },
     );
   }
   return {

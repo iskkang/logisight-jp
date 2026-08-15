@@ -50,6 +50,7 @@ export const Route = createFileRoute("/methodology")({
       description:
         "Logisight が用いる企業向けサービス価格指数・港湾統計・財務省貿易統計の出典・単位・更新頻度と、因果を断定しない表現原則、欠測データの扱いをまとめています。",
       path: "/methodology",
+      koPath: "/methodology",
     }),
   component: MethodologyPage,
 });
