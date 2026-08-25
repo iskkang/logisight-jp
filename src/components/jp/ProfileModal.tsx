@@ -1,4 +1,5 @@
 import { useEffect, useState, type FormEvent } from "react";
+import { createPortal } from "react-dom";
 import { Link } from "@tanstack/react-router";
 
 import { useSession } from "@/lib/auth";
@@ -50,7 +51,8 @@ export function ProfileModal() {
     };
   }, [loading, user]);
 
-  if (!open || !user) return null;
+  // SSR には document が無い。ポータルはマウント後にだけ張る。
+  if (!open || !user || typeof document === "undefined") return null;
 
   async function onSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -79,9 +81,17 @@ export function ProfileModal() {
     }
   }
 
-  return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/40 px-4 py-8">
-      <div className="max-h-full w-full max-w-[440px] overflow-y-auto bg-white p-7">
+  // body に直接描く。ヘッダーは backdrop-blur を持っており、その中に置くと
+  // position:fixed の基準がヘッダーになって、この画面がヘッダーの高さ(約50px)に
+  // 切り取られる。見出しの一行しか見えず、登録できないという声はこれが原因だった。
+  return createPortal(
+    <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/40 px-4 py-8">
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-label="ご登録ありがとうございます"
+        className="max-h-full w-full max-w-[440px] overflow-y-auto bg-white p-7"
+      >
         <h2 className="text-[19px] font-bold text-[#0b2d52]">ご登録ありがとうございます</h2>
         <p className="mt-2 text-[12.5px] leading-[1.8] text-[#6b7683]">
           差し支えなければ、ご所属をお聞かせください。以降のご案内に使わせていただきます。
@@ -151,6 +161,7 @@ export function ProfileModal() {
           </p>
         </form>
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }
