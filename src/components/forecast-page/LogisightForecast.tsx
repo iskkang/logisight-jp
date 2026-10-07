@@ -193,7 +193,7 @@ function Hero({ kpis, lastUpdated, modules, activeModule, onModule }: {
         <div className="max-w-[760px] pt-[58px] pb-[68px]">
           <span className="text-[11px] font-bold uppercase tracking-[0.22em] text-[#2dd4bf]">Verified Forecast</span>
           <h1 className="mt-3.5 text-[clamp(32px,4.4vw,50px)] font-extrabold leading-[1.06] tracking-[-0.035em] text-[#e9eef7]">物流市場 <span className="text-[#2dd4bf]">見通し</span></h1>
-          <p className="mt-4 max-w-[640px] text-[15px] leading-[1.6] text-[#93a1b7]">Logisight AI が現在と過去のデータを分析し、運賃の方向を見通します。</p>
+          <p className="mt-4 max-w-[640px] text-[15px] leading-[1.6] text-[#93a1b7]">現在と過去のデータを分析し、運賃の方向を見通します。</p>
           {modules.length > 0 && (
             <div className="mt-[18px] flex flex-wrap gap-2">
               <button type="button" onClick={() => onModule(null)} className={`rounded-full border px-3 py-[5px] text-[12px] ${activeModule == null ? "border-[#2dd4bf73] bg-[#0e2a2a] text-[#2dd4bf]" : "border-[#78a0cd1c] bg-[#0e1626] text-[#93a1b7]"}`}>すべて</button>
@@ -219,7 +219,7 @@ function Hero({ kpis, lastUpdated, modules, activeModule, onModule }: {
 function Kpis({ kpis }: { kpis: ReturnType<typeof computeKpis> }) {
   const items = [
     { lab: "方向的中率(12週)", ic: "✓", bg: "#16a34a", v: kpis.hitRate.gate ? "集計中" : `${kpis.hitRate.rate}%`, num: false, s: kpis.hitRate.gate ? `判定サンプル ${kpis.hitRate.sample}/10` : `判定済み ${kpis.hitRate.sample}件` },
-    { lab: "今週の発行", ic: "+", bg: "#0d9488", v: `${kpis.publishedThisWeek}件`, num: true, s: "校閲を通過して発行" },
+    { lab: "今週の発行", ic: "+", bg: "#0d9488", v: `${kpis.publishedThisWeek}件`, num: true, s: "発行" },
     { lab: "判定待ち", ic: "⏳", bg: "#d97706", v: `${kpis.awaitingJudgment}件`, num: true, s: "確認予定日の前" },
     { lab: "根拠データ 平均", ic: "◉", bg: "#3b82f6", v: kpis.avgEvidence != null ? `${kpis.avgEvidence}/5` : "—", num: true, s: "発行済みの見通しが基準" },
     { lab: "平均リードタイム", ic: "→", bg: "#64748b", v: kpis.leadTimeDays != null ? `${kpis.leadTimeDays}日` : "—", num: true, s: "発行 → 判定" },
@@ -377,7 +377,6 @@ function DetailPanel({ f, series }: { f: Forecast; series?: ForecastSeries }) {
       </div>
       <div className="mt-3.5 flex flex-wrap items-center justify-between gap-4 text-[12px] text-[#828d9d]">
         <span>見通しは情報提供が目的であり、投資や契約の勧誘ではありません。すべて確率として示します。</span>
-        <span className="font-semibold text-[#0d9488]">AI 草案 · 編集校閲</span>
       </div>
     </div>
   );
@@ -388,7 +387,7 @@ const METHOD: { b: string; s: string }[] = [
   { b: "データ収集", s: "Drewry · 上海航運交易所(SSE) · SCFI/WCI ほか" },
   { b: "5ファクター採点", s: "モメンタム・供給・需要・コスト・価格行動を −2〜+2 で採点" },
   { b: "加重合算", s: "海上: 供給30 · モメンタム25 · 需要25 · コスト10 · 価格10" },
-  { b: "AI 執筆 + 自動検証", s: "判定単位と欠測の有無を自動で検査" },
+  { b: "自動検証", s: "判定単位と欠測の有無を自動で検査" },
   { b: "編集の確認後に発行", s: "発行後は本文を変えず、判定日の実測で的中を集計" },
 ];
 function Methodology() {
@@ -464,9 +463,9 @@ export function LogisightForecast() {
           {/* GEO: 보이지 않는 Article JSON-LD만 유지 (시각 요소 없음) */}
           <GeoArticleSchema
             article={{
-              headline: "物流市場の見通し — AI 草案 · 編集校閲",
+              headline: "物流市場の見通し",
               description:
-                "Logisight AI が現在と過去のデータを分析し、運賃・貿易・政策の方向を確率で見通します。発行前に編集が校閲します。",
+                "現在と過去のデータを分析し、運賃・貿易・政策の方向を確率で見通します。",
               path: "/forecasts",
               datePublished: geo.latestDate,
               dateModified: geo.latestDate,
@@ -480,7 +479,7 @@ export function LogisightForecast() {
             <section className="mt-[26px]">
               <div className="mb-3.5 flex items-center gap-2.5">
                 <h2 className="text-[19px] font-extrabold tracking-[-0.02em] text-[#1a2433]">鉄道の見通し</h2>
-                <span className="rounded-full border border-[#d8dfe9] bg-[#eef1f6] px-[9px] py-[3px] text-[11px] text-[#828d9d]">ユーラシア · AI</span>
+                <span className="rounded-full border border-[#d8dfe9] bg-[#eef1f6] px-[9px] py-[3px] text-[11px] text-[#828d9d]">ユーラシア</span>
               </div>
               <div className={`p-[22px] ${CARD}`}>
                 <p className="text-[14px] leading-[1.65] text-[#1a2433]">{railBrief.outlook.summary}</p>
@@ -499,7 +498,7 @@ export function LogisightForecast() {
           {open.length === 0 ? (
             <div className={`mt-[26px] px-6 py-16 text-center ${CARD}`}>
               <p className="text-[14px] font-semibold text-[#1a2433]">データ収集中</p>
-              <p className="mt-1 text-[12px] text-[#828d9d]">校閲を通過した見通しが掲載されると、ここに表示します。</p>
+              <p className="mt-1 text-[12px] text-[#828d9d]">発行された見通しが掲載されると、ここに表示します。</p>
             </div>
           ) : (
             <>

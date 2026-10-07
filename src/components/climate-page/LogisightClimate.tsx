@@ -442,7 +442,6 @@ function RouteForecast({ fc }: { fc: ClimateForecastRow }) {
   return (
     <div className="mt-3 rounded-[8px] border border-[#bfe6e0] bg-[#f0faf8] px-3 py-2.5">
       <div className="flex flex-wrap items-center gap-1.5">
-        <span className="rounded-[5px] bg-[#0d9488] px-1.5 py-[2px] text-[10px] font-extrabold tracking-[0.04em] text-white">AI 分析</span>
         {via && <span className="text-[11px] font-semibold text-[#0f766e]">via {via}</span>}
       </div>
       <p className="mt-1.5 text-[12px] leading-[1.5] text-[#334155]">{fcSummary(weather)}</p>
@@ -457,7 +456,7 @@ function RouteForecast({ fc }: { fc: ClimateForecastRow }) {
               <p className="mt-0.5 text-[12px] leading-[1.55] text-[#475569]">{t}</p>
             </div>
           ))}
-          <div className="text-[10.5px] text-[#94a3b8]">AI 自動分析 · コードガード検証 · トラック突合にもとづく</div>
+          <div className="text-[10.5px] text-[#94a3b8]">コードガード検証 · トラック突合にもとづく</div>
         </div>
       )}
     </div>
@@ -488,12 +487,12 @@ function Impact({ rm, routes, events, nodes, forecasts }: { rm: RiskMap; routes:
   if (rows.length === 0) return null;
   return (
     <>
-      <div className="mb-3.5 mt-[26px] flex items-center justify-between gap-2.5"><h2 className="text-[19px] font-extrabold tracking-[-0.02em] text-[#1a2433]">予報リスク → 影響を受ける航路</h2><span className={CHIP}>asset_risk の予報 · track/AI 分析を優先</span></div>
+      <div className="mb-3.5 mt-[26px] flex items-center justify-between gap-2.5"><h2 className="text-[19px] font-extrabold tracking-[-0.02em] text-[#1a2433]">予報リスク → 影響を受ける航路</h2><span className={CHIP}>asset_risk の予報 · track を優先</span></div>
       <div className="grid grid-cols-1 gap-3.5 min-[1080px]:grid-cols-3">
         {rows.map(({ r, base, evs, lead, worst, forecast }) => {
           const crit = worst === 3;
           const c: Lv = crit ? "r" : worst === 2 || evs.length ? "a" : level(base);
-          const tag = forecast ? "AI 予報と連動" : crit ? "警報 · 予報トラック" : worst === 2 ? "注意 · 予報トラック" : evs.length ? "トラック監視中" : "影響は小さい";
+          const tag = forecast ? "予報と連動" : crit ? "警報 · 予報トラック" : worst === 2 ? "注意 · 予報トラック" : evs.length ? "トラック監視中" : "影響は小さい";
           const traj = HDAYS.map((_, h) => routeRisk(rm, r, h));
           const chk = (r.chokes || []).join(" · ") || "—";
           const inten = lead ? parseIntensity(lead.e.title) : null;
@@ -564,7 +563,7 @@ function RegionImpact({ events, assets, routes, nodes, forecasts }: { events: Ev
                   ))}
                 </div>
               )}
-              {fc ? <RouteForecast fc={fc} /> : <div className="mt-3 rounded-[8px] border border-[#e6ebf2] bg-[#f6f8fb] px-3 py-2 text-[11.5px] text-[#828d9d]">AI 影響分析を校閲中 — 発行され次第ここに表示します。</div>}
+              {fc ? <RouteForecast fc={fc} /> : <div className="mt-3 rounded-[8px] border border-[#e6ebf2] bg-[#f6f8fb] px-3 py-2 text-[11.5px] text-[#828d9d]">影響分析を準備中 — 発行され次第ここに表示します。</div>}
             </div>
           );
         })}
