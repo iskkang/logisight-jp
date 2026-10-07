@@ -9,149 +9,44 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as UnsubscribeRouteImport } from './routes/unsubscribe'
-import { Route as TradeRouteImport } from './routes/trade'
-import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
-import { Route as ReportsRouteImport } from './routes/reports'
-import { Route as RatesRouteImport } from './routes/rates'
-import { Route as RailMapRouteImport } from './routes/rail-map'
-import { Route as RailRouteImport } from './routes/rail'
-import { Route as PrivacyRouteImport } from './routes/privacy'
-import { Route as PortsRouteImport } from './routes/ports'
-import { Route as PortRiskRouteImport } from './routes/port-risk'
-import { Route as PolicyRouteImport } from './routes/policy'
-import { Route as NewsSitemapDotxmlRouteImport } from './routes/news-sitemap[.]xml'
-import { Route as NewsRouteImport } from './routes/news'
-import { Route as MethodologyRouteImport } from './routes/methodology'
-import { Route as HsRouteImport } from './routes/hs'
-import { Route as ForecastsRouteImport } from './routes/forecasts'
-import { Route as FaqRouteImport } from './routes/faq'
-import { Route as EurasiaRouteImport } from './routes/eurasia'
-import { Route as DashboardRouteImport } from './routes/dashboard'
-import { Route as ContactRouteImport } from './routes/contact'
-import { Route as ClimateRouteImport } from './routes/climate'
-import { Route as BenchmarkRouteImport } from './routes/benchmark'
-import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as ReportsIndexRouteImport } from './routes/reports.index'
-import { Route as RailIndexRouteImport } from './routes/rail.index'
-import { Route as RailEuropeRouteImport } from './routes/rail.europe'
-import { Route as RailEurasiaRouteImport } from './routes/rail.eurasia'
-import { Route as RailAmericasRouteImport } from './routes/rail.americas'
-import { Route as Index1520RoutesRouteImport } from './routes/index1520.routes'
+import { Route as AboutRouteImport } from './routes/about'
+import { Route as BenchmarkRouteImport } from './routes/benchmark'
+import { Route as ClimateRouteImport } from './routes/climate'
+import { Route as ContactRouteImport } from './routes/contact'
+import { Route as DashboardRouteImport } from './routes/dashboard'
+import { Route as EurasiaRouteImport } from './routes/eurasia'
+import { Route as FaqRouteImport } from './routes/faq'
+import { Route as ForecastsRouteImport } from './routes/forecasts'
+import { Route as HsRouteImport } from './routes/hs'
+import { Route as MethodologyRouteImport } from './routes/methodology'
+import { Route as NewsRouteImport } from './routes/news'
+import { Route as NewsSitemapDotxmlRouteImport } from './routes/news-sitemap[.]xml'
+import { Route as PolicyRouteImport } from './routes/policy'
+import { Route as PortRiskRouteImport } from './routes/port-risk'
+import { Route as PortsRouteImport } from './routes/ports'
+import { Route as PrivacyRouteImport } from './routes/privacy'
+import { Route as RailRouteImport } from './routes/rail'
+import { Route as RailMapRouteImport } from './routes/rail-map'
+import { Route as RatesRouteImport } from './routes/rates'
+import { Route as ReportsRouteImport } from './routes/reports'
+import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
+import { Route as TradeRouteImport } from './routes/trade'
+import { Route as UnsubscribeRouteImport } from './routes/unsubscribe'
 import { Route as ArticleSlugRouteImport } from './routes/article.$slug'
-import { Route as ReportsMonthlyMonthRouteImport } from './routes/reports.monthly.$month'
-import { Route as ApiWebhooksResendRouteImport } from './routes/api/webhooks/resend'
+import { Route as Index1520RoutesRouteImport } from './routes/index1520.routes'
+import { Route as RailIndexRouteImport } from './routes/rail.index'
+import { Route as RailAmericasRouteImport } from './routes/rail.americas'
+import { Route as RailEurasiaRouteImport } from './routes/rail.eurasia'
+import { Route as RailEuropeRouteImport } from './routes/rail.europe'
+import { Route as ReportsIndexRouteImport } from './routes/reports.index'
 import { Route as ApiCronIndexnowRouteImport } from './routes/api/cron/indexnow'
+import { Route as ApiWebhooksResendRouteImport } from './routes/api/webhooks/resend'
+import { Route as ReportsMonthlyMonthRouteImport } from './routes/reports.monthly.$month'
 
-const UnsubscribeRoute = UnsubscribeRouteImport.update({
-  id: '/unsubscribe',
-  path: '/unsubscribe',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const TradeRoute = TradeRouteImport.update({
-  id: '/trade',
-  path: '/trade',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
-  id: '/sitemap.xml',
-  path: '/sitemap.xml',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ReportsRoute = ReportsRouteImport.update({
-  id: '/reports',
-  path: '/reports',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const RatesRoute = RatesRouteImport.update({
-  id: '/rates',
-  path: '/rates',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const RailMapRoute = RailMapRouteImport.update({
-  id: '/rail-map',
-  path: '/rail-map',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const RailRoute = RailRouteImport.update({
-  id: '/rail',
-  path: '/rail',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const PrivacyRoute = PrivacyRouteImport.update({
-  id: '/privacy',
-  path: '/privacy',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const PortsRoute = PortsRouteImport.update({
-  id: '/ports',
-  path: '/ports',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const PortRiskRoute = PortRiskRouteImport.update({
-  id: '/port-risk',
-  path: '/port-risk',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const PolicyRoute = PolicyRouteImport.update({
-  id: '/policy',
-  path: '/policy',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const NewsSitemapDotxmlRoute = NewsSitemapDotxmlRouteImport.update({
-  id: '/news-sitemap.xml',
-  path: '/news-sitemap.xml',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const NewsRoute = NewsRouteImport.update({
-  id: '/news',
-  path: '/news',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const MethodologyRoute = MethodologyRouteImport.update({
-  id: '/methodology',
-  path: '/methodology',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const HsRoute = HsRouteImport.update({
-  id: '/hs',
-  path: '/hs',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ForecastsRoute = ForecastsRouteImport.update({
-  id: '/forecasts',
-  path: '/forecasts',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const FaqRoute = FaqRouteImport.update({
-  id: '/faq',
-  path: '/faq',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const EurasiaRoute = EurasiaRouteImport.update({
-  id: '/eurasia',
-  path: '/eurasia',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const DashboardRoute = DashboardRouteImport.update({
-  id: '/dashboard',
-  path: '/dashboard',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ContactRoute = ContactRouteImport.update({
-  id: '/contact',
-  path: '/contact',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ClimateRoute = ClimateRouteImport.update({
-  id: '/climate',
-  path: '/climate',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const BenchmarkRoute = BenchmarkRouteImport.update({
-  id: '/benchmark',
-  path: '/benchmark',
+const IndexRoute = IndexRouteImport.update({
+  id: '/',
+  path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AboutRoute = AboutRouteImport.update({
@@ -159,39 +54,114 @@ const AboutRoute = AboutRouteImport.update({
   path: '/about',
   getParentRoute: () => rootRouteImport,
 } as any)
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
+const BenchmarkRoute = BenchmarkRouteImport.update({
+  id: '/benchmark',
+  path: '/benchmark',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ReportsIndexRoute = ReportsIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => ReportsRoute,
+const ClimateRoute = ClimateRouteImport.update({
+  id: '/climate',
+  path: '/climate',
+  getParentRoute: () => rootRouteImport,
 } as any)
-const RailIndexRoute = RailIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => RailRoute,
+const ContactRoute = ContactRouteImport.update({
+  id: '/contact',
+  path: '/contact',
+  getParentRoute: () => rootRouteImport,
 } as any)
-const RailEuropeRoute = RailEuropeRouteImport.update({
-  id: '/europe',
-  path: '/europe',
-  getParentRoute: () => RailRoute,
+const DashboardRoute = DashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => rootRouteImport,
 } as any)
-const RailEurasiaRoute = RailEurasiaRouteImport.update({
+const EurasiaRoute = EurasiaRouteImport.update({
   id: '/eurasia',
   path: '/eurasia',
-  getParentRoute: () => RailRoute,
+  getParentRoute: () => rootRouteImport,
 } as any)
-const RailAmericasRoute = RailAmericasRouteImport.update({
-  id: '/americas',
-  path: '/americas',
-  getParentRoute: () => RailRoute,
+const FaqRoute = FaqRouteImport.update({
+  id: '/faq',
+  path: '/faq',
+  getParentRoute: () => rootRouteImport,
 } as any)
-const Index1520RoutesRoute = Index1520RoutesRouteImport.update({
-  id: '/index1520/routes',
-  path: '/index1520/routes',
+const ForecastsRoute = ForecastsRouteImport.update({
+  id: '/forecasts',
+  path: '/forecasts',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HsRoute = HsRouteImport.update({
+  id: '/hs',
+  path: '/hs',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MethodologyRoute = MethodologyRouteImport.update({
+  id: '/methodology',
+  path: '/methodology',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const NewsRoute = NewsRouteImport.update({
+  id: '/news',
+  path: '/news',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const NewsSitemapDotxmlRoute = NewsSitemapDotxmlRouteImport.update({
+  id: '/news-sitemap.xml',
+  path: '/news-sitemap.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PolicyRoute = PolicyRouteImport.update({
+  id: '/policy',
+  path: '/policy',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PortRiskRoute = PortRiskRouteImport.update({
+  id: '/port-risk',
+  path: '/port-risk',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PortsRoute = PortsRouteImport.update({
+  id: '/ports',
+  path: '/ports',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrivacyRoute = PrivacyRouteImport.update({
+  id: '/privacy',
+  path: '/privacy',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RailRoute = RailRouteImport.update({
+  id: '/rail',
+  path: '/rail',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RailMapRoute = RailMapRouteImport.update({
+  id: '/rail-map',
+  path: '/rail-map',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RatesRoute = RatesRouteImport.update({
+  id: '/rates',
+  path: '/rates',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ReportsRoute = ReportsRouteImport.update({
+  id: '/reports',
+  path: '/reports',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
+  id: '/sitemap.xml',
+  path: '/sitemap.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TradeRoute = TradeRouteImport.update({
+  id: '/trade',
+  path: '/trade',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const UnsubscribeRoute = UnsubscribeRouteImport.update({
+  id: '/unsubscribe',
+  path: '/unsubscribe',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ArticleSlugRoute = ArticleSlugRouteImport.update({
@@ -199,20 +169,50 @@ const ArticleSlugRoute = ArticleSlugRouteImport.update({
   path: '/article/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ReportsMonthlyMonthRoute = ReportsMonthlyMonthRouteImport.update({
-  id: '/monthly/$month',
-  path: '/monthly/$month',
+const Index1520RoutesRoute = Index1520RoutesRouteImport.update({
+  id: '/index1520/routes',
+  path: '/index1520/routes',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RailIndexRoute = RailIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => RailRoute,
+} as any)
+const RailAmericasRoute = RailAmericasRouteImport.update({
+  id: '/americas',
+  path: '/americas',
+  getParentRoute: () => RailRoute,
+} as any)
+const RailEurasiaRoute = RailEurasiaRouteImport.update({
+  id: '/eurasia',
+  path: '/eurasia',
+  getParentRoute: () => RailRoute,
+} as any)
+const RailEuropeRoute = RailEuropeRouteImport.update({
+  id: '/europe',
+  path: '/europe',
+  getParentRoute: () => RailRoute,
+} as any)
+const ReportsIndexRoute = ReportsIndexRouteImport.update({
+  id: '/',
+  path: '/',
   getParentRoute: () => ReportsRoute,
+} as any)
+const ApiCronIndexnowRoute = ApiCronIndexnowRouteImport.update({
+  id: '/api/cron/indexnow',
+  path: '/api/cron/indexnow',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const ApiWebhooksResendRoute = ApiWebhooksResendRouteImport.update({
   id: '/api/webhooks/resend',
   path: '/api/webhooks/resend',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ApiCronIndexnowRoute = ApiCronIndexnowRouteImport.update({
-  id: '/api/cron/indexnow',
-  path: '/api/cron/indexnow',
-  getParentRoute: () => rootRouteImport,
+const ReportsMonthlyMonthRoute = ReportsMonthlyMonthRouteImport.update({
+  id: '/monthly/$month',
+  path: '/monthly/$month',
+  getParentRoute: () => ReportsRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
@@ -464,158 +464,11 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/unsubscribe': {
-      id: '/unsubscribe'
-      path: '/unsubscribe'
-      fullPath: '/unsubscribe'
-      preLoaderRoute: typeof UnsubscribeRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/trade': {
-      id: '/trade'
-      path: '/trade'
-      fullPath: '/trade'
-      preLoaderRoute: typeof TradeRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/sitemap.xml': {
-      id: '/sitemap.xml'
-      path: '/sitemap.xml'
-      fullPath: '/sitemap.xml'
-      preLoaderRoute: typeof SitemapDotxmlRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/reports': {
-      id: '/reports'
-      path: '/reports'
-      fullPath: '/reports'
-      preLoaderRoute: typeof ReportsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/rates': {
-      id: '/rates'
-      path: '/rates'
-      fullPath: '/rates'
-      preLoaderRoute: typeof RatesRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/rail-map': {
-      id: '/rail-map'
-      path: '/rail-map'
-      fullPath: '/rail-map'
-      preLoaderRoute: typeof RailMapRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/rail': {
-      id: '/rail'
-      path: '/rail'
-      fullPath: '/rail'
-      preLoaderRoute: typeof RailRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/privacy': {
-      id: '/privacy'
-      path: '/privacy'
-      fullPath: '/privacy'
-      preLoaderRoute: typeof PrivacyRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/ports': {
-      id: '/ports'
-      path: '/ports'
-      fullPath: '/ports'
-      preLoaderRoute: typeof PortsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/port-risk': {
-      id: '/port-risk'
-      path: '/port-risk'
-      fullPath: '/port-risk'
-      preLoaderRoute: typeof PortRiskRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/policy': {
-      id: '/policy'
-      path: '/policy'
-      fullPath: '/policy'
-      preLoaderRoute: typeof PolicyRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/news-sitemap.xml': {
-      id: '/news-sitemap.xml'
-      path: '/news-sitemap.xml'
-      fullPath: '/news-sitemap.xml'
-      preLoaderRoute: typeof NewsSitemapDotxmlRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/news': {
-      id: '/news'
-      path: '/news'
-      fullPath: '/news'
-      preLoaderRoute: typeof NewsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/methodology': {
-      id: '/methodology'
-      path: '/methodology'
-      fullPath: '/methodology'
-      preLoaderRoute: typeof MethodologyRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/hs': {
-      id: '/hs'
-      path: '/hs'
-      fullPath: '/hs'
-      preLoaderRoute: typeof HsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/forecasts': {
-      id: '/forecasts'
-      path: '/forecasts'
-      fullPath: '/forecasts'
-      preLoaderRoute: typeof ForecastsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/faq': {
-      id: '/faq'
-      path: '/faq'
-      fullPath: '/faq'
-      preLoaderRoute: typeof FaqRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/eurasia': {
-      id: '/eurasia'
-      path: '/eurasia'
-      fullPath: '/eurasia'
-      preLoaderRoute: typeof EurasiaRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/dashboard': {
-      id: '/dashboard'
-      path: '/dashboard'
-      fullPath: '/dashboard'
-      preLoaderRoute: typeof DashboardRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/contact': {
-      id: '/contact'
-      path: '/contact'
-      fullPath: '/contact'
-      preLoaderRoute: typeof ContactRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/climate': {
-      id: '/climate'
-      path: '/climate'
-      fullPath: '/climate'
-      preLoaderRoute: typeof ClimateRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/benchmark': {
-      id: '/benchmark'
-      path: '/benchmark'
-      fullPath: '/benchmark'
-      preLoaderRoute: typeof BenchmarkRouteImport
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/about': {
@@ -625,53 +478,158 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AboutRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
+    '/benchmark': {
+      id: '/benchmark'
+      path: '/benchmark'
+      fullPath: '/benchmark'
+      preLoaderRoute: typeof BenchmarkRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/reports/': {
-      id: '/reports/'
-      path: '/'
-      fullPath: '/reports/'
-      preLoaderRoute: typeof ReportsIndexRouteImport
-      parentRoute: typeof ReportsRoute
+    '/climate': {
+      id: '/climate'
+      path: '/climate'
+      fullPath: '/climate'
+      preLoaderRoute: typeof ClimateRouteImport
+      parentRoute: typeof rootRouteImport
     }
-    '/rail/': {
-      id: '/rail/'
-      path: '/'
-      fullPath: '/rail/'
-      preLoaderRoute: typeof RailIndexRouteImport
-      parentRoute: typeof RailRoute
+    '/contact': {
+      id: '/contact'
+      path: '/contact'
+      fullPath: '/contact'
+      preLoaderRoute: typeof ContactRouteImport
+      parentRoute: typeof rootRouteImport
     }
-    '/rail/europe': {
-      id: '/rail/europe'
-      path: '/europe'
-      fullPath: '/rail/europe'
-      preLoaderRoute: typeof RailEuropeRouteImport
-      parentRoute: typeof RailRoute
+    '/dashboard': {
+      id: '/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof DashboardRouteImport
+      parentRoute: typeof rootRouteImport
     }
-    '/rail/eurasia': {
-      id: '/rail/eurasia'
+    '/eurasia': {
+      id: '/eurasia'
       path: '/eurasia'
-      fullPath: '/rail/eurasia'
-      preLoaderRoute: typeof RailEurasiaRouteImport
-      parentRoute: typeof RailRoute
+      fullPath: '/eurasia'
+      preLoaderRoute: typeof EurasiaRouteImport
+      parentRoute: typeof rootRouteImport
     }
-    '/rail/americas': {
-      id: '/rail/americas'
-      path: '/americas'
-      fullPath: '/rail/americas'
-      preLoaderRoute: typeof RailAmericasRouteImport
-      parentRoute: typeof RailRoute
+    '/faq': {
+      id: '/faq'
+      path: '/faq'
+      fullPath: '/faq'
+      preLoaderRoute: typeof FaqRouteImport
+      parentRoute: typeof rootRouteImport
     }
-    '/index1520/routes': {
-      id: '/index1520/routes'
-      path: '/index1520/routes'
-      fullPath: '/index1520/routes'
-      preLoaderRoute: typeof Index1520RoutesRouteImport
+    '/forecasts': {
+      id: '/forecasts'
+      path: '/forecasts'
+      fullPath: '/forecasts'
+      preLoaderRoute: typeof ForecastsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/hs': {
+      id: '/hs'
+      path: '/hs'
+      fullPath: '/hs'
+      preLoaderRoute: typeof HsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/methodology': {
+      id: '/methodology'
+      path: '/methodology'
+      fullPath: '/methodology'
+      preLoaderRoute: typeof MethodologyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/news': {
+      id: '/news'
+      path: '/news'
+      fullPath: '/news'
+      preLoaderRoute: typeof NewsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/news-sitemap.xml': {
+      id: '/news-sitemap.xml'
+      path: '/news-sitemap.xml'
+      fullPath: '/news-sitemap.xml'
+      preLoaderRoute: typeof NewsSitemapDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/policy': {
+      id: '/policy'
+      path: '/policy'
+      fullPath: '/policy'
+      preLoaderRoute: typeof PolicyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/port-risk': {
+      id: '/port-risk'
+      path: '/port-risk'
+      fullPath: '/port-risk'
+      preLoaderRoute: typeof PortRiskRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/ports': {
+      id: '/ports'
+      path: '/ports'
+      fullPath: '/ports'
+      preLoaderRoute: typeof PortsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/privacy': {
+      id: '/privacy'
+      path: '/privacy'
+      fullPath: '/privacy'
+      preLoaderRoute: typeof PrivacyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/rail': {
+      id: '/rail'
+      path: '/rail'
+      fullPath: '/rail'
+      preLoaderRoute: typeof RailRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/rail-map': {
+      id: '/rail-map'
+      path: '/rail-map'
+      fullPath: '/rail-map'
+      preLoaderRoute: typeof RailMapRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/rates': {
+      id: '/rates'
+      path: '/rates'
+      fullPath: '/rates'
+      preLoaderRoute: typeof RatesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/reports': {
+      id: '/reports'
+      path: '/reports'
+      fullPath: '/reports'
+      preLoaderRoute: typeof ReportsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sitemap.xml': {
+      id: '/sitemap.xml'
+      path: '/sitemap.xml'
+      fullPath: '/sitemap.xml'
+      preLoaderRoute: typeof SitemapDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/trade': {
+      id: '/trade'
+      path: '/trade'
+      fullPath: '/trade'
+      preLoaderRoute: typeof TradeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/unsubscribe': {
+      id: '/unsubscribe'
+      path: '/unsubscribe'
+      fullPath: '/unsubscribe'
+      preLoaderRoute: typeof UnsubscribeRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/article/$slug': {
@@ -681,12 +639,54 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ArticleSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/reports/monthly/$month': {
-      id: '/reports/monthly/$month'
-      path: '/monthly/$month'
-      fullPath: '/reports/monthly/$month'
-      preLoaderRoute: typeof ReportsMonthlyMonthRouteImport
+    '/index1520/routes': {
+      id: '/index1520/routes'
+      path: '/index1520/routes'
+      fullPath: '/index1520/routes'
+      preLoaderRoute: typeof Index1520RoutesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/rail/': {
+      id: '/rail/'
+      path: '/'
+      fullPath: '/rail/'
+      preLoaderRoute: typeof RailIndexRouteImport
+      parentRoute: typeof RailRoute
+    }
+    '/rail/americas': {
+      id: '/rail/americas'
+      path: '/americas'
+      fullPath: '/rail/americas'
+      preLoaderRoute: typeof RailAmericasRouteImport
+      parentRoute: typeof RailRoute
+    }
+    '/rail/eurasia': {
+      id: '/rail/eurasia'
+      path: '/eurasia'
+      fullPath: '/rail/eurasia'
+      preLoaderRoute: typeof RailEurasiaRouteImport
+      parentRoute: typeof RailRoute
+    }
+    '/rail/europe': {
+      id: '/rail/europe'
+      path: '/europe'
+      fullPath: '/rail/europe'
+      preLoaderRoute: typeof RailEuropeRouteImport
+      parentRoute: typeof RailRoute
+    }
+    '/reports/': {
+      id: '/reports/'
+      path: '/'
+      fullPath: '/reports/'
+      preLoaderRoute: typeof ReportsIndexRouteImport
       parentRoute: typeof ReportsRoute
+    }
+    '/api/cron/indexnow': {
+      id: '/api/cron/indexnow'
+      path: '/api/cron/indexnow'
+      fullPath: '/api/cron/indexnow'
+      preLoaderRoute: typeof ApiCronIndexnowRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/api/webhooks/resend': {
       id: '/api/webhooks/resend'
@@ -695,12 +695,12 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiWebhooksResendRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/api/cron/indexnow': {
-      id: '/api/cron/indexnow'
-      path: '/api/cron/indexnow'
-      fullPath: '/api/cron/indexnow'
-      preLoaderRoute: typeof ApiCronIndexnowRouteImport
-      parentRoute: typeof rootRouteImport
+    '/reports/monthly/$month': {
+      id: '/reports/monthly/$month'
+      path: '/monthly/$month'
+      fullPath: '/reports/monthly/$month'
+      preLoaderRoute: typeof ReportsMonthlyMonthRouteImport
+      parentRoute: typeof ReportsRoute
     }
   }
 }
