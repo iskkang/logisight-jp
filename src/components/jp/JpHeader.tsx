@@ -14,20 +14,25 @@ import { signOut, takeOAuthError, useSession } from "@/lib/auth";
 // 重なって出ており、ページを移ると導線が入れ替わって見えた。気象・リスク・見通しは
 // そのバーからしか行けず、上の一列には無かった。並びは
 // ニュース → 総合 → 分野4つ → リスク2つ → 分析の道具3つ → レポート。
+// to は行き先、match は「この項目に属する経路」の基準だ ★
+// /rail は /rail/americas へ 307 リダイレクトする。ヘッダーは全ページに在るので
+// クローラーが毎ページで 1 ホップ余計に踏んでいた。リンクは行き先を直に指す。
+// ただし現在地の表示は /rail 以下すべて(americas・eurasia)で点く必要があるので、
+// 基準は /rail のまま残す —— to をそのまま基準にすると /rail/eurasia で「鉄道」が消える。
 const NAV = [
-  { to: "/", label: "ホーム" },
-  { to: "/news", label: "ニュース" },
-  { to: "/dashboard", label: "総合" },
-  { to: "/rates", label: "運賃" },
-  { to: "/ports", label: "港湾" },
-  { to: "/trade", label: "貿易" },
-  { to: "/rail", label: "鉄道" },
-  { to: "/climate", label: "気象" },
-  { to: "/port-risk", label: "リスク" },
-  { to: "/benchmark", label: "ベンチマーク" },
-  { to: "/hs", label: "HSコード" },
-  { to: "/forecasts", label: "見通し" },
-  { to: "/reports", label: "レポート" },
+  { to: "/", match: "/", label: "ホーム" },
+  { to: "/news", match: "/news", label: "ニュース" },
+  { to: "/dashboard", match: "/dashboard", label: "総合" },
+  { to: "/rates", match: "/rates", label: "運賃" },
+  { to: "/ports", match: "/ports", label: "港湾" },
+  { to: "/trade", match: "/trade", label: "貿易" },
+  { to: "/rail/americas", match: "/rail", label: "鉄道" },
+  { to: "/climate", match: "/climate", label: "気象" },
+  { to: "/port-risk", match: "/port-risk", label: "リスク" },
+  { to: "/benchmark", match: "/benchmark", label: "ベンチマーク" },
+  { to: "/hs", match: "/hs", label: "HSコード" },
+  { to: "/forecasts", match: "/forecasts", label: "見通し" },
+  { to: "/reports", match: "/reports", label: "レポート" },
 ] as const;
 
 export function JpHeader({ today }: { today: string }) {
@@ -39,8 +44,8 @@ export function JpHeader({ today }: { today: string }) {
   // OAuth の失敗理由は URL にしか載らない。読まないと「押しても何も起きない」に見える。
   useEffect(() => setOauthError(takeOAuthError()), []);
   const pathname = useRouterState({ select: (s) => s.location.pathname });
-  const active = (to: string) =>
-    to === "/" ? pathname === "/" : pathname === to || pathname.startsWith(`${to}/`);
+  const active = (match: string) =>
+    match === "/" ? pathname === "/" : pathname === match || pathname.startsWith(`${match}/`);
 
   return (
     <header className="sticky top-0 z-50 border-b border-[#e3e7ec] bg-white/95 backdrop-blur-[6px]">
@@ -58,7 +63,7 @@ export function JpHeader({ today }: { today: string }) {
               // ヘッダーの高さごと変わる。項目名の途中で切れるくらいなら、
               // 詰まって見えるほうがまだ読める。
               className={`relative px-2 py-2 text-[13.5px] whitespace-nowrap transition-colors ${
-                active(n.to)
+                active(n.match)
                   ? "font-bold text-[#0d2137] after:absolute after:inset-x-2 after:-bottom-[13px] after:h-[2px] after:bg-[#1857b8]"
                   : "text-[#5b6672] hover:text-[#0d2137]"
               }`}
@@ -130,7 +135,7 @@ export function JpHeader({ today }: { today: string }) {
                 to={n.to}
                 onClick={() => setOpen(false)}
                 className={`block rounded-[6px] px-3 py-2.5 text-[14px] ${
-                  active(n.to) ? "font-bold text-[#1857b8]" : "text-[#16202c]"
+                  active(n.match) ? "font-bold text-[#1857b8]" : "text-[#16202c]"
                 }`}
               >
                 {n.label}
