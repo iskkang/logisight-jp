@@ -1,8 +1,14 @@
-import { Link, useNavigate } from "@tanstack/react-router";
+import { Link } from "@tanstack/react-router";
 import { useSuspenseQuery } from "@tanstack/react-query";
 
 import { JpPage } from "@/components/jp/JpPage";
-import { isInternalNewsItem, latestNewsQueryOptions, type NewsItem } from "@/lib/api/news";
+import {
+  PER_PAGE,
+  isInternalNewsItem,
+  latestNewsQueryOptions,
+  newsCountQueryOptions,
+  type NewsItem,
+} from "@/lib/api/news";
 
 /** 記事のカテゴリ。DB の値と一致していないと絞り込みが何も返さない。 */
 const CATEGORIES = ["海上", "航空", "港湾", "鉄道", "貿易", "物流"] as const;
@@ -36,11 +42,17 @@ function CatTag({ category }: { category: string | null }) {
   );
 }
 
-export function JpNews({ category }: { category?: string }) {
-  const navigate = useNavigate();
+export function JpNews({ category, page = 1 }: { category?: string; page?: number }) {
   const { data: items } = useSuspenseQuery(
-    latestNewsQueryOptions({ lang: "ja", limit: 50, category }),
+    latestNewsQueryOptions({
+      lang: "ja",
+      limit: PER_PAGE,
+      offset: (page - 1) * PER_PAGE,
+      category,
+    }),
   );
+  const { data: total } = useSuspenseQuery(newsCountQueryOptions({ lang: "ja", category }));
+  const totalPages = Math.max(1, Math.ceil((total ?? 0) / PER_PAGE));
 
   // 日付ごとにまとめる。業界紙の一覧は日付が見出しになる。
   const groups: { day: string; items: NewsItem[] }[] = [];
@@ -51,20 +63,21 @@ export function JpNews({ category }: { category?: string }) {
     else groups.push({ day: k, items: [it] });
   }
 
-  const go = (c?: string) =>
-    navigate({ to: "/news", search: c ? { cat: c } : {} });
-
   return (
     <JpPage
       crumbs={[{ label: "ホーム", to: "/" }, { label: "ニュース" }]}
       title="物流ニュース"
       lead="世界の物流・海運・航空・貿易のニュースを選んでお届けします。出典と発行日は各記事に表示しています。"
     >
-      {/* カテゴリ */}
+      {/* カテゴリ —— リンクで描かないとクローラーがカテゴリページを見つけられない ★
+          button+onClick は JS だけの遷移で HTML に <a href> が残らない。カテゴリ
+          ページへのクロール経路がサイト全体に一つも無く、読者も中クリック・別タブで
+          開けなかった。下のページ送りも同じ理由でリンクにしている。
+          カテゴリを変えたら 1 ページ目に戻す —— page は付けない。 */}
       <div className="mt-4 flex flex-wrap gap-0 border-b border-[#d5d9de]">
-        <button
-          type="button"
-          onClick={() => go()}
+        <Link
+          to="/news"
+          search={{}}
           className={`px-3.5 py-2 text-[13px] transition-colors ${
             !category
               ? "font-bold text-[#0b2d52] shadow-[inset_0_-2px_0_#0b2d52]"
@@ -72,12 +85,12 @@ export function JpNews({ category }: { category?: string }) {
           }`}
         >
           すべて
-        </button>
+        </Link>
         {CATEGORIES.map((c) => (
-          <button
+          <Link
             key={c}
-            type="button"
-            onClick={() => go(c)}
+            to="/news"
+            search={{ cat: c }}
             className={`px-3.5 py-2 text-[13px] transition-colors ${
               category === c
                 ? "font-bold text-[#0b2d52] shadow-[inset_0_-2px_0_#0b2d52]"
@@ -85,7 +98,7 @@ export function JpNews({ category }: { category?: string }) {
             }`}
           >
             {c}
-          </button>
+          </Link>
         ))}
       </div>
 
@@ -151,10 +164,69 @@ export function JpNews({ category }: { category?: string }) {
         </section>
       ))}
 
+      <Pagination page={page} totalPages={totalPages} category={category} />
+
       <p className="mb-2 mt-7 text-[11.5px] leading-[1.8] text-[#8a929c]">
         ※ 出典と発行日は各記事に表示しています。Logisight の記事は原文にもとづく要約・解釈であり、
         外部記事は原文へリンクします。
       </p>
     </JpPage>
+  );
+}
+
+/**
+ * ページ送り。必ず <Link>(実際の <a href>)で描く ★
+ * button+navigate だと HTML に <a href> が残らず、クローラーが 2 ページ目以降の
+ * 記事へ辿れない。sitemap にだけ在って site 内から到達できないページは
+ * 「検出 — インデックス未登録」のまま残る。
+ */
+function Pagination({
+  page,
+  totalPages,
+  category,
+}: {
+  page: number;
+  totalPages: number;
+  category?: string;
+}) {
+  if (totalPages <= 1) return null;
+  // 現在ページの前後 2 つ + 先頭・末尾。全部出すと 16 ページ分が並ぶ。
+  const nums = [
+    1,
+    totalPages,
+    ...[page - 2, page - 1, page, page + 1, page + 2].filter((n) => n >= 1 && n <= totalPages),
+  ];
+  const pages = [...new Set(nums)].sort((a, b) => a - b);
+  // 1 ページ目のアドレスに ?page=1 を付けない —— /news と別 URL になってしまう。
+  const search = (p: number) => ({
+    ...(category ? { cat: category } : {}),
+    ...(p > 1 ? { page: p } : {}),
+  });
+  const base = "min-w-[32px] px-2 py-1.5 text-center text-[13px] tabular-nums transition-colors";
+  return (
+    <nav className="mt-8 flex items-center justify-center gap-1 border-t border-[#eef0f2] pt-5">
+      {page > 1 && (
+        <Link to="/news" search={search(page - 1)} className={`${base} text-[#4a5462] hover:text-[#0b2d52]`}>
+          前へ
+        </Link>
+      )}
+      {pages.map((p, i) => (
+        <span key={p} className="flex items-center">
+          {i > 0 && p - pages[i - 1] > 1 && <span className="px-1 text-[12px] text-[#8a929c]">…</span>}
+          {p === page ? (
+            <span className={`${base} font-bold text-[#0b2d52] shadow-[inset_0_-2px_0_#0b2d52]`}>{p}</span>
+          ) : (
+            <Link to="/news" search={search(p)} className={`${base} text-[#4a5462] hover:text-[#0b2d52]`}>
+              {p}
+            </Link>
+          )}
+        </span>
+      ))}
+      {page < totalPages && (
+        <Link to="/news" search={search(page + 1)} className={`${base} text-[#4a5462] hover:text-[#0b2d52]`}>
+          次へ
+        </Link>
+      )}
+    </nav>
   );
 }

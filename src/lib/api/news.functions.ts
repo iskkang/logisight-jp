@@ -11,11 +11,22 @@ import { normalizeNewsImage } from "./news-image";
 const SELECT =
   "id,slug,title,summary,url,source,category,image_url,image_source,image_credit,published_at,lang,tags,is_hero,agent_type,content";
 
+// 外部記事のうち「読者に見せるものがある」行だけを残す条件。本文か要旨のどちらかがあればよい
+// —— 日本媒体の収集は転載許可が無いため本文を保存しない(下の .filter() の注記を参照)。
+//
+// 下の .filter() と同じ条件を SQL にも下ろしている ★
+// 取得してから絞ると、ページごとに実際の件数が変わり総件数とも合わなくなる。
+// そうなるとページ番号が噛み合わず、最後のページが空になったり無いページが生まれる。
+const SHOWABLE =
+  "agent_type.is.null,agent_type.neq.external,and(content.not.is.null,content.neq.),and(summary.not.is.null,summary.neq.)";
+
 export const getLatestNews = createServerFn({ method: "GET" })
   .inputValidator(
     z.object({
       lang: z.string().min(2).max(5).default("ko"),
       limit: z.number().int().min(1).max(50).default(20),
+      // 一覧のページ送り用。既定 0 なのでトップページなど既存の呼び出しは変わらない。
+      offset: z.number().int().min(0).max(5000).default(0),
       category: z.string().min(1).max(40).optional(),
       dateFrom: z.string().optional(), // e.g. "2026-05-31T00:00:00+09:00"
       dateTo: z.string().optional(), // e.g. "2026-05-31T23:59:59+09:00"
@@ -28,13 +39,14 @@ export const getLatestNews = createServerFn({ method: "GET" })
       .select(SELECT)
       .eq("lang", data.lang)
       .or("agent_type.is.null,agent_type.neq.daily_card")
+      .or(SHOWABLE)
       .like("url", "http%")
       .order("published_at", { ascending: false, nullsFirst: false })
       // 同着を必ず同じ順に並べる。日本海事新聞は一覧に時刻が無く、同じ日の記事が
       // すべて同一の published_at になる。第二キーが無いと DB が呼び出しごとに
       // 違う順で返し、トップページ(limit 14)とニュース一覧(limit 50)で並びがずれた。
       .order("id", { ascending: false })
-      .limit(data.limit);
+      .range(data.offset, data.offset + data.limit - 1);
 
     if (data.category) q = q.eq("category", data.category);
     if (data.dateFrom) q = q.gte("published_at", data.dateFrom);
@@ -66,4 +78,38 @@ export const getLatestNews = createServerFn({ method: "GET" })
         (r as NewsItem).read_minutes = readMin;
         return normalizeNewsImage(r as NewsItem);
       });
+  });
+
+/**
+ * 一覧の総件数。ページ番号を描くためだけに使う。
+ *
+ * getLatestNews と「同じ絞り込み」を見ること ★ 条件が食い違うと、最後のページが
+ * 空になったり、存在しないページ番号が生まれる。head:true なので行は取らず数だけ数える。
+ */
+export const getNewsCount = createServerFn({ method: "GET" })
+  .inputValidator(
+    z.object({
+      lang: z.string().min(2).max(5).default("ja"),
+      category: z.string().min(1).max(40).optional(),
+      dateFrom: z.string().optional(),
+      dateTo: z.string().optional(),
+    }),
+  )
+  .handler(async ({ data }): Promise<number> => {
+    setResponseHeader("cache-control", PUBLIC_SWR_CACHE);
+    let q = supabasePublicServer
+      .from("maritime_news")
+      .select("id", { count: "exact", head: true })
+      .eq("lang", data.lang)
+      .or("agent_type.is.null,agent_type.neq.daily_card")
+      .or(SHOWABLE)
+      .like("url", "http%");
+
+    if (data.category) q = q.eq("category", data.category);
+    if (data.dateFrom) q = q.gte("published_at", data.dateFrom);
+    if (data.dateTo) q = q.lte("published_at", data.dateTo);
+
+    const { count, error } = await q;
+    if (error) throw new Error(error.message);
+    return count ?? 0;
   });
