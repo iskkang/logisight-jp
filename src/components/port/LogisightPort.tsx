@@ -251,7 +251,7 @@ export function LogisightPort() {
                 sub={`${hormuz.crossingDate} · タンカー ${fmtNum(hormuz.tankerCount)} · バルク ${fmtNum(hormuz.bulkCount)}`}
               />
             </div>
-            <DataMeta className="mt-3" source={`${DATASET_SOURCE.portcast}(港湾混雑) · ${DATASET_SOURCE.econdb}(海峡 TEU) · ${DATASET_SOURCE.shipfinder}(ホルムズ)`} cadence="週次・日次" method="港湾の median 待機日数 · 海峡の通過 TEU · 通航マクロ" />
+            <DataMeta className="mt-3" source={`${DATASET_SOURCE.portcast}(港湾混雑) · ${DATASET_SOURCE.shipfinder}(ホルムズ)`} cadence="週次・日次" method="港湾の median 待機日数 · 海峡の通過 TEU · 通航マクロ" />
           </Sect>
 
           {/* Chokepoints */}
@@ -285,7 +285,7 @@ export function LogisightPort() {
                 })}
               </div>
             )}
-            <DataMeta className="mt-3" source={DATASET_SOURCE.econdb} cadence="日次" unit="TEU" method="海峡別の方向別通過 TEU · 通航の推移" />
+            <DataMeta className="mt-3" cadence="日次" unit="TEU" method="海峡別の方向別通過 TEU · 通航の推移" />
           </Sect>
 
           {/* Hormuz row */}
