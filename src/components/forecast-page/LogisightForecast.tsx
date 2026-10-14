@@ -420,7 +420,8 @@ function buildForecastsGeo(forecasts: Forecast[]) {
 }
 
 /* ============================ PAGE ============================ */
-type ForecastSearch = { cadence?: "weekly" | "monthly"; dir: string[]; series: string[]; sel?: string; mod?: string };
+// dir・series は URL に無いとき返さない(307 正規化を避けるため)ので省略可だ。
+type ForecastSearch = { cadence?: "weekly" | "monthly"; dir?: string[]; series?: string[]; sel?: string; mod?: string };
 
 export function LogisightForecast() {
   const { data: forecasts } = useSuspenseQuery(publishedForecastsQueryOptions());
@@ -437,12 +438,13 @@ export function LogisightForecast() {
   const geo = buildForecastsGeo(forecasts);
 
   const open = search.mod ? allOpen.filter((f) => f.module === search.mod) : allOpen;
-  const filter: ForecastFilter = { cadence: search.cadence, dir: search.dir, series: search.series };
+  const filter: ForecastFilter = { cadence: search.cadence, dir: search.dir ?? [], series: search.series ?? [] };
   const filtered = applyFilter(open, filter).sort((a, b) => displayOrderOf(a) - displayOrderOf(b));
   const selectedId = search.sel ?? filtered[0]?.id ?? null;
   const selected = open.find((f) => f.id === selectedId) ?? filtered[0] ?? null;
 
-  const dirSeg = search.dir.length === 1 ? (search.dir[0] === "up" ? "上昇" : search.dir[0] === "flat" ? "横ばい" : search.dir[0] === "down" ? "下落" : "すべての方向") : "すべての方向";
+  const dirs = search.dir ?? [];
+  const dirSeg = dirs.length === 1 ? (dirs[0] === "up" ? "上昇" : dirs[0] === "flat" ? "横ばい" : dirs[0] === "down" ? "下落" : "すべての方向") : "すべての方向";
   const cadSeg = search.cadence === "weekly" ? "週次" : search.cadence === "monthly" ? "月次" : "すべて";
 
   const setDir = (v: string) => navigate({ search: (p: ForecastSearch) => ({ ...p, dir: v === "上昇" ? ["up"] : v === "横ばい" ? ["flat"] : v === "下落" ? ["down"] : [] }), replace: true });

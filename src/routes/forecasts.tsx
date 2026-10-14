@@ -13,8 +13,9 @@ const arr = (v: unknown): string[] =>
 
 type Search = {
   cadence?: "weekly" | "monthly";
-  dir: string[];
-  series: string[];
+  // 省略可にする —— URL に無いときはキー自体を返さないため(韓国版と同じ形)
+  dir?: string[];
+  series?: string[];
   sel?: string;
   mod?: string;
 };
@@ -32,13 +33,22 @@ export const Route = createFileRoute("/forecasts")({
     });
     return { ...base, meta: [...base.meta, { name: "robots", content: "noindex,nofollow" }] };
   },
-  validateSearch: (s: Record<string, unknown>): Search => ({
-    cadence: s.cadence === "weekly" || s.cadence === "monthly" ? s.cadence : undefined,
-    dir: arr(s.dir),
-    series: arr(s.series),
-    sel: typeof s.sel === "string" ? s.sel : undefined,
-    mod: typeof s.mod === "string" ? s.mod : undefined,
-  }),
+  // URL に無いキーは返さない ★
+  // dir・series が常に [] を返していたため、ルーターがアドレスを
+  // ?dir=%5B%5D&series=%5B%5D に正規化して毎回 307 を出していた。
+  // 全ページのヘッダーがこのリンクを貼っているので、訪問のたびに 1 ホップ余計に踏む。
+  // 韓国版は既にこの書き方になっている(logisight-core/src/routes/forecasts.tsx)。
+  validateSearch: (s: Record<string, unknown>): Search => {
+    const dir = arr(s.dir);
+    const series = arr(s.series);
+    return {
+      ...(s.cadence === "weekly" || s.cadence === "monthly" ? { cadence: s.cadence } : {}),
+      ...(dir.length > 0 ? { dir } : {}),
+      ...(series.length > 0 ? { series } : {}),
+      ...(typeof s.sel === "string" ? { sel: s.sel } : {}),
+      ...(typeof s.mod === "string" ? { mod: s.mod } : {}),
+    };
+  },
   loader: async ({ context }) => {
     await Promise.all([
       context.queryClient.ensureQueryData(publishedForecastsQueryOptions()),
