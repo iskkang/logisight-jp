@@ -6,10 +6,15 @@ import { supabase } from "@/integrations/supabase/client";
 // 뉴스레터 원클릭 수신거부. 이메일 푸터 링크(/unsubscribe?id=<uuid>)로 진입.
 // anon 키로 SECURITY DEFINER 함수 newsletter_unsubscribe(p_id)만 호출 — 테이블 직접 접근 없음.
 export const Route = createFileRoute("/unsubscribe")({
+  // URL に無いキーは返さない ★
+  // 無いときに "" を返すとルーターがアドレスを ?id= に正規化して 307 を出す。
+  // ニュースレターの配信停止リンクは ?u=<user_id> で来るので、毎回 1 ホップ
+  // 余計に踏んでいた。配信停止は摩擦が少ないほどよく、メールクライアントや
+  // リンク検査器がリダイレクトを正しく追わないこともある。
+  // u は会員(jp_profiles)の配信停止。id は旧・購読者テーブル用。
   validateSearch: (s: Record<string, unknown>) => ({
-    id: typeof s.id === "string" ? s.id : "",
-    // u は会員(jp_profiles)の配信停止。id は旧・購読者テーブル用。
-    u: typeof s.u === "string" ? s.u : "",
+    ...(typeof s.id === "string" ? { id: s.id } : {}),
+    ...(typeof s.u === "string" ? { u: s.u } : {}),
   }),
   head: () => ({
     meta: [
@@ -37,7 +42,7 @@ const MESSAGES: Record<State, { title: string; body: string }> = {
 };
 
 function UnsubscribePage() {
-  const { id, u } = Route.useSearch();
+  const { id, u } = Route.useSearch() as { id?: string; u?: string };
   const [state, setState] = useState<State>(id || u ? "loading" : "invalid");
 
   useEffect(() => {
