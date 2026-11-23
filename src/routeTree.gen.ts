@@ -13,6 +13,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as BenchmarkRouteImport } from './routes/benchmark'
 import { Route as ClimateRouteImport } from './routes/climate'
+import { Route as CompanyRouteImport } from './routes/company'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as EurasiaRouteImport } from './routes/eurasia'
@@ -62,6 +63,11 @@ const BenchmarkRoute = BenchmarkRouteImport.update({
 const ClimateRoute = ClimateRouteImport.update({
   id: '/climate',
   path: '/climate',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CompanyRoute = CompanyRouteImport.update({
+  id: '/company',
+  path: '/company',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ContactRoute = ContactRouteImport.update({
@@ -220,6 +226,7 @@ export interface FileRoutesByFullPath {
   '/about': typeof AboutRoute
   '/benchmark': typeof BenchmarkRoute
   '/climate': typeof ClimateRoute
+  '/company': typeof CompanyRoute
   '/contact': typeof ContactRoute
   '/dashboard': typeof DashboardRoute
   '/eurasia': typeof EurasiaRoute
@@ -256,6 +263,7 @@ export interface FileRoutesByTo {
   '/about': typeof AboutRoute
   '/benchmark': typeof BenchmarkRoute
   '/climate': typeof ClimateRoute
+  '/company': typeof CompanyRoute
   '/contact': typeof ContactRoute
   '/dashboard': typeof DashboardRoute
   '/eurasia': typeof EurasiaRoute
@@ -291,6 +299,7 @@ export interface FileRoutesById {
   '/about': typeof AboutRoute
   '/benchmark': typeof BenchmarkRoute
   '/climate': typeof ClimateRoute
+  '/company': typeof CompanyRoute
   '/contact': typeof ContactRoute
   '/dashboard': typeof DashboardRoute
   '/eurasia': typeof EurasiaRoute
@@ -329,6 +338,7 @@ export interface FileRouteTypes {
     | '/about'
     | '/benchmark'
     | '/climate'
+    | '/company'
     | '/contact'
     | '/dashboard'
     | '/eurasia'
@@ -365,6 +375,7 @@ export interface FileRouteTypes {
     | '/about'
     | '/benchmark'
     | '/climate'
+    | '/company'
     | '/contact'
     | '/dashboard'
     | '/eurasia'
@@ -399,6 +410,7 @@ export interface FileRouteTypes {
     | '/about'
     | '/benchmark'
     | '/climate'
+    | '/company'
     | '/contact'
     | '/dashboard'
     | '/eurasia'
@@ -436,6 +448,7 @@ export interface RootRouteChildren {
   AboutRoute: typeof AboutRoute
   BenchmarkRoute: typeof BenchmarkRoute
   ClimateRoute: typeof ClimateRoute
+  CompanyRoute: typeof CompanyRoute
   ContactRoute: typeof ContactRoute
   DashboardRoute: typeof DashboardRoute
   EurasiaRoute: typeof EurasiaRoute
@@ -490,6 +503,13 @@ declare module '@tanstack/react-router' {
       path: '/climate'
       fullPath: '/climate'
       preLoaderRoute: typeof ClimateRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/company': {
+      id: '/company'
+      path: '/company'
+      fullPath: '/company'
+      preLoaderRoute: typeof CompanyRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/contact': {
@@ -739,6 +759,7 @@ const rootRouteChildren: RootRouteChildren = {
   AboutRoute: AboutRoute,
   BenchmarkRoute: BenchmarkRoute,
   ClimateRoute: ClimateRoute,
+  CompanyRoute: CompanyRoute,
   ContactRoute: ContactRoute,
   DashboardRoute: DashboardRoute,
   EurasiaRoute: EurasiaRoute,

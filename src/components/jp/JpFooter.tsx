@@ -39,6 +39,7 @@ const COLS: {
     title: "媒体について",
     items: [
       { label: "会社概要", to: "/about" },
+      { label: "MTL JAPAN 会社案内", to: "/company" },
       { label: "輸送のご相談", to: "/contact" },
       { label: "データの方法論", to: "/methodology" },
       { label: "よくある質問", to: "/faq" },

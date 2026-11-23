@@ -116,6 +116,13 @@ function AboutPage() {
           <dt className="text-[var(--color-ink-muted)]">FAX</dt>
           <dd className="text-[var(--color-ink)]">03-6284-4507</dd>
         </dl>
+        <p>
+          業務内容は{" "}
+          <Link to="/company" className={linkCls}>
+            MTL JAPAN 会社案内
+          </Link>{" "}
+          をご覧ください(日本語・English・中文・한국어)。
+        </p>
       </Section>
 
       <Section title="お問い合わせ">
