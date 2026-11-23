@@ -1,0 +1,41 @@
+name: 画像の取り寄せ
+
+# 編集部が content/fetch-images/*.json(取り寄せ票)を作業ブランチに push したら、
+# 画像を取って public/news-images/ に置き、同じブランチにコミットする。
+# main には走らせない —— main へは検収(マージ)を経て入る。
+
+on:
+  push:
+    branches-ignore: [main]
+    paths:
+      - "content/fetch-images/**"
+
+permissions:
+  contents: write
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: 画像を取得
+        run: node scripts/fetch-images.mjs
+
+      - name: 取得した画像をコミット
+        if: always()
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A public/news-images content/fetch-images
+          if git diff --cached --quiet; then
+            echo "変更なし"
+          else
+            git commit -m "content(images): 取り寄せた画像を追加"
+            git push
+          fi

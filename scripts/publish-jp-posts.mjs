@@ -8,12 +8,12 @@
  *
  *   --check を付けると検証だけ行い、DB には書かない。
  */
-import { readdirSync, readFileSync } from "node:fs";
+import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { createClient } from "@supabase/supabase-js";
 import ws from "ws";
 
-import { toNewsRow, validatePost } from "./lib/jp-post.mjs";
+import { localImagePaths, toNewsRow, validatePost } from "./lib/jp-post.mjs";
 
 const DIR = "content/jp-posts";
 const checkOnly = process.argv.includes("--check");
@@ -43,6 +43,20 @@ for (const f of files) {
 if (bad) process.exit(1);
 console.log(`${posts.length} 件の記事ファイルを検証しました。`);
 if (checkOnly) process.exit(0);
+
+// 掲載する前に、本文と代表画像が指すリポジトリ内の画像が揃っているかを確かめる。
+// 取り寄せ(fetch-images.yml)が終わる前にマージされると、画像の欠けた記事が出てしまう。
+const missing = posts.flatMap((p) =>
+  localImagePaths(p)
+    .filter((path) => !existsSync(join("public", path)))
+    .map((path) => `${p.slug}: ${path}`),
+);
+if (missing.length) {
+  console.error(
+    `画像がまだありません(取り寄せが終わっていない可能性):\n  - ${missing.join("\n  - ")}`,
+  );
+  process.exit(1);
+}
 
 const SUPABASE_URL = process.env.SUPABASE_URL;
 const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;

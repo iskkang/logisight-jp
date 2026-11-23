@@ -1,7 +1,9 @@
 import { describe, expect, it } from "vitest";
 
 // @ts-expect-error — scripts/ は素の ESM(.mjs)で型定義を持たない
-import { toNewsRow, validatePost } from "../../../../scripts/lib/jp-post.mjs";
+import { localImagePaths, toNewsRow, validatePost } from "../../../../scripts/lib/jp-post.mjs";
+// @ts-expect-error — scripts/ は素の ESM(.mjs)で型定義を持たない
+import { sniff } from "../../../../scripts/fetch-images.mjs";
 import { parseBodyImage } from "../article-image";
 
 const base = {
@@ -59,5 +61,25 @@ describe("parseBodyImage", () => {
     expect(parseBodyImage("ただの段落")).toBeNull();
     expect(parseBodyImage("![x](javascript:alert(1))")).toBeNull();
     expect(parseBodyImage("![x](/etc/passwd.png)")).toBeNull();
+  });
+});
+
+describe("localImagePaths", () => {
+  it("代表画像と本文のリポジトリ内画像を重複なく返す", () => {
+    const paths = localImagePaths({
+      ...base,
+      image_url: "/news-images/nagoya-rain.png",
+      content: base.content + "\n\n![外部](https://example.com/a.png)",
+    });
+    expect(paths).toEqual(["/news-images/nagoya-rain.png"]);
+  });
+});
+
+describe("sniff", () => {
+  it("先頭バイトで PNG・JPEG・WebP を見分け、それ以外は null", () => {
+    expect(sniff(Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]))).toBe("png");
+    expect(sniff(Buffer.from([0xff, 0xd8, 0xff, 0xe0]))).toBe("jpg");
+    expect(sniff(Buffer.from("RIFF\0\0\0\0WEBPVP8 ", "binary"))).toBe("webp");
+    expect(sniff(Buffer.from("<html>"))).toBeNull();
   });
 });

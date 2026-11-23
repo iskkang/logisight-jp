@@ -65,6 +65,17 @@ export function validatePost(post, fileName = "") {
   return errs;
 }
 
+/** 記事が使うリポジトリ内の画像(/news-images/…)の一覧。代表画像と本文の図版。 */
+export function localImagePaths(post) {
+  const paths = [];
+  if (post.image_url && LOCAL_IMAGE.test(post.image_url)) paths.push(post.image_url);
+  for (const block of String(post.content ?? "").split(/\n{2,}/)) {
+    const m = BODY_IMAGE.exec(block.trim().split("\n")[0]);
+    if (m && LOCAL_IMAGE.test(m[2])) paths.push(m[2]);
+  }
+  return [...new Set(paths)];
+}
+
 /** 記事ファイル → maritime_news の行。 */
 export function toNewsRow(post) {
   return {
