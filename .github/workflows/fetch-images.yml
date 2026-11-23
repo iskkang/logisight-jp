@@ -8,7 +8,7 @@ on:
   push:
     branches-ignore: [main]
     paths:
-      - "content/fetch-images/**"
+      - "content/fetch-images/*.json"
 
 permissions:
   contents: write
@@ -32,7 +32,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -A public/news-images content/fetch-images
+          git add -A -- public content/fetch-images
           if git diff --cached --quiet; then
             echo "変更なし"
           else
