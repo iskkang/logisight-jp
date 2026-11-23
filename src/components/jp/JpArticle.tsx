@@ -2,6 +2,7 @@ import { Link } from "@tanstack/react-router";
 
 import { JpPage } from "@/components/jp/JpPage";
 import type { Article } from "@/lib/api/article";
+import { parseBodyImage } from "@/lib/api/article-image";
 
 /** "2026-08-04T…" → "2026年8月4日" */
 function fmtDate(iso: string | null): string {
@@ -11,13 +12,25 @@ function fmtDate(iso: string | null): string {
 
 /**
  * マークダウンの最小レンダリング。見出し・段落・箇条書きだけを扱う。
- * 記事本文は翻訳パイプラインが生成したマークダウンで、表や画像は含まない。
+ * 記事本文は翻訳パイプラインが生成したマークダウンで、表は含まない。
+ * 編集記事(content/jp-posts)だけは図版ブロックを含む —— parseBodyImage を参照。
  */
 function Body({ markdown }: { markdown: string }) {
   const blocks = markdown.split(/\n{2,}/).map((b) => b.trim()).filter(Boolean);
   return (
     <div className="mt-6 space-y-4">
       {blocks.map((b, i) => {
+        const img = parseBodyImage(b);
+        if (img) {
+          return (
+            <figure key={i} className="my-6">
+              <img src={img.src} alt={img.alt} className="w-full border border-[#e2e6ea]" loading="lazy" />
+              {img.credit && (
+                <figcaption className="mt-1.5 text-[11px] text-[#8a929c]">出典: {img.credit}</figcaption>
+              )}
+            </figure>
+          );
+        }
         const h = /^(#{2,4})\s+(.*)$/.exec(b);
         if (h) {
           return (

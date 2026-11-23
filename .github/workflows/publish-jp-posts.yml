@@ -1,0 +1,38 @@
+name: 編集記事の掲載
+
+# content/jp-posts/*.json が main に入ったら maritime_news(lang=ja)へ書き込む。
+# main へのマージが編集者の検収 —— マージ前の PR では検証だけを走らせる。
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "content/jp-posts/**"
+  pull_request:
+    paths:
+      - "content/jp-posts/**"
+  workflow_dispatch:
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "npm"
+
+      - run: npm ci
+
+      - name: 記事ファイルの検証
+        run: node scripts/publish-jp-posts.mjs --check
+
+      - name: maritime_news へ反映
+        if: github.event_name != 'pull_request'
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+        run: node scripts/publish-jp-posts.mjs
